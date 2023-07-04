@@ -1,13 +1,14 @@
-import { Patch } from '../common/ui';
+import { Patch, Like } from '../common/ui';
 
 function ProjectItem() {
   return (
-    <article className='flex flex-col w-400pxr'>
+    <article className='relative flex flex-col w-400pxr'>
       <img
         src='https://haitikkot.org/gv5/theme/cookie/img/noimage.png'
         alt='기본 이미지'
         className='h-300pxr rounded-xl mb-7pxr'
       />
+      <Like like={false} position='top-12pxr right-12pxr' />
       <div className='flex items-center justify-between'>
         <div className='flex-center'>
           <span className='text-xl font-bold text-purple-300'>2,791% 달성</span>
