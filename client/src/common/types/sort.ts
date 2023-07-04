@@ -12,3 +12,14 @@ export const CATEGORIES = {
   game: '게임/취미',
   etc: '기타',
 } as const;
+
+export const ORDERS = {
+  recent: '최신순',
+  popular: '인기순',
+  closing: '마감임박순',
+} as const;
+
+export const PROGRESS = {
+  ongoing: '진행중',
+  end: '종료',
+} as const;

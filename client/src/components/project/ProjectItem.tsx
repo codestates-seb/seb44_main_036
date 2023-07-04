@@ -1,8 +1,8 @@
-import { Patch, Like } from '../common/ui';
+import { Patch, Like } from '../ui';
 
 function ProjectItem() {
   return (
-    <article className='relative flex flex-col w-400pxr'>
+    <article className='relative flex flex-col cursor-pointer w-400pxr'>
       <Patch type='alert'>마감임박</Patch>
       <img
         src='https://haitikkot.org/gv5/theme/cookie/img/noimage.png'

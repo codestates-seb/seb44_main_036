@@ -1,4 +1,4 @@
-import { CATEGORIES } from '../common/types';
+import { CATEGORIES } from '@/common/types';
 import { Category } from '.';
 
 function CategoryList() {

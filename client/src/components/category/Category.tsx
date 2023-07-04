@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { CATEGORIES } from '../common/types';
+import { CATEGORIES } from '@/common/types';
 
 type Props = {
   categoryEN: (typeof CATEGORIES)[keyof typeof CATEGORIES];

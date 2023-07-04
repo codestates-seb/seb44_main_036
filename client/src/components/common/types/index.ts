@@ -1,1 +1,0 @@
-export { CATEGORIES } from './category';
