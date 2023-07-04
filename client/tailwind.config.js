@@ -10,7 +10,7 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     spacing: {
-      ...range(1, 100).reduce((acc, px) => {
+      ...range(1, 1000).reduce((acc, px) => {
         acc[`${px}pxr`] = pxToRem(px);
         return acc;
       }, {}),
