@@ -2,7 +2,7 @@
 // import axios from 'axios';
 import UserModal from '@/components/UserModal/UserModal';
 import { useState } from 'react';
-import { IoMdSettings } from 'react-icons/io';
+import { setting, settingHover } from '@/assets/mypage';
 
 interface IUser {
   imageUrl: string;
@@ -48,6 +48,7 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
   const [tab, setTab] = useState<'main' | 'liked'>('main');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(user.address);
+  const [isHovered, setIsHovered] = useState(false);
 
   const mainProjects = user.accountType === 'seller' ? sellingProjects : fundedProjects;
   const projects = tab === 'main' ? mainProjects : likedProjects;
@@ -92,17 +93,24 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
     <>
       <div className='flex-col w-full flex-center'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
+          <div className='flex flex-row items-center justify-end h-full'>
+            <button className='text-gray-100 mr-10pxr'>프로필 수정</button>
+            <p className='text-gray-100 mr-10pxr'>|</p>
+            <button className='text-gray-100 mr-320pxr'>로그아웃</button>
+          </div>
           <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-110pxr'>
             <img
-              className='overflow-hidden bg-black rounded-full w-120pxr h-120pxr'
+              className='object-cover overflow-hidden bg-gray-100 rounded-full w-120pxr h-120pxr'
               src={user.imageUrl}
               alt={user.nickname}
             />
             <button
               className='absolute text-gray-400 bg-white rounded-full flex-center left-90pxr w-30pxr h-30pxr top-90pxr hover:text-purple-300'
               onClick={openModal}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              <IoMdSettings size='24'></IoMdSettings>
+              <img src={isHovered ? settingHover : setting} alt='setting'></img>
             </button>
           </div>
         </div>
@@ -120,7 +128,7 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
             <button
               className={`text-3xl font-semibold ${
                 tab === 'main' ? 'text-purple-300 active' : 'text-gray-400 hover:text-purple-300'
-              } relative mr-50pxr`}
+              } relative mr-85pxr`}
               onClick={() => setTab('main')}
             >
               {user.accountType === 'seller' ? '판매중인 프로젝트' : '펀딩중인 프로젝트'}

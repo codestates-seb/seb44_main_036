@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { IoMdSettings } from 'react-icons/io';
-import { exit, exitHover, vector } from '@/assets/usermodal';
+import { exit, exitHover, update, settingHover } from '@/assets/mypage';
 
 interface UserModalProps {
   imageUrl: string;
@@ -43,13 +42,13 @@ const UserModal: React.FC<UserModalProps> = ({
         <div className='bg-white rounded-lg w-700pxr h-600pxr'>
           <div className='flex-center mt-20pxr mb-20pxr'>
             <img
-              className='overflow-hidden bg-black rounded-full flex-center w-120pxr h-120pxr'
+              className='object-cover overflow-hidden bg-gray-100 rounded-full flex-center w-120pxr h-120pxr'
               src={imageUrl}
               alt={nickname}
             />
             <div className='absolute'>
               <div className='absolute text-purple-300 bg-white rounded-full flex-center left-30pxr w-30pxr h-30pxr top-30pxr'>
-                <IoMdSettings size='24'></IoMdSettings>
+                <img src={settingHover} alt='settingHover'></img>
               </div>
               <button
                 className='absolute w-30pxr h-30pxr left-300pxr bottom-30pxr'
@@ -74,7 +73,7 @@ const UserModal: React.FC<UserModalProps> = ({
             )}
             <p>&nbsp;님</p>
             <button className='ml-10pxr' onClick={() => setEditingNickname(true)}>
-              <img src={vector} alt='vector'></img>
+              <img src={update} alt='update'></img>
             </button>
           </div>
           <p className='text-purple-300 flex-center mb-30pxr'>
