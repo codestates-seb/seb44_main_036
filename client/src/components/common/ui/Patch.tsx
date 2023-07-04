@@ -6,7 +6,7 @@ type Props = {
 const patchStyles = {
   tag: 'bg-purple-200 hover:bg-purple-300',
   deadline: 'bg-purple-300',
-  alert: 'bg-cherry',
+  alert: 'bg-cherry absolute top-10pxr left-10pxr',
 };
 
 function Patch({ children, type }: Props) {
