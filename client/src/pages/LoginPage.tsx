@@ -1,5 +1,9 @@
 function LoginPage() {
-  return <></>;
+  return (
+    <section>
+      <></>
+    </section>
+  );
 }
 
 export default LoginPage;
