@@ -1,12 +1,12 @@
 // import { useSearchParams } from 'react-router-dom';
-import { ORDERS, PROGRESS } from '@/common/types';
+import { ORDERS, PROGRESS } from '@/common/constants';
 import useSetParams from '@/hooks/useSetParams';
 
 function ProjectHeader() {
   const orders = Object.entries(ORDERS);
   const progress = Object.entries(PROGRESS);
-  const [orderParams, setOrderParams] = useSetParams('order', ORDERS.recent);
-  const [, setProgressParams] = useSetParams('progress', PROGRESS.ongoing);
+  const [orderParams, setOrderParams] = useSetParams('order', 'recent');
+  const [, setProgressParams] = useSetParams('progress', 'ongoing');
 
   return (
     <section className='flex justify-between max-w-[1280px] mx-auto mt-45pxr mb-25pxr'>

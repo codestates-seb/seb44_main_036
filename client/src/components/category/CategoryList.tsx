@@ -1,11 +1,11 @@
-import { CATEGORIES } from '@/common/types';
+import { CATEGORIES } from '@/common/constants';
 import { Category } from '.';
 
 function CategoryList() {
   const categories = Object.entries(CATEGORIES);
 
   return (
-    <ul className='flex-center max-w-[1280px] mx-auto my-30pxr'>
+    <ul className='flex-center max-w-[1280px] mx-auto my-50pxr'>
       {categories.map(([key, value]) => (
         <Category
           key={key}
