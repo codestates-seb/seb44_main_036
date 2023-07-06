@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
+
 import { ReactComponent as LogoSvg } from '@/assets/logos/logo.svg';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
-import Button from '../Auth/Button';
+import Button from '../ui/Button';
 
 function Header() {
   const navigate = useNavigate();

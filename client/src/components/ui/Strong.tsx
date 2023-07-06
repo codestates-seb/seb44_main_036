@@ -6,7 +6,7 @@ type Props = {
 
 function Strong({ text, style, onClick }: Props) {
   return (
-    <strong onClick={onClick} className={`text-purple-300 text font-semibold ${style}`}>
+    <strong onClick={onClick} className={`text-purple-300 font-semibold ${style}`}>
       {text}
     </strong>
   );
