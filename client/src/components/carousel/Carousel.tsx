@@ -1,7 +1,7 @@
 import type { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
-import { Buttons } from '.';
+import { SlideController } from '.';
 import { ProgressBar } from '../ui';
 import { useState } from 'react';
 import 'swiper/css';
@@ -63,21 +63,21 @@ function Carousel() {
       {CAROUSEL_LIST.map((carousel) => (
         <SwiperSlide key={carousel.id}>
           <img src={carousel.imageUrl} alt='캐러셀 이미지' />
-          <div className='absolute top-[0px] left-[0px] w-full h-full bg-gradient-to-tr from-gray-900 opacity-60'></div>
+          <div className='absolute top-[0px] left-[0px] w-full h-full bg-gradient-to-tr from-black opacity-60'></div>
           <section className='absolute text-white left-80pxr bottom-50pxr max-w-400pxr'>
             <h2 className='max-w-sm text-[2.1rem] font-extrabold max-w-1280 mb-10pxr leading-10'>
               {carousel.title}
             </h2>
-            <p className='font-semibold'>{carousel.desc}</p>
+            <p className='text-sm font-semibold'>{carousel.desc}</p>
           </section>
         </SwiperSlide>
       ))}
       <ProgressBar
         backgroundStyle='absolute bottom-25pxr left-80pxr z-10 bg-white/30 h-3pxr w-380pxr'
         barStyle='z-20 bg-white h-3pxr'
-        progress={(activeIndex / 3) * 100}
+        progress={(activeIndex / CAROUSEL_LIST.length) * 100}
       />
-      <Buttons />
+      <SlideController />
     </Swiper>
   );
 }

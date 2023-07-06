@@ -1,7 +1,7 @@
 import { useSwiper } from 'swiper/react';
 import { arrowLeft, arrowRight } from '@/assets/common';
 
-function Buttons() {
+function SlideController() {
   const swiper = useSwiper();
   const buttonStyle = 'bg-gray-900 px-15pxr py-12pxr hover:bg-gray-800';
 
@@ -23,4 +23,4 @@ function Buttons() {
   );
 }
 
-export default Buttons;
+export default SlideController;
