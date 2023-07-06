@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        path: '/:category?',
+        path: '/category?/:categoryId?',
         element: <MainPage />,
       },
       {

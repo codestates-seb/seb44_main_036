@@ -9,17 +9,15 @@ type Props = {
 function Category({ categoryEN, categoryINFO }: Props) {
   const imgUrl = new URL(`../../assets/category/${categoryEN}.png`, import.meta.url).href;
   const [categoryNUM, categoryKO] = categoryINFO;
-  const { category = '' } = useParams();
-  const isActive = category === `${categoryNUM ?? ''}`;
+  const { categoryId = '' } = useParams();
+  const isActive = categoryId === `${categoryNUM ?? ''}`;
 
   return (
     <li className='flex-col flex-center'>
-      <Link to={`/${categoryNUM ?? ''}`}>
+      <Link to={`/category/${categoryNUM ?? ''}`}>
         <img src={imgUrl} alt={categoryKO} className='cursor-pointer w-75pxr h-75pxr' />
       </Link>
-      <span className={`text-sm mt-10pxr ${isActive && 'font-extrabold underline'}`}>
-        {categoryKO}
-      </span>
+      <span className={`text-sm mt-10pxr ${isActive && 'font-extrabold'}`}>{categoryKO}</span>
     </li>
   );
 }
