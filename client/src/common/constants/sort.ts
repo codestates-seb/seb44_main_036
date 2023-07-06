@@ -1,16 +1,16 @@
 export const CATEGORIES = {
-  all: '전체',
-  tech: '테크/가전',
-  fashion: '패션/잡화',
-  living: '홈/리빙',
-  beauty: '뷰티',
-  food: '푸드',
-  sport: '스포츠',
-  culture: '컬쳐',
-  character: '캐릭터/굿즈',
-  pet: '반려동물',
-  game: '게임/취미',
-  etc: '기타',
+  all: [null, '전체'],
+  tech: [0, '테크/가전'],
+  fashion: [1, '패션/잡화'],
+  living: [2, '홈/리빙'],
+  beauty: [3, '뷰티'],
+  food: [4, '푸드'],
+  sport: [5, '스포츠'],
+  culture: [6, '컬쳐'],
+  character: [7, '캐릭터/굿즈'],
+  pet: [8, '반려동물'],
+  game: [9, '게임/취미'],
+  etc: [10, '기타'],
 } as const;
 
 export const ORDERS = {

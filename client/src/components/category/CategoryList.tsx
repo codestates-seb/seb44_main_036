@@ -1,12 +1,14 @@
 import { CATEGORIES } from '@/common/constants';
 import { Category } from '.';
-// import type { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 
+export type categoryEN = keyof typeof CATEGORIES;
+export type categoryINFO = (typeof CATEGORIES)[keyof typeof CATEGORIES];
+
 function CategoryList() {
-  const categories = Object.entries(CATEGORIES);
+  const categories = Object.entries(CATEGORIES) as [categoryEN, categoryINFO][];
 
   return (
     <Swiper
@@ -16,13 +18,9 @@ function CategoryList() {
       slidesPerGroup={5}
       className='flex-center max-w-[1200px] mx-auto my-50pxr'
     >
-      {categories.map(([key, value]) => (
-        <SwiperSlide>
-          <Category
-            key={key}
-            categoryEN={key as (typeof CATEGORIES)[keyof typeof CATEGORIES]}
-            categoryKO={value as keyof typeof CATEGORIES}
-          />
+      {categories.map(([categoryEN, categoryINFO]) => (
+        <SwiperSlide key={categoryEN}>
+          <Category categoryEN={categoryEN} categoryINFO={categoryINFO} />
         </SwiperSlide>
       ))}
     </Swiper>

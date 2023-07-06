@@ -1,20 +1,21 @@
 import { Link, useParams } from 'react-router-dom';
-import { CATEGORIES } from '@/common/constants';
+import type { categoryEN, categoryINFO } from './CategoryList';
 
 type Props = {
-  categoryEN: (typeof CATEGORIES)[keyof typeof CATEGORIES];
-  categoryKO: keyof typeof CATEGORIES;
+  categoryEN: categoryEN;
+  categoryINFO: categoryINFO;
 };
 
-function Category({ categoryEN, categoryKO }: Props) {
+function Category({ categoryEN, categoryINFO }: Props) {
   const imgUrl = new URL(`../../assets/category/${categoryEN}.png`, import.meta.url).href;
-  const { category = 'all' } = useParams();
-  const isActive = category === categoryEN;
+  const [categoryNUM, categoryKO] = categoryINFO;
+  const { category = '' } = useParams();
+  const isActive = category === `${categoryNUM ?? ''}`;
 
   return (
     <li className='flex-col flex-center'>
-      <Link to={`/${categoryEN}`}>
-        <img src={imgUrl} alt={categoryEN} className='cursor-pointer w-75pxr h-75pxr' />
+      <Link to={`/${categoryNUM ?? ''}`}>
+        <img src={imgUrl} alt={categoryKO} className='cursor-pointer w-75pxr h-75pxr' />
       </Link>
       <span className={`text-sm mt-10pxr ${isActive && 'font-extrabold underline'}`}>
         {categoryKO}
