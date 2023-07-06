@@ -1,8 +1,12 @@
-import { signUpData } from '../types/authTypes';
-import { instance } from './instance';
+import { loginData, signUpData } from '../types/authTypes';
+import { authInstance, userInstance } from './instance';
 
 export const authApi = {
-  login: () => instance.post('/users/login'),
-  logout: () => instance.post('/users/logout'),
-  signup: (data: signUpData) => instance.post('/users/signup', data),
+  login: (data: loginData) => authInstance.post('/users/login', data),
+  logout: () => authInstance.post('/users/logout'),
+  signup: (data: signUpData) => authInstance.post('/users/signup', data),
+};
+
+export const userApi = {
+  getUser: (userId: number) => userInstance.get(`/user/${userId}`),
 };

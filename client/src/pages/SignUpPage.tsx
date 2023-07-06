@@ -1,16 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import AuthInput from '@/components/Auth/AuthInput';
-import TitleText from '@/components/ui/TitleText';
-import SocialButton from '@/components/Auth/SocialButton';
-import Button from '@/components/ui/Button';
-import Strong from '@/components/ui/Strong';
-import { ReactComponent as GoogleLogoSvg } from '@/assets/logos/google_logo.svg';
-import { ReactComponent as KakaoLogoSvg } from '@/assets/logos/kakao_logo.svg';
+import AuthInput from '@/components/auth/AuthInput';
+import { Button, Strong } from '@/components/ui';
 import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '@/common/constants/regexs';
-import { FormValues } from '@/common/types/authTypes';
+import { SignUpFormValues } from '@/common/types/authTypes';
 import { postSignUp } from '@/common/api/authApi';
+import SocialForm from '@/components/auth/SocialForm';
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -19,13 +15,14 @@ function SignUpPage() {
     formState: { errors },
     handleSubmit,
     watch,
-  } = useForm<FormValues>();
+  } = useForm<SignUpFormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+  const onSubmit: SubmitHandler<SignUpFormValues> = async (formData) => {
     const { email, nickname, password } = formData;
 
     try {
       await postSignUp({ email, nickname, password });
+      navigate('/users/login');
     } catch (error) {
       return error;
     }
@@ -33,20 +30,8 @@ function SignUpPage() {
 
   return (
     <section className='flex-col flex-center my-80pxr'>
-      <article className='w-full max-w-[370px] mb-42pxr flex flex-col'>
-        <TitleText text={'간편 가입'} style={'mb-14pxr'} />
-        <SocialButton
-          text={'구글 계정으로 시작'}
-          icon={<GoogleLogoSvg />}
-          style={'mb-15pxr text-gray-800 bg-white border-[1.5px] border-gray-300 hover:bg-gray-200'}
-        />
-        <SocialButton
-          text={'카카오톡으로 시작'}
-          icon={<KakaoLogoSvg />}
-          style={'text-kakao-300 bg-kakao-100 border-gray-300 hover:bg-kakao-200'}
-        />
-      </article>
-      <article className='w-full max-w-[370px]'>
+      <SocialForm />
+      <article className='w-full max-w-[370px] mt-42pxr'>
         <form className='flex flex-col w-full' onSubmit={handleSubmit(onSubmit)}>
           <AuthInput
             type={'email'}
@@ -116,23 +101,23 @@ function SignUpPage() {
             type={'password'}
             id={'passwordCheck'}
             holder={'비밀번호 확인'}
-            style={'mb-44pxr'}
             register={register}
             registerOptions={{
+              required: '비밀번호 확인은 필수 입력입니다.',
               validate: {
                 value: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.',
               },
             }}
             errors={errors}
           />
-          <Button type='submit' text='회원가입' style='h-50pxr mb-23pxr' />
+          <Button type='submit' text='회원가입' style='h-50pxr mb-23pxr mt-44pxr' />
           <div className='flex-center'>
             <p>
-              이미 회원이신가요?{' '}
+              이미 회원이신가요?
               <Strong
                 onClick={() => navigate('/users/login')}
                 text='로그인'
-                style={'cursor-pointer'}
+                style={'cursor-pointer ml-12pxr'}
               />
             </p>
           </div>
