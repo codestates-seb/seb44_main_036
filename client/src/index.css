@@ -27,3 +27,9 @@
     grid-template-columns: repeat(auto-fill, minmax(400px, auto));
   }
 }
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: gray !important;
+  --swiper-navigation-size: 20px !important;
+}

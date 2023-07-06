@@ -12,15 +12,13 @@ function Category({ categoryEN, categoryKO }: Props) {
   const isActive = category === categoryEN;
 
   return (
-    <li
-      className={`flex-col border-b-4 border-solid flex-center px-12pxr py-10pxr ${
-        isActive ? 'border-black' : 'border-gray-300'
-      }`}
-    >
+    <li className='flex-col flex-center'>
       <Link to={`/${categoryEN}`}>
         <img src={imgUrl} alt={categoryEN} className='cursor-pointer w-75pxr h-75pxr' />
       </Link>
-      <span className='text-sm mt-10pxr'>{categoryKO}</span>
+      <span className={`text-sm mt-10pxr ${isActive && 'font-extrabold underline'}`}>
+        {categoryKO}
+      </span>
     </li>
   );
 }
