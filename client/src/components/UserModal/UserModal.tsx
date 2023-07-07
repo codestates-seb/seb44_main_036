@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { resign, resignHover, exit, exitHover, update, settingHover } from '@/assets/mypage';
+import {
+  resign,
+  resignHover,
+  exit,
+  exitHover,
+  update,
+  setting,
+  settingHover,
+} from '@/assets/mypage';
 // import axios from 'axios';
 // import { mutate } from 'swr';
 
@@ -24,7 +32,9 @@ const UserModal: React.FC<UserModalProps> = ({
   const [newNickname, setNewNickname] = useState(nickname);
   const [IsExitHovered, setIsExitHovered] = useState(false);
   const [isResignHovered, setisResignHovered] = useState(false);
+  const [isSettingHovered, setisSettingHovered] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
+  const [previewImage, setPreviewImage] = useState(imageUrl);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewAddress(event.target.value);
@@ -39,13 +49,33 @@ const UserModal: React.FC<UserModalProps> = ({
     setEditingNickname(false);
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleClickImageUpload = () => {
+    const input = document.getElementById('image-upload');
+    if (input) {
+      input.click();
+    }
+  };
+
   // API 완성 후 변경 될 코드
   // const handleSave = async () => {
-  //   try {
-  //     const response = await axios.patch(`/api/users/${userId}`, {
-  //       nickname: newNickname,
-  //       address: newAddress,
-  //     });
+  //   const data = {
+  //   nickname: newNickname,
+  //   address: newAddress,
+  //   imageUrl: selectedImage ? URL.createObjectURL(selectedImage) : imageUrl,
+  // };
+
+  // const response = await axios.patch(`/서버 url/users/${userId}`, data, {
+  //   headers: {
+  //     'Content-Type': 'application/json', // Set the Content-Type header to application/json
+  //   },
+  // });
 
   //     if (response.status === 200) {
   //       // When mutate is called with the SWR key and no data,
@@ -81,13 +111,18 @@ const UserModal: React.FC<UserModalProps> = ({
             </div>
             <img
               className='object-cover overflow-hidden bg-gray-100 rounded-full flex-center w-120pxr h-120pxr'
-              src={imageUrl}
+              src={previewImage}
               alt={nickname}
             />
             <div className='absolute'>
-              <div className='absolute text-purple-300 bg-white rounded-full flex-center left-30pxr w-30pxr h-30pxr top-30pxr'>
-                <img src={settingHover} alt='settingHover'></img>
-              </div>
+              <button
+                className='absolute text-purple-300 bg-white rounded-full flex-center left-30pxr w-30pxr h-30pxr top-30pxr'
+                onClick={handleClickImageUpload}
+                onMouseEnter={() => setisSettingHovered(true)}
+                onMouseLeave={() => setisSettingHovered(false)}
+              >
+                <img src={isSettingHovered ? settingHover : setting} alt='settingHover'></img>
+              </button>
               <button
                 className='absolute w-30pxr h-30pxr left-300pxr bottom-30pxr'
                 onClick={onClose}
@@ -133,6 +168,13 @@ const UserModal: React.FC<UserModalProps> = ({
               수정완료
             </button>
           </div>
+          <input
+            id='image-upload'
+            type='file'
+            accept='image/*'
+            style={{ display: 'none' }}
+            onChange={handleImageUpload}
+          />
         </div>
       </div>
     </>
