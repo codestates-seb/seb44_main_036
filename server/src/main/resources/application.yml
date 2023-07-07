@@ -1,9 +1,9 @@
 spring:
   datasource:
-    drive-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/MyFunding
+    url: jdbc:mysql://mi-funding.cxbepn4gpw76.ap-northeast-2.rds.amazonaws.com:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
     username: root
-    password: 1234
+    password: 12341234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
