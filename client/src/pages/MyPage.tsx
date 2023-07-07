@@ -1,8 +1,9 @@
 // import useSWR from 'swr';
 // import axios from 'axios';
-import UserModal from '@/components/UserModal/UserModal';
+import UserModal from '@/components/usermodal/UserModal';
 import { useState } from 'react';
 import { setting, settingHover } from '@/assets/mypage';
+import { MyPageLikeList, MyPageMainList } from '@/components/mypage';
 
 interface IUser {
   imageUrl: string;
@@ -10,11 +11,6 @@ interface IUser {
   path: string;
   accountType: 'seller' | 'buyer';
   address: string | null;
-}
-
-interface IProject {
-  id: number;
-  name: string;
 }
 
 // 임시 사용자 데이터
@@ -26,22 +22,6 @@ const user: IUser = {
   address: '(06931) 경상남도 김해시....',
 };
 
-// 임시 프로젝트 데이터
-const sellingProjects: IProject[] = [
-  { id: 1, name: 'Selling Project 1' },
-  { id: 2, name: 'Selling Project 2' },
-];
-
-const fundedProjects: IProject[] = [
-  { id: 1, name: 'Funded Project 1' },
-  { id: 2, name: 'Funded Project 2' },
-];
-
-// 임시 좋아요 데이터
-const likedProjects: IProject[] = [
-  { id: 1, name: 'Liked Project 1' },
-  { id: 2, name: 'Liked Project 2' },
-];
 // const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
@@ -49,9 +29,6 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(user.address);
   const [isHovered, setIsHovered] = useState(false);
-
-  const mainProjects = user.accountType === 'seller' ? sellingProjects : fundedProjects;
-  const projects = tab === 'main' ? mainProjects : likedProjects;
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -91,10 +68,12 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
 
   return (
     <>
-      <div className='flex-col w-full flex-center'>
+      <div className='flex-col'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
           <div className='flex flex-row items-center justify-end h-full'>
-            <button className='text-gray-100 mr-10pxr'>프로필 수정</button>
+            <button className='text-gray-100 mr-10pxr' onClick={openModal}>
+              프로필 수정
+            </button>
             <p className='text-gray-100 mr-10pxr'>|</p>
             <button className='text-gray-100 mr-320pxr'>로그아웃</button>
           </div>
@@ -115,11 +94,11 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
           </div>
         </div>
 
-        <div className='flex flex-row text-4xl font-thin'>
+        <div className='flex flex-row text-4xl font-thin flex-center'>
           <h1 className='text-4xl font-bold mb-10pxr'>{user.nickname}</h1>
           <p>&nbsp;님</p>
         </div>
-        <p className='text-purple-300 mb-100pxr'>
+        <p className='text-purple-300 flex-center mb-100pxr'>
           {user.accountType === 'seller' ? '판매자 회원' : '구매자 회원'}
         </p>
 
@@ -148,23 +127,18 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
               )}
             </button>
           </div>
-          {projects.map((project) => (
-            <div key={project.id}>
-              <h2>{project.name}</h2>
-            </div>
-          ))}
+          {tab === 'main' && <MyPageMainList></MyPageMainList>}
+          {tab === 'liked' && <MyPageLikeList></MyPageLikeList>}
         </div>
         {isModalOpen && (
-          <div className='fixed z-50 flex-center bottom-410pxr'>
-            <UserModal
-              imageUrl={user.imageUrl}
-              nickname={user.nickname}
-              accountType={user.accountType}
-              address={address}
-              onClose={closeModal}
-              onSave={saveAddress}
-            />
-          </div>
+          <UserModal
+            imageUrl={user.imageUrl}
+            nickname={user.nickname}
+            accountType={user.accountType}
+            address={address}
+            onClose={closeModal}
+            onSave={saveAddress}
+          />
         )}
       </div>
     </>

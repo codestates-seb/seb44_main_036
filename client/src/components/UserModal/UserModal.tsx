@@ -38,7 +38,7 @@ const UserModal: React.FC<UserModalProps> = ({
 
   return (
     <>
-      <div className='fixed w-full h-full bg-black bg-opacity-50 flex-center'>
+      <div className='fixed z-50 w-full h-full bg-black bg-opacity-50 top-1pxr flex-center'>
         <div className='bg-white rounded-lg w-700pxr h-600pxr'>
           <div className='flex-center mt-20pxr mb-20pxr'>
             <img
