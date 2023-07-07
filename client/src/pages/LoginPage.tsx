@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { postLogin } from '@/common/api/authApi';
+import { getUserInfo, postLogin } from '@/common/api/authApi';
 import { EMAIL_REGEX, PASSWORD_REGEX } from '@/common/constants/regexs';
 import { LoginFormValues } from '@/common/types/authTypes';
 import AuthInput from '@/components/auth/AuthInput';
@@ -21,6 +21,9 @@ function LoginPage() {
 
     try {
       await postLogin({ email, password });
+      const userInfo = await getUserInfo();
+      localStorage.setItem('userInfo', userInfo);
+
       navigate('/');
     } catch (error) {
       return error;

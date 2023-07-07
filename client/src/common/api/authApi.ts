@@ -9,6 +9,9 @@ export const postLogin = async (formData: loginData) => {
   return (await authApi.login(formData)).data;
 };
 
-export const getUserData = async (userId: number) => {
-  return (await userApi.getUser(userId)).data;
+export const getUserInfo = async () => {
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return (await userApi.getUser(userId)).data;
+  }
 };
