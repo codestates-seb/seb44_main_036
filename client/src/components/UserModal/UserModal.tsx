@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { exit, exitHover, update, settingHover } from '@/assets/mypage';
+import { resign, resignHover, exit, exitHover, update, settingHover } from '@/assets/mypage';
+// import axios from 'axios';
+// import { mutate } from 'swr';
 
 interface UserModalProps {
   imageUrl: string;
@@ -7,7 +9,7 @@ interface UserModalProps {
   accountType: 'seller' | 'buyer';
   address: string | null;
   onClose: () => void;
-  onSave: (address: string, nickname: string) => void;
+  onSave: (nickname: string, address: string) => void;
 }
 
 const UserModal: React.FC<UserModalProps> = ({
@@ -20,7 +22,8 @@ const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const [newAddress, setNewAddress] = useState(address || '');
   const [newNickname, setNewNickname] = useState(nickname);
-  const [isHovered, setIsHovered] = useState(false);
+  const [IsExitHovered, setIsExitHovered] = useState(false);
+  const [isResignHovered, setisResignHovered] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -32,15 +35,50 @@ const UserModal: React.FC<UserModalProps> = ({
   };
 
   const handleSave = () => {
-    onSave(newAddress, newNickname);
+    onSave(newNickname, newAddress);
     setEditingNickname(false);
   };
+
+  // API 완성 후 변경 될 코드
+  // const handleSave = async () => {
+  //   try {
+  //     const response = await axios.patch(`/api/users/${userId}`, {
+  //       nickname: newNickname,
+  //       address: newAddress,
+  //     });
+
+  //     if (response.status === 200) {
+  //       // When mutate is called with the SWR key and no data,
+  //       // it revalidates the data instead of mutating the cache
+  //       mutate(`/api/users/${userId}`);
+  //       setEditingNickname(false);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <>
       <div className='fixed z-50 w-full h-full bg-black bg-opacity-50 top-1pxr flex-center'>
         <div className='bg-white rounded-lg w-700pxr h-600pxr'>
           <div className='flex-center mt-20pxr mb-20pxr'>
+            <div className='absolute'>
+              <button
+                className='absolute flex flex-center right-150pxr bottom-10pxr'
+                onMouseEnter={() => setisResignHovered(true)}
+                onMouseLeave={() => setisResignHovered(false)}
+              >
+                <img src={isResignHovered ? resignHover : resign} alt='resign'></img>
+                <p
+                  className={`w-120pxr ml-10pxr text-xl ${
+                    isResignHovered ? 'text-gray-800' : 'text-gray-600'
+                  }`}
+                >
+                  회원탈퇴
+                </p>
+              </button>
+            </div>
             <img
               className='object-cover overflow-hidden bg-gray-100 rounded-full flex-center w-120pxr h-120pxr'
               src={imageUrl}
@@ -53,10 +91,10 @@ const UserModal: React.FC<UserModalProps> = ({
               <button
                 className='absolute w-30pxr h-30pxr left-300pxr bottom-30pxr'
                 onClick={onClose}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => setIsExitHovered(true)}
+                onMouseLeave={() => setIsExitHovered(false)}
               >
-                <img src={isHovered ? exitHover : exit} alt='exit'></img>
+                <img src={IsExitHovered ? exitHover : exit} alt='exit'></img>
               </button>
             </div>
           </div>
@@ -81,9 +119,10 @@ const UserModal: React.FC<UserModalProps> = ({
           </p>
           <div className='flex-center'>
             <textarea
-              className='border border-gray-300 rounded p-20pxr w-500pxr h-200pxr'
+              className='border border-gray-300 rounded resize-none p-20pxr w-600pxr h-200pxr'
               value={newAddress}
               onChange={handleAddressChange}
+              placeholder='주소를 입력해주세요'
             />
           </div>
           <div className='justify-end mt-20pxr flex-center'>

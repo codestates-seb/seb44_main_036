@@ -28,6 +28,7 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
   const [tab, setTab] = useState<'main' | 'liked'>('main');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(user.address);
+  const [nickname, setNickname] = useState<string>(user.nickname);
   const [isHovered, setIsHovered] = useState(false);
 
   const openModal = () => {
@@ -38,7 +39,8 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
     setIsModalOpen(false);
   };
 
-  const saveAddress = (newAddress: string) => {
+  const saveUser = (newNickname: string, newAddress: string) => {
+    setNickname(newNickname);
     setAddress(newAddress);
     closeModal();
   };
@@ -70,14 +72,23 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
     <>
       <div className='flex-col'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
-          <div className='flex flex-row items-center justify-end h-full'>
-            <button className='text-gray-100 mr-10pxr' onClick={openModal}>
-              프로필 수정
-            </button>
-            <p className='text-gray-100 mr-10pxr'>|</p>
-            <button className='text-gray-100 mr-320pxr'>로그아웃</button>
+          <div className='flex flex-row items-center justify-around h-full'>
+            <div>
+              <p className='text-sm text-gray-100'>보유금액</p>
+              <div className='flex flex-row'>
+                <p className='text-4xl font-bold text-gray-100'>2,902,000</p>
+                <p className='flex items-end text-gray-100 ml-10pxr'>원</p>
+              </div>
+            </div>
+            <div className='flex flex-row'>
+              <button className='text-gray-100 mr-10pxr' onClick={openModal}>
+                프로필 수정
+              </button>
+              <p className='text-gray-100 mr-10pxr'>|</p>
+              <button className='text-gray-100'>로그아웃</button>
+            </div>
           </div>
-          <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-110pxr'>
+          <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-180pxr'>
             <img
               className='object-cover overflow-hidden bg-gray-100 rounded-full w-120pxr h-120pxr'
               src={user.imageUrl}
@@ -133,11 +144,11 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
         {isModalOpen && (
           <UserModal
             imageUrl={user.imageUrl}
-            nickname={user.nickname}
+            nickname={nickname}
             accountType={user.accountType}
             address={address}
             onClose={closeModal}
-            onSave={saveAddress}
+            onSave={saveUser}
           />
         )}
       </div>
