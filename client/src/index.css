@@ -33,3 +33,7 @@
   color: gray !important;
   --swiper-navigation-size: 20px !important;
 }
+
+input:focus {
+  outline: none;
+}
