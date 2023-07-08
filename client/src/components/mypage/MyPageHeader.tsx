@@ -10,7 +10,7 @@ function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <>
-      <div className='flex flex-row items-center justify-end h-full'>
+      <div className='flex flex-row items-center justify-around h-full'>
         <div>
           <p className='text-sm text-gray-100'>보유금액</p>
           <div className='flex flex-row'>
