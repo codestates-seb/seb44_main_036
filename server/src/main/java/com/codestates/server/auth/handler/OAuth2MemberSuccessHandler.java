@@ -54,6 +54,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String accessToken = delegateAccessToken(username,authorities);
         String refreshToken = delegateRefreshToken(username);
 
+        response.setHeader("Authorization",accessToken);
+        response.setHeader("Refresh",refreshToken);
+
         String uri = createURI(accessToken,refreshToken).toString();
         getRedirectStrategy().sendRedirect(request,response,uri);
     }
