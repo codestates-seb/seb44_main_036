@@ -3,9 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as LogoSvg } from '@/assets/logos/logo.svg';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
 import Button from '../ui/Button';
+import { useAppSelector } from '@/hooks/useReducer';
 
 function Header() {
   const navigate = useNavigate();
+  const isLogin = useAppSelector((state) => state.user.isLogin);
+  const userData = useAppSelector((state) => state.user.data);
+
   return (
     <header className='flex-center h-62pxr'>
       <div className='flex items-center justify-between w-full max-w-7xl'>
@@ -21,12 +25,23 @@ function Header() {
           <SearchIconSvg className='absolute right-20pxr top-8pxr' />
         </div>
         <div className='flex-center ellipsis'>
-          <Link to='/users/login' className='text-gray-800 px-10pxr hover:text-purple-300'>
-            로그인
-          </Link>
-          <Link to='/users/signup' className='text-gray-800 px-10pxr hover:text-purple-300'>
-            회원가입
-          </Link>
+          {isLogin ? (
+            <Link
+              to='/mypage'
+              className='overflow-hidden bg-gray-400 rounded-full h-35pxr w-35pxr mr-20pxr'
+            >
+              <img src={userData?.userImg} alt='유저' />
+            </Link>
+          ) : (
+            <>
+              <Link to='/users/login' className='text-gray-800 px-10pxr hover:text-purple-300'>
+                로그인
+              </Link>
+              <Link to='/users/signup' className='text-gray-800 px-10pxr hover:text-purple-300'>
+                회원가입
+              </Link>
+            </>
+          )}
           <Button
             onClick={() => navigate('/project/add')}
             text={'프로젝트 만들기'}

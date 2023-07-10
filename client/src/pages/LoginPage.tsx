@@ -7,8 +7,11 @@ import { LoginFormValues } from '@/common/types/authTypes';
 import AuthInput from '@/components/auth/AuthInput';
 import SocialForm from '@/components/auth/SocialForm';
 import { Button, Strong } from '@/components/ui';
+import userSlice from '@/reducer/userSlice';
+import { useAppDispatch } from '@/hooks/useReducer';
 
 function LoginPage() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
     register,
@@ -17,12 +20,12 @@ function LoginPage() {
   } = useForm<LoginFormValues>();
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (formData) => {
-    const { email, password } = formData;
+    // const { email, password } = formData;
 
     try {
-      await postLogin({ email, password });
+      // await postLogin({ email, password });
       const userInfo = await getUserInfo();
-      localStorage.setItem('userInfo', userInfo);
+      dispatch(userSlice.actions.logIn(userInfo));
 
       navigate('/');
     } catch (error) {
