@@ -1,3 +1,6 @@
+awsParameterStorePropertySource:
+  enabled: true
+
 spring:
   datasource:
     url: jdbc:mysql://mi-funding.cxbepn4gpw76.ap-northeast-2.rds.amazonaws.com:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
@@ -18,8 +21,8 @@ spring:
       client:
         registration:
           google:
-            clientId: ${G_CLIENT_ID}
-            clientSecret: ${G_CLIENT_SECRET}
+            clientId: ${/spring-boot-aws/cloud-parameter-store/G_CLIENT_ID}
+            clientSecret: ${/spring-boot-aws/cloud-parameter-store/G_CLIENT_SECRET}
             scope:
               - email
               - profile
@@ -37,7 +40,7 @@ mail:
   address:
     admin: admin@gmail.com
 jwt:
-  key: ${JWT_SECRET_KEY}
+  key: ${/spring-boot-aws/cloud-parameter-store/JWT_SECRET_KEY}
   access-token-expiration-minutes: 40
   refresh-token-expiration-minutes: 420
 
