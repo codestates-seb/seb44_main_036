@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { exit, exitHover, update, settingHover } from '@/assets/mypage';
+import {
+  resign,
+  resignHover,
+  exit,
+  exitHover,
+  update,
+  setting,
+  settingHover,
+} from '@/assets/mypage';
+import { DaumPostcodeButton } from '.';
+// import axios from 'axios';
+// import { mutate } from 'swr';
 
 interface UserModalProps {
   imageUrl: string;
@@ -7,21 +18,22 @@ interface UserModalProps {
   accountType: 'seller' | 'buyer';
   address: string | null;
   onClose: () => void;
-  onSave: (address: string, nickname: string) => void;
+  onSave: (nickname: string, address: string) => void;
 }
 
-const UserModal: React.FC<UserModalProps> = ({
-  imageUrl,
-  accountType,
-  nickname,
-  address,
-  onClose,
-  onSave,
-}) => {
+interface PostcodeData {
+  zonecode: string;
+  address: string;
+}
+
+function UserModal({ imageUrl, accountType, nickname, address, onClose, onSave }: UserModalProps) {
   const [newAddress, setNewAddress] = useState(address || '');
   const [newNickname, setNewNickname] = useState(nickname);
-  const [isHovered, setIsHovered] = useState(false);
+  const [IsExitHovered, setIsExitHovered] = useState(false);
+  const [isResignHovered, setisResignHovered] = useState(false);
+  const [isSettingHovered, setisSettingHovered] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
+  const [previewImage, setPreviewImage] = useState(imageUrl);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewAddress(event.target.value);
@@ -32,31 +44,101 @@ const UserModal: React.FC<UserModalProps> = ({
   };
 
   const handleSave = () => {
-    onSave(newAddress, newNickname);
+    onSave(newNickname, newAddress);
     setEditingNickname(false);
   };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleClickImageUpload = () => {
+    const input = document.getElementById('image-upload');
+    if (input) {
+      input.click();
+    }
+  };
+
+  const handleSelectedAddress = (data: PostcodeData) => {
+    setNewAddress(data.address);
+    // Process the selected address
+    // ...
+  };
+
+  // API 완성 후 변경 될 코드
+  // const handleSave = async () => {
+  //   const data = {
+  //   nickname: newNickname,
+  //   address: newAddress,
+  //   imageUrl: selectedImage ? URL.createObjectURL(selectedImage) : imageUrl,
+  // };
+
+  // const response = await axios.patch(`/서버 url/users/${userId}`, data, {
+  //   headers: {
+  //     'Content-Type': 'application/json', // Set the Content-Type header to application/json
+  //   },
+  // });
+
+  //     if (response.status === 200) {
+  //       // When mutate is called with the SWR key and no data,
+  //       // it revalidates the data instead of mutating the cache
+  //       mutate(`/api/users/${userId}`);
+  //       setEditingNickname(false);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <>
       <div className='fixed z-50 w-full h-full bg-black bg-opacity-50 top-1pxr flex-center'>
         <div className='bg-white rounded-lg w-700pxr h-600pxr'>
           <div className='flex-center mt-20pxr mb-20pxr'>
+            <div className='absolute'>
+              <button
+                className='absolute flex-center right-200pxr bottom-10pxr w-100pxr'
+                onMouseEnter={() => setisResignHovered(true)}
+                onMouseLeave={() => setisResignHovered(false)}
+              >
+                <img
+                  className='w-20pxr'
+                  src={isResignHovered ? resignHover : resign}
+                  alt='resign'
+                ></img>
+                <p
+                  className={` ml-10pxr text-sm ${
+                    isResignHovered ? 'text-gray-800' : 'text-gray-600'
+                  }`}
+                >
+                  회원탈퇴
+                </p>
+              </button>
+            </div>
             <img
               className='object-cover overflow-hidden bg-gray-100 rounded-full flex-center w-120pxr h-120pxr'
-              src={imageUrl}
+              src={previewImage}
               alt={nickname}
             />
             <div className='absolute'>
-              <div className='absolute text-purple-300 bg-white rounded-full flex-center left-30pxr w-30pxr h-30pxr top-30pxr'>
-                <img src={settingHover} alt='settingHover'></img>
-              </div>
+              <button
+                className='absolute text-purple-300 bg-white rounded-full flex-center left-30pxr w-30pxr h-30pxr top-30pxr'
+                onClick={handleClickImageUpload}
+                onMouseEnter={() => setisSettingHovered(true)}
+                onMouseLeave={() => setisSettingHovered(false)}
+              >
+                <img src={isSettingHovered ? settingHover : setting} alt='settingHover'></img>
+              </button>
               <button
                 className='absolute w-30pxr h-30pxr left-300pxr bottom-30pxr'
                 onClick={onClose}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => setIsExitHovered(true)}
+                onMouseLeave={() => setIsExitHovered(false)}
               >
-                <img src={isHovered ? exitHover : exit} alt='exit'></img>
+                <img src={IsExitHovered ? exitHover : exit} alt='exit'></img>
               </button>
             </div>
           </div>
@@ -79,12 +161,16 @@ const UserModal: React.FC<UserModalProps> = ({
           <p className='text-purple-300 flex-center mb-30pxr'>
             {accountType === 'seller' ? '판매자 회원' : '구매자 회원'}
           </p>
-          <div className='flex-center'>
+          <div className='relative flex-center'>
             <textarea
-              className='border border-gray-300 rounded p-20pxr w-500pxr h-200pxr'
+              className='border border-gray-300 rounded resize-none p-20pxr w-600pxr h-200pxr'
               value={newAddress}
               onChange={handleAddressChange}
+              placeholder='주소를 입력해주세요'
             />
+            <div className='absolute right-60pxr bottom-10pxr'>
+              <DaumPostcodeButton onAddressSelected={handleSelectedAddress} />
+            </div>
           </div>
           <div className='justify-end mt-20pxr flex-center'>
             <button
@@ -94,10 +180,17 @@ const UserModal: React.FC<UserModalProps> = ({
               수정완료
             </button>
           </div>
+          <input
+            id='image-upload'
+            type='file'
+            accept='image/*'
+            style={{ display: 'none' }}
+            onChange={handleImageUpload}
+          />
         </div>
       </div>
     </>
   );
-};
+}
 
 export default UserModal;
