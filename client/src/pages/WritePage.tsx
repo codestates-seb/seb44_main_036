@@ -1,5 +1,5 @@
 import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import { combineClassNames } from '@/common/utils/functions';
 import { TagInput } from '@/components/project';
 import { CATEGORIES } from '@/common/constants';
@@ -22,6 +22,25 @@ function WritePage() {
       label: categoryKO,
     }));
 
+  const customStyles: StylesConfig = {
+    control: (base, { isFocused }) => ({
+      ...base,
+      border: isFocused ? '1px solid #7A22C3' : '1px solid #D1D1D1',
+      boxShadow: '',
+      ':hover': { border: isFocused ? '1px solid #7A22C3' : '1px solid #D1D1D1' },
+    }),
+    option: (base, { isSelected }) => ({
+      ...base,
+      backgroundColor: isSelected ? '#f1dfff' : 'transparent',
+      color: isSelected ? '#7A22C3' : 'black',
+      ':hover': {
+        ...base[':hover'],
+        backgroundColor: '#f1dfff',
+        color: isSelected ? '#7A22C3' : 'black',
+      },
+    }),
+  };
+
   return (
     <>
       <main className='max-w-[1280px] mx-auto mt-30pxr'>
@@ -41,7 +60,13 @@ function WritePage() {
         <h3 className={style.subTitle}>프로젝트 종료일</h3>
         <input type='date' className={combineClassNames(style.input, 'w-[80%] mb-20pxr')} />
         <h3 className={style.subTitle}>카테고리 설정</h3>
-        <Select options={options} className='w-[25%] mb-20pxr' />
+        <Select
+          options={options}
+          className='w-[25%] mb-20pxr'
+          styles={customStyles}
+          placeholder='카테고리 선택'
+          components={{ IndicatorSeparator: null }}
+        />
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
       </main>
