@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MemberResponseDto {
     private long memberId;
-    private String nickName;
+    private String nickname;
     private String email;
 }
