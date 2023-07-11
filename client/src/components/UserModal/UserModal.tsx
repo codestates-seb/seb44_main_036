@@ -8,6 +8,7 @@ import {
   setting,
   settingHover,
 } from '@/assets/mypage';
+import { DaumPostcodeButton } from '.';
 // import axios from 'axios';
 // import { mutate } from 'swr';
 
@@ -20,14 +21,12 @@ interface UserModalProps {
   onSave: (nickname: string, address: string) => void;
 }
 
-const UserModal: React.FC<UserModalProps> = ({
-  imageUrl,
-  accountType,
-  nickname,
-  address,
-  onClose,
-  onSave,
-}) => {
+interface PostcodeData {
+  zonecode: string;
+  address: string;
+}
+
+function UserModal({ imageUrl, accountType, nickname, address, onClose, onSave }: UserModalProps) {
   const [newAddress, setNewAddress] = useState(address || '');
   const [newNickname, setNewNickname] = useState(nickname);
   const [IsExitHovered, setIsExitHovered] = useState(false);
@@ -63,6 +62,12 @@ const UserModal: React.FC<UserModalProps> = ({
     }
   };
 
+  const handleSelectedAddress = (data: PostcodeData) => {
+    setNewAddress(data.address);
+    // Process the selected address
+    // ...
+  };
+
   // API 완성 후 변경 될 코드
   // const handleSave = async () => {
   //   const data = {
@@ -95,13 +100,17 @@ const UserModal: React.FC<UserModalProps> = ({
           <div className='flex-center mt-20pxr mb-20pxr'>
             <div className='absolute'>
               <button
-                className='absolute flex flex-center right-150pxr bottom-10pxr'
+                className='absolute flex-center right-200pxr bottom-10pxr w-100pxr'
                 onMouseEnter={() => setisResignHovered(true)}
                 onMouseLeave={() => setisResignHovered(false)}
               >
-                <img src={isResignHovered ? resignHover : resign} alt='resign'></img>
+                <img
+                  className='w-20pxr'
+                  src={isResignHovered ? resignHover : resign}
+                  alt='resign'
+                ></img>
                 <p
-                  className={`w-120pxr ml-10pxr text-xl ${
+                  className={` ml-10pxr text-sm ${
                     isResignHovered ? 'text-gray-800' : 'text-gray-600'
                   }`}
                 >
@@ -152,13 +161,16 @@ const UserModal: React.FC<UserModalProps> = ({
           <p className='text-purple-300 flex-center mb-30pxr'>
             {accountType === 'seller' ? '판매자 회원' : '구매자 회원'}
           </p>
-          <div className='flex-center'>
+          <div className='relative flex-center'>
             <textarea
               className='border border-gray-300 rounded resize-none p-20pxr w-600pxr h-200pxr'
               value={newAddress}
               onChange={handleAddressChange}
               placeholder='주소를 입력해주세요'
             />
+            <div className='absolute right-60pxr bottom-10pxr'>
+              <DaumPostcodeButton onAddressSelected={handleSelectedAddress} />
+            </div>
           </div>
           <div className='justify-end mt-20pxr flex-center'>
             <button
@@ -179,6 +191,6 @@ const UserModal: React.FC<UserModalProps> = ({
       </div>
     </>
   );
-};
+}
 
 export default UserModal;
