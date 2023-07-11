@@ -21,9 +21,10 @@ function SignUpPage() {
     const { email, nickname, password } = formData;
 
     try {
-      await postSignUp({ email, nickname, password });
-      navigate('/users/login');
+      await postSignUp({ email, password, nickname });
+      // navigate('/users/login');
     } catch (error) {
+      console.log(error);
       return error;
     }
   };

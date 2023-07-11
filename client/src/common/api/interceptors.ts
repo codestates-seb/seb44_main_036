@@ -1,7 +1,7 @@
 import { decodeJWT } from '../utils/decodeJWT';
-import { loginInstance } from './instance';
+import { instance } from './instance';
 
-loginInstance.interceptors.response.use(
+instance.interceptors.response.use(
   async (response) => {
     const { data } = response;
     const token = data.accessToken;
