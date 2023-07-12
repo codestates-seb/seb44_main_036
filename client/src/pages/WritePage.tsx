@@ -9,6 +9,8 @@ import { useRef } from 'react';
 import { options } from '@/common/constants/sort';
 import { customStyles, style } from '@/components/writepage/styles';
 import { TagType } from '@/components/writepage/TagInput';
+import { projectApi } from '@/common/api/api';
+import { imageCompressor, dday } from '@/common/utils/functions';
 
 type Category = {
   value: number;
@@ -18,8 +20,8 @@ type Category = {
 type FormData = {
   title: string;
   targetAmount: number;
-  expiredAt: Date;
-  thumbnail?: string;
+  expiredAt: number;
+  imageUrl?: string;
   tags?: string[];
   category?: number;
   summary?: string;
@@ -31,19 +33,21 @@ function WritePage() {
   const selectRef = useRef<Category>({ value: 10, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
+  const imageRef = useRef('');
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     buttonRef.current?.click();
+    data.expiredAt = dday(data.expiredAt as unknown as Date);
     data.content = editorRef.current?.getInstance().getHTML();
-    data.category = selectRef.current.value;
-    data.tags = tagRef.current;
+    data.imageUrl = imageRef.current;
+    // data.category = selectRef.current.value;
+    // data.tags = tagRef.current;
     console.log(data);
   };
 
@@ -53,6 +57,15 @@ function WritePage() {
 
   const getTags = (tags: TagType[]) => {
     tagRef.current = tags.map((tag) => tag.label);
+  };
+
+  const getImageUrl = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files?.[0];
+    if (image) {
+      const compressionImage = await imageCompressor(image);
+      const { data: imageUrl } = await projectApi.getImageUrl({ image: compressionImage });
+      imageRef.current = imageUrl;
+    }
   };
 
   return (
@@ -74,7 +87,12 @@ function WritePage() {
           <p className={style.error}>{errors.title?.message}</p>
         </div>
         <h3 className={style.subTitle}>대표 이미지</h3>
-        <input type='file' accept='.png, .jpg, .jpeg' className={style.fileInput} />
+        <input
+          type='file'
+          accept='.png, .jpg, .jpeg'
+          className={style.fileInput}
+          onChange={getImageUrl}
+        />
         <h3 className={style.subTitle}>목표 금액</h3>
         <div className='relative w-[80%]'>
           <input

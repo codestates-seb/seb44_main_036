@@ -10,3 +10,8 @@ export const authApi = {
 export const userApi = {
   getUser: (userId: string) => authInstance.get(`/user/${userId}`),
 };
+
+export const projectApi = {
+  getImageUrl: (image: { image: File }) =>
+    authInstance.post('/upload', image, { headers: { 'Content-Type': 'multipart/form-data' } }),
+};
