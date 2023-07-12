@@ -73,7 +73,7 @@ public class MemberService {
 
         Member findMember =
                 optionalMember.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         return findMember;
     }
@@ -82,6 +82,6 @@ public class MemberService {
         Optional<Member> member = memberRepository.findByEmail(email);
 
         if (member.isPresent())
-            throw new BusinessLogicException(ExceptionCode.USER_EXIST);
+            throw new BusinessLogicException(ExceptionCode.MEMBER_EXIST);
     }
 }
