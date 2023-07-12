@@ -1,8 +1,8 @@
 cloud:
   aws:
     credentials:
-      accessKey: ${/spring-boot-aws/cloud-parameter-store/AWS_ACCESS_KEY}
-      secretKey: ${/spring-boot-aws/cloud-parameter-store/AWS_SECRET_KEY}
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
     s3:
       bucket: mifunding
     region:
@@ -11,15 +11,20 @@ cloud:
       auto: 'false'
 
 
-
-awsParameterStorePropertySource:
-  enabled: true
+aws:
+  paramstore:
+    enabled: true
+    prefix: /spring-boot-aws
+    profile-separator: _
+    name: cloud-parameter-store
 
 spring:
+  config:
+    import: 'aws-parameterstore:'
   datasource:
-    url: jdbc:mysql://${/spring-boot-aws/cloud-parameter-store/RDS_ENDPOINT}:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
+    url: jdbc:mysql://${RDS_ENDPOINT}:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
     username: root
-    password: ${/spring-boot-aws/cloud-parameter-store/MYSQL_PASSWORD}
+    password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
@@ -35,8 +40,8 @@ spring:
       client:
         registration:
           google:
-            clientId: ${/spring-boot-aws/cloud-parameter-store/G_CLIENT_ID}
-            clientSecret: ${/spring-boot-aws/cloud-parameter-store/G_CLIENT_SECRET}
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
             scope:
               - email
               - profile
@@ -52,9 +57,8 @@ server:
       force-response: true
 mail:
   address:
-    admin: ${/spring-boot-aws/cloud-parameter-store/ADMIN}
+    admin: ${ADMIN}
 jwt:
-  key: ${/spring-boot-aws/cloud-parameter-store/JWT_SECRET_KEY}
+  key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 40
   refresh-token-expiration-minutes: 420
-
