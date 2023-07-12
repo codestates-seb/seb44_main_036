@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import AuthInput from '@/components/auth/AuthInput';
 import { Button, Strong } from '@/components/ui';
 import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '@/common/constants/regexs';
-import { SignUpFormValues } from '@/common/types/authTypes';
+import { FormValues } from '@/common/types/authTypes';
 import { postSignUp } from '@/common/api/authApi';
 import SocialForm from '@/components/auth/SocialForm';
 import { successToast } from '@/common/utils/toast';
@@ -16,9 +16,9 @@ function SignUpPage() {
     formState: { errors },
     handleSubmit,
     watch,
-  } = useForm<SignUpFormValues>();
+  } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<SignUpFormValues> = async (formData) => {
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     const { email, nickname, password } = formData;
     try {
       await postSignUp({ email, password, nickname });
