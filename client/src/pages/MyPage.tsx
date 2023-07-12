@@ -1,9 +1,13 @@
 // import useSWR from 'swr';
 // import axios from 'axios';
-import UserModal from '@/components/usermodal/UserModal';
+import UserModal from '@/components/userModal/UserModal';
 import { useState } from 'react';
 import { setting, settingHover } from '@/assets/mypage';
 import { MyPageLikeList, MyPageMainList } from '@/components/mypage';
+import { logout } from '@/common/api/authApi';
+import { useAppDispatch } from '@/hooks/useReducer';
+import userSlice from '@/reducer/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface IUser {
   imageUrl: string;
@@ -29,6 +33,8 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(user.address);
   const [isHovered, setIsHovered] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -41,6 +47,15 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
   const saveAddress = (newAddress: string) => {
     setAddress(newAddress);
     closeModal();
+  };
+
+  const onLogOutClick = () => {
+    const ok = confirm('로그아웃 하시겠습니까?');
+    if (ok) {
+      logout();
+      dispatch(userSlice.actions.logOut());
+      navigate('/');
+    }
   };
 
   // 서버 API 구현 후 추가 될 코드
@@ -75,7 +90,9 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
               프로필 수정
             </button>
             <p className='text-gray-100 mr-10pxr'>|</p>
-            <button className='text-gray-100 mr-320pxr'>로그아웃</button>
+            <button className='text-gray-100 mr-320pxr' onClick={onLogOutClick}>
+              로그아웃
+            </button>
           </div>
           <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-110pxr'>
             <img

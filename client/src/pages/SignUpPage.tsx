@@ -7,6 +7,7 @@ import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '@/common/constants/rege
 import { SignUpFormValues } from '@/common/types/authTypes';
 import { postSignUp } from '@/common/api/authApi';
 import SocialForm from '@/components/auth/SocialForm';
+import { successToast } from '@/common/utils/toast';
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -19,12 +20,11 @@ function SignUpPage() {
 
   const onSubmit: SubmitHandler<SignUpFormValues> = async (formData) => {
     const { email, nickname, password } = formData;
-
     try {
       await postSignUp({ email, password, nickname });
-      // navigate('/users/login');
+      successToast('회원가입 성공');
+      navigate('/users/login');
     } catch (error) {
-      console.log(error);
       return error;
     }
   };

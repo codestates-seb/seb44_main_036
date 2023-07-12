@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, Method } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
 import { loginData, signUpData } from '../types/authTypes';
 import { authInstance, instance } from './instance';
@@ -10,7 +10,8 @@ export const authApi = {
 };
 
 export const userApi = {
-  getUser: (userId: string) => authInstance.get(`/${userId}`),
+  getUser: (userId: string, headers?: AxiosRequestConfig['headers']) =>
+    authInstance.get(`/mypage/${userId}`, { headers }),
 };
 
 // export const ApiCaller = async <T, U>(

@@ -9,6 +9,7 @@ import SocialForm from '@/components/auth/SocialForm';
 import { Button, Strong } from '@/components/ui';
 import userSlice from '@/reducer/userSlice';
 import { useAppDispatch } from '@/hooks/useReducer';
+import { successToast } from '@/common/utils/toast';
 
 function LoginPage() {
   const dispatch = useAppDispatch();
@@ -20,13 +21,21 @@ function LoginPage() {
   } = useForm<LoginFormValues>();
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (formData) => {
-    // const { email, password } = formData;
+    const { email, password } = formData;
 
     try {
-      // await postLogin({ email, password });
-      const userInfo = await getUserInfo();
-      dispatch(userSlice.actions.logIn(userInfo));
+      const res = await postLogin({ email, password });
+      // const userInfo = await getUserInfo();
+      // dispatch(userSlice.actions.logIn(userInfo));
+      dispatch(
+        userSlice.actions.logIn({
+          nickname: 'eyo25',
+          address: null,
+          userImg: null,
+        })
+      );
 
+      successToast('환영합니다. eyo25님');
       navigate('/');
     } catch (error) {
       return error;
