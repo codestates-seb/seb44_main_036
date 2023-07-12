@@ -3,4 +3,3 @@ export { default as ProjectList } from './ProjectList';
 export { default as ProjectHeader } from './ProjectHeader';
 export { default as ProjectInfo } from './ProjectInfo';
 export { default as ProjectDetail } from './ProjectDetail';
-export { default as TagInput } from './add/TagInput';

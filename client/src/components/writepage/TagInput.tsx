@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Tag } from '@/components/ui';
 
-type TagType = {
+export type TagType = {
   id: number;
   label: string;
 };
@@ -9,18 +9,16 @@ type TagType = {
 type Props = {
   style: string;
   initialTags?: TagType[];
+  tagRef: React.RefObject<HTMLButtonElement> | null;
+  getTags: (tags: TagType[]) => void;
 };
 
 const MAX_TAGS = 10;
-const TAG_MAX_LEN = 15;
+const TAG_MAX_LEN = 10;
 
-function TagInput({ initialTags = [], style }: Props) {
+function TagInput({ initialTags = [], style, tagRef, getTags }: Props) {
   const [tags, setTags] = useState(initialTags);
   const [input, setInput] = useState('');
-
-  //   useEffect(() => {
-  //     setForm((prev) => ({ ...prev, tags: [...enteredTags.map((tag) => tag.label)] }));
-  //   }, [enteredTags, setForm]);
 
   const addTag = () => {
     if (tags.find((tag) => tag.label === input) || tags.length === MAX_TAGS) {
@@ -72,7 +70,8 @@ function TagInput({ initialTags = [], style }: Props) {
           onKeyUp={setTagsByKey}
         />
       </div>
-      <div className='text-sm text-purple-300 ml-12pxr mb-20pxr'>{tags.length} / 10 개의 태그</div>
+      <div className='text-sm text-purple-300 ml-12pxr mb-30pxr'>{tags.length} / 10 개의 태그</div>
+      <button className='hidden' type='button' onClick={() => getTags(tags)} ref={tagRef}></button>
     </>
   );
 }

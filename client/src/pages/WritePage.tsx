@@ -1,68 +1,113 @@
+import type { Editor } from '@toast-ui/react-editor';
 import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
-import Select, { StylesConfig } from 'react-select';
+import Select from 'react-select';
 import { combineClassNames } from '@/common/utils/functions';
-import { TagInput } from '@/components/project';
-import { CATEGORIES } from '@/common/constants';
+import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useRef } from 'react';
+import { options } from '@/common/constants/sort';
+import { customStyles, style } from '@/components/writepage/styles';
+import { TagType } from '@/components/writepage/TagInput';
 
-const style = {
-  title: 'text-3xl font-extrabold text-purple-300 mb-5pxr',
-  desc: 'font-light pb-15pxr',
-  subTitle: 'text-2xl font-bold text-gray-900 my-10pxr',
-  input: 'border border-solid rounded border-gray-400 py-5pxr px-10pxr focus:border-purple-300',
-  fileInput:
-    'border-b border-solid border-gray-400 w-[80%] py-5pxr mb-20pxr text-sm text-gray-900 focus:border-purple-300 file:py-3pxr file:px-15pxr file:rounded-full file:border-0 file:bg-purple-300 file:text-white file:mr-10pxr',
-  tagInput: 'w-[80%] flex items-center overflow-hidden mb-10pxr',
-  textarea: 'w-[80%] mb-20pxr outline-none h-150pxr',
-  submitButton:
-    'text-xl text-white bg-purple-300 rounded-full hover:bg-purple-400 w-300pxr h-50pxr my-40pxr',
+type Category = {
+  value: number;
+  label: string;
+};
+
+type FormData = {
+  title: string;
+  targetAmount: number;
+  expiredAt: Date;
+  thumbnail?: string;
+  tags?: string[];
+  category?: number;
+  summary?: string;
+  content?: string;
 };
 
 function WritePage() {
-  const options = Object.values(CATEGORIES)
-    .filter(([categoryNUM]) => categoryNUM !== null)
-    .map(([categoryNUM, categoryKO]) => ({
-      value: categoryNUM,
-      label: categoryKO,
-    }));
+  const editorRef = useRef<Editor>(null);
+  const selectRef = useRef<Category>({ value: 10, label: '기타' });
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const tagRef = useRef<string[]>([]);
 
-  const customStyles: StylesConfig = {
-    control: (base, { isFocused }) => ({
-      ...base,
-      border: isFocused ? '1px solid #7A22C3' : '1px solid #D1D1D1',
-      boxShadow: '',
-      ':hover': { border: isFocused ? '1px solid #7A22C3' : '1px solid #D1D1D1' },
-    }),
-    option: (base, { isSelected }) => ({
-      ...base,
-      backgroundColor: isSelected ? '#f1dfff' : 'transparent',
-      color: isSelected ? '#7A22C3' : 'black',
-      ':hover': {
-        ...base[':hover'],
-        backgroundColor: '#f1dfff',
-        color: isSelected ? '#7A22C3' : 'black',
-      },
-    }),
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    buttonRef.current?.click();
+    data.content = editorRef.current?.getInstance().getHTML();
+    data.category = selectRef.current.value;
+    data.tags = tagRef.current;
+    console.log(data);
+  };
+
+  const onSelect = (value: unknown) => {
+    selectRef.current = value as Category;
+  };
+
+  const getTags = (tags: TagType[]) => {
+    tagRef.current = tags.map((tag) => tag.label);
   };
 
   return (
     <>
-      <main className='max-w-[1280px] mx-auto mt-30pxr'>
+      <form className='max-w-[1280px] mx-auto mt-30pxr'>
         <h2 className={style.title}>프로젝트 정보</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
         <h3 className={style.subTitle}>프로젝트 제목</h3>
-        <input type='text' className={combineClassNames(style.input, 'w-[80%] mb-20pxr')} />
+        <div className='relative'>
+          <input
+            type='text'
+            {...register('title', {
+              required: '❗️ 필수 항목입니다. 최소 2자, 최대 20자까지 입력 가능합니다.',
+              minLength: 2,
+              maxLength: 20,
+            })}
+            className={combineClassNames(style.input, 'w-[80%] mb-30pxr')}
+          />
+          <p className={style.error}>{errors.title?.message}</p>
+        </div>
         <h3 className={style.subTitle}>대표 이미지</h3>
         <input type='file' accept='.png, .jpg, .jpeg' className={style.fileInput} />
         <h3 className={style.subTitle}>목표 금액</h3>
         <div className='relative w-[80%]'>
-          <input type='number' className={combineClassNames(style.input, 'w-full mb-20pxr')} />
+          <input
+            type='number'
+            {...register('targetAmount', {
+              required: '❗️ 필수 항목입니다. 최소 5만원부터 최대 천만원까지 입력 가능합니다.',
+              valueAsNumber: true,
+              min: 50000,
+              max: 10000000,
+            })}
+            className={combineClassNames(style.input, 'w-full mb-30pxr')}
+          />
           <span className='absolute top-[10%] right-15pxr'>원</span>
+          <p className={style.error}>{errors.targetAmount?.message}</p>
         </div>
         <h3 className={style.subTitle}>검색용 태그(#)</h3>
-        <TagInput style={combineClassNames(style.input, style.tagInput)}></TagInput>
+        <TagInput
+          style={combineClassNames(style.input, style.tagInput)}
+          tagRef={buttonRef}
+          getTags={getTags}
+        ></TagInput>
         <h3 className={style.subTitle}>프로젝트 종료일</h3>
-        <input type='date' className={combineClassNames(style.input, 'w-[80%] mb-20pxr')} />
+        <div className='relative'>
+          <input
+            type='date'
+            {...register('expiredAt', {
+              required: '❗️ 필수 항목입니다.',
+              valueAsDate: true,
+            })}
+            className={combineClassNames(style.input, 'w-[80%] mb-30pxr')}
+          />
+          <p className={style.error}>{errors.expiredAt?.message}</p>
+        </div>
         <h3 className={style.subTitle}>카테고리 설정</h3>
         <Select
           options={options}
@@ -70,6 +115,7 @@ function WritePage() {
           styles={customStyles}
           placeholder='카테고리 선택'
           components={{ IndicatorSeparator: null }}
+          onChange={onSelect}
         />
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
@@ -77,13 +123,22 @@ function WritePage() {
         <textarea
           className={combineClassNames(style.input, style.textarea)}
           placeholder='나만의 프로젝트 이야기를 요약해 주세요.'
+          {...register('summary', {
+            required: '❗️ 필수 항목입니다. 최대 100자까지 입력 가능합니다.',
+            maxLength: 100,
+          })}
         ></textarea>
         <h3 className={style.subTitle}>프로젝트 스토리</h3>
-        <div className='w-[80%] rounded focus-within:outline-[1px] focus-within:outline focus-within:outline-purple-300'>
-          <TuiEditor />
+        <div className={style.editor}>
+          <TuiEditor editorRef={editorRef} />
         </div>
-        <input type='submit' value='프로젝트 생성' className={style.submitButton} />
-      </main>
+        <input
+          type='button'
+          value='프로젝트 생성'
+          className={style.submitButton}
+          onClick={handleSubmit(onSubmit)}
+        />
+      </form>
       <ScrollUpButton />
     </>
   );

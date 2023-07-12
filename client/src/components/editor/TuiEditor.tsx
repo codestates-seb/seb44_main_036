@@ -3,7 +3,6 @@ import { Editor } from '@toast-ui/react-editor';
 
 type Props = {
   editorRef: React.RefObject<Editor> | null;
-  setInput: (input: string) => void;
   content?: string;
 };
 
@@ -14,20 +13,13 @@ const toolbar = [
   ['image', 'link'],
 ];
 
-function TuiEditor({ content, editorRef, setInput }: Props) {
-  const handleChange = () => {
-    if (editorRef) {
-      setInput(editorRef.current?.getInstance().getHTML());
-    }
-  };
-
+function TuiEditor({ content, editorRef }: Props) {
   return (
     <Editor
       initialValue={content ?? ' '}
       initialEditType='wysiwyg'
       autofocus={false}
       ref={editorRef}
-      onChange={handleChange}
       toolbarItems={toolbar}
       hideModeSwitch
       height='500px'
