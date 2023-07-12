@@ -3,6 +3,7 @@ import Select, { StylesConfig } from 'react-select';
 import { combineClassNames } from '@/common/utils/functions';
 import { TagInput } from '@/components/project';
 import { CATEGORIES } from '@/common/constants';
+import { TuiEditor } from '@/components/editor';
 
 const style = {
   title: 'text-3xl font-extrabold text-purple-300 mb-5pxr',
@@ -12,6 +13,9 @@ const style = {
   fileInput:
     'border-b border-solid border-gray-400 w-[80%] py-5pxr mb-20pxr text-sm text-gray-900 focus:border-purple-300 file:py-3pxr file:px-15pxr file:rounded-full file:border-0 file:bg-purple-300 file:text-white file:mr-10pxr',
   tagInput: 'w-[80%] flex items-center overflow-hidden mb-10pxr',
+  textarea: 'w-[80%] mb-20pxr outline-none h-150pxr',
+  submitButton:
+    'text-xl text-white bg-purple-300 rounded-full hover:bg-purple-400 w-300pxr h-50pxr my-40pxr',
 };
 
 function WritePage() {
@@ -62,13 +66,23 @@ function WritePage() {
         <h3 className={style.subTitle}>카테고리 설정</h3>
         <Select
           options={options}
-          className='w-[25%] mb-20pxr'
+          className='w-[25%] mb-40pxr'
           styles={customStyles}
           placeholder='카테고리 선택'
           components={{ IndicatorSeparator: null }}
         />
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
+        <h3 className={style.subTitle}>프로젝트 요약</h3>
+        <textarea
+          className={combineClassNames(style.input, style.textarea)}
+          placeholder='나만의 프로젝트 이야기를 요약해 주세요.'
+        ></textarea>
+        <h3 className={style.subTitle}>프로젝트 스토리</h3>
+        <div className='w-[80%] rounded focus-within:outline-[1px] focus-within:outline focus-within:outline-purple-300'>
+          <TuiEditor />
+        </div>
+        <input type='submit' value='프로젝트 생성' className={style.submitButton} />
       </main>
       <ScrollUpButton />
     </>

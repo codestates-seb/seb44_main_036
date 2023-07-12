@@ -30,6 +30,7 @@ function TuiEditor({ content, editorRef, setInput }: Props) {
       onChange={handleChange}
       toolbarItems={toolbar}
       hideModeSwitch
+      height='500px'
     />
   );
 }
