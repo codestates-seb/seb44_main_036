@@ -39,6 +39,9 @@ public class Project extends Auditable {
 
     @Column(nullable = false,updatable = false)
     private Integer targetAmount;
+
+    @Column(name = "EXPIRED_DATE",updatable = false)
+    private LocalDateTime expiredDate;
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;

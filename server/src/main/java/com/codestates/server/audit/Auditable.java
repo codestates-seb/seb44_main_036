@@ -23,7 +23,4 @@ public abstract class Auditable {
     @LastModifiedDate
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
-
-    @Column(name = "EXPIRED_DATE",updatable = false)
-    private LocalDateTime expiredDate;
 }
