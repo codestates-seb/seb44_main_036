@@ -2,21 +2,23 @@ import axios from 'axios';
 import { decodeJWT } from '../utils/decodeJWT';
 import { setCookie } from '../utils/cookie';
 
+const timeout = 1500;
+
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  timeout,
 });
 
 instance.interceptors.response.use(
   (response) => {
     if (response.config.url === '/login') {
       const headers = response.headers;
-
       const accessToken = headers['authorization'].replace('Bearer ', '');
-      localStorage.setItem('accessToken', accessToken);
-      const { memberId } = decodeJWT(accessToken);
-      localStorage.setItem('memberId', memberId);
-
       const refreshToken = headers['refresh'];
+      const memberId = decodeJWT(accessToken).memberId;
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('memberId', memberId);
       setCookie('refreshToken', refreshToken, {
         path: '/',
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -25,28 +27,20 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error);
-    const status = error.response.status;
-    const msg = error.response.data.message;
-
+    // const status = error?.response.status;
+    // const msg = error?.response.data.message;
     if (error.config.url === '/signup') {
-      if (status === 409) {
-        if (msg === 'user exists') {
-          alert('이미 존재하는 이메일 입니다.');
-        } else {
-          alert('이미 존재하는 이메일 입니다.');
-        }
-      }
+      // TODO: 서버에서 에러 정리되면 작업
+      // if (status === 409) {
+      //   if (msg === 'user exists') {
+      //     alert('이미 존재하는 이메일 입니다.');
+      //   }
+      // }
+      alert('회원가입 에러');
     }
 
     if (error.config.url === '/login') {
-      if (status === 401) {
-        if (msg === 'Unauthorized') {
-          alert('이메일 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
-        }
-      } else {
-        alert('이메일 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.');
-      }
+      alert('로그인 에러');
     }
 
     throw Promise.reject(error);
@@ -55,6 +49,7 @@ instance.interceptors.response.use(
 
 export const authInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  timeout,
 });
 
 authInstance.interceptors.request.use(
@@ -71,7 +66,7 @@ authInstance.interceptors.request.use(
   }
 );
 
-authInstance.interceptors.request.use(
+authInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     console.log('error체크', error);
