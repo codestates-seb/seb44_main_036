@@ -1,14 +1,36 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    s3:
+      bucket: mifunding
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: 'false'
+
+
+aws:
+  paramstore:
+    enabled: true
+    prefix: /spring-boot-aws
+    profile-separator: _
+    name: cloud-parameter-store
+
 spring:
+  config:
+    import: 'aws-parameterstore:'
   datasource:
-    url: jdbc:mysql://mi-funding.cxbepn4gpw76.ap-northeast-2.rds.amazonaws.com:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
+    url: jdbc:mysql://${RDS_ENDPOINT}:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
     username: root
-    password: 12341234
+    password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -35,7 +57,7 @@ server:
       force-response: true
 mail:
   address:
-    admin: admin@gmail.com
+    admin: ${ADMIN}
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 40

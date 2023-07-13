@@ -19,7 +19,7 @@ public class Member extends Auditable {
     private long memberId;
 
     @Column(length = 100, nullable = false)
-    private String nickName;
+    private String nickname;
 
     @Column(nullable = false, updatable = false, unique = true)
     private String email;
@@ -28,8 +28,8 @@ public class Member extends Auditable {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    public Member(String nickName,String email ){
-        this.nickName = nickName;
+    public Member(String nickname,String email ){
+        this.nickname = nickname;
         this.email = email;
 
     }

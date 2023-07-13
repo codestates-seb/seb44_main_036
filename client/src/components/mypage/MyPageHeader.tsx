@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { setting, settingHover } from '@/assets/mypage';
+import { logout } from '@/common/api/authApi';
+import { useAppDispatch } from '@/hooks/useReducer';
+import userSlice from '@/reducer/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface MyPageHeaderProps {
   imageUrl: string;
@@ -8,6 +12,17 @@ interface MyPageHeaderProps {
 
 function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const onLogOutClick = () => {
+    const ok = confirm('로그아웃 하시겠습니까?');
+    if (ok) {
+      logout();
+      dispatch(userSlice.actions.logOut());
+      navigate('/');
+    }
+  };
   return (
     <>
       <div className='flex flex-row items-center justify-around h-full'>
@@ -23,7 +38,9 @@ function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
             프로필 수정
           </button>
           <p className='text-gray-100 mr-10pxr'>|</p>
-          <button className='text-gray-100'>로그아웃</button>
+          <button className='text-gray-100 mr-320pxr' onClick={onLogOutClick}>
+            로그아웃
+          </button>
         </div>
       </div>
       <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-180pxr'>
