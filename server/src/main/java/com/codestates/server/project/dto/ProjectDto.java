@@ -1,4 +1,4 @@
-package com.codestates.server.project.dto;
+package com.codestates.server.project.dto;//package com.codestates.server.project.dto;
 
 import com.codestates.server.validator.NotSpace;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 public class ProjectDto {
 
@@ -16,14 +17,23 @@ public class ProjectDto {
     @AllArgsConstructor
     public static class Post {
 
+        @NotBlank
+        private long memberId;
+        @NotBlank
         private String title;
+        @NotBlank
         private String content;
 
-        private int targetAmount;
+        @NotBlank
+        private String summary;
 
-        private MultipartFile multipartFile;
+        @NotBlank
+        private Integer targetAmount;
+        @NotBlank
+        private int endDay; //일 단위
 
-        private int expired_at; //주 단위
+        @NotBlank
+        private String imageUrl;
     }
 
     @Getter
@@ -43,11 +53,16 @@ public class ProjectDto {
     @AllArgsConstructor
     @Getter
     public static class Response {
+
+        private long projectId;
         private long memberId;
-        private String email;
-        private String n;
-
-
+        private String imageUrl;
+        private String title;
+        private String summary;
+        private String content;
+        private Integer currentAmount;
+        private Integer targetAmount;
+        private LocalDateTime expiredDate;
 
     }
 }
