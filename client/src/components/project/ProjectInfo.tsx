@@ -1,8 +1,17 @@
 import { Patch, SquareButton, Button } from '../ui';
 import { arrowRight } from '@/assets/common';
 import { emptyHeart, heart, share } from '@/assets/like';
+import { useRef, useState } from 'react';
+import ShareModal from '../kakaoshare/ShareModal';
 
 function ProjectInfo() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const modalRef = useRef();
+
+  const onModalClosed = () => {
+    setModalOpen(false);
+  };
+
   return (
     <section className='flex justify-between h-410pxr'>
       <img
@@ -32,10 +41,11 @@ function ProjectInfo() {
           <span className='text-4xl italic font-extrabold'>2,902,000</span> 원 달성
         </div>
         <div className='bg-gray-500/50 h-1pxr'></div>
-        <div className='flex justify-between'>
+        <div className='relative flex justify-between'>
+          {modalOpen && <ShareModal onModalClosed={onModalClosed} />}
           <div className='flex justify-between gap-20pxr'>
             <SquareButton text='396' imgSrc={heart} />
-            <SquareButton text='공유' imgSrc={share} />
+            <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />
           </div>
           <Button text='펀딩하기' style='w-[70%] text-xl' />
         </div>

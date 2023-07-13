@@ -4,7 +4,6 @@ import { ReactComponent as LogoSvg } from '@/assets/logos/logo.svg';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
 import Button from '../ui/Button';
 import { useAppSelector } from '@/hooks/useReducer';
-import { likeToast } from '@/common/utils/toast';
 
 function Header() {
   const navigate = useNavigate();
@@ -12,7 +11,6 @@ function Header() {
   const userData = useAppSelector((state) => state.user.data);
 
   const onProjectAddClick = () => {
-    likeToast(false);
     navigate('/project/add');
   };
 
