@@ -1,14 +1,14 @@
 export type signUpData = {
   email: string;
-  nickname: string;
+  nickname?: string;
   password: string;
 };
 
-export type SignUpFormValues = {
+export type FormValues = {
   email: string;
-  nickname: string;
+  nickname?: string;
   password: string;
-  passwordCheck: string;
+  passwordCheck?: string;
 };
 
 export type loginData = {

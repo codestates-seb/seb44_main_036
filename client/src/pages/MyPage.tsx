@@ -7,6 +7,8 @@ import {
   MyPageMainList,
 } from '@/components/mypage';
 import { UserModal } from '@/components/usermodal';
+// import useSWR from 'swr';
+// import axios from 'axios';
 
 interface IUser {
   imageUrl: string;
