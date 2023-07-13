@@ -37,6 +37,7 @@ public class MemberService {
             member.setPassword(encryptedPassword);
         }
 
+
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
         Member savedMember = memberRepository.save(member);

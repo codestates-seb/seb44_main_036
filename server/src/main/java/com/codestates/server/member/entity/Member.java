@@ -1,6 +1,7 @@
 package com.codestates.server.member.entity;
 
 import com.codestates.server.audit.Auditable;
+import com.codestates.server.project.entity.Project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,11 @@ public class Member extends Auditable {
     private String email;
     @Column(length = 100)
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    private List<Project> projects = new ArrayList<>();
+
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
