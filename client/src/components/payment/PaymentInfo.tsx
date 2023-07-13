@@ -89,10 +89,10 @@ function PaymentInfo({ quantity }: PaymentInfoProps) {
         </button>
       </div>
       {showModal && (
-        <div className='fixed z-50 flex flex-center inset-1pxr'>
-          <div className='absolute bg-black opacity-40 inset-1pxr'></div>
+        <div className='fixed z-50 flex inset-1pxr flex-center'>
+          <div className='absolute bg-black inset-1pxr opacity-40'></div>
           <div className='relative bg-white rounded-lg p-40pxr'>
-            <p className='text-xl font-bold text-center text-purple-300'>결제가 완료되었습니다!</p>
+            <p className='text-xl font-bold text-center text-purple-300'>결제가 완료되었습니다 !</p>
             <div className='flex-center'>
               <button
                 className='text-white bg-purple-300 rounded-full flex-center w-100pxr h-30pxr mt-40pxr'
