@@ -1,13 +1,14 @@
+import { useState } from 'react';
+import {
+  UserProfile,
+  MyPageHeader,
+  TabButton,
+  MyPageLikeList,
+  MyPageMainList,
+} from '@/components/mypage';
+import { UserModal } from '@/components/usermodal';
 // import useSWR from 'swr';
 // import axios from 'axios';
-import UserModal from '@/components/userModal/UserModal';
-import { useState } from 'react';
-import { setting, settingHover } from '@/assets/mypage';
-import { MyPageLikeList, MyPageMainList } from '@/components/mypage';
-import { logout } from '@/common/api/authApi';
-import { useAppDispatch } from '@/hooks/useReducer';
-import userSlice from '@/reducer/userSlice';
-import { useNavigate } from 'react-router-dom';
 
 interface IUser {
   imageUrl: string;
@@ -28,13 +29,11 @@ const user: IUser = {
 
 // const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
+function MyPage() {
   const [tab, setTab] = useState<'main' | 'liked'>('main');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(user.address);
-  const [isHovered, setIsHovered] = useState(false);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const [nickname, setNickname] = useState<string>(user.nickname);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -44,18 +43,10 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
     setIsModalOpen(false);
   };
 
-  const saveAddress = (newAddress: string) => {
+  const saveUser = (newNickname: string, newAddress: string) => {
+    setNickname(newNickname);
     setAddress(newAddress);
     closeModal();
-  };
-
-  const onLogOutClick = () => {
-    const ok = confirm('로그아웃 하시겠습니까?');
-    if (ok) {
-      logout();
-      dispatch(userSlice.actions.logOut());
-      navigate('/');
-    }
   };
 
   // 서버 API 구현 후 추가 될 코드
@@ -85,81 +76,34 @@ const MyPage: React.FC<{ userId: string }> = (/*{ userId }*/) => {
     <>
       <div className='flex-col'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
-          <div className='flex flex-row items-center justify-end h-full'>
-            <button className='text-gray-100 mr-10pxr' onClick={openModal}>
-              프로필 수정
-            </button>
-            <p className='text-gray-100 mr-10pxr'>|</p>
-            <button className='text-gray-100 mr-320pxr' onClick={onLogOutClick}>
-              로그아웃
-            </button>
-          </div>
-          <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-110pxr'>
-            <img
-              className='object-cover overflow-hidden bg-gray-100 rounded-full w-120pxr h-120pxr'
-              src={user.imageUrl}
-              alt={user.nickname}
-            />
-            <button
-              className='absolute text-gray-400 bg-white rounded-full flex-center left-90pxr w-30pxr h-30pxr top-90pxr hover:text-purple-300'
-              onClick={openModal}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <img src={isHovered ? settingHover : setting} alt='setting'></img>
-            </button>
-          </div>
+          <MyPageHeader imageUrl={user.imageUrl} openModal={openModal} />
         </div>
 
-        <div className='flex flex-row text-4xl font-thin flex-center'>
-          <h1 className='text-4xl font-bold mb-10pxr'>{user.nickname}</h1>
-          <p>&nbsp;님</p>
+        <div className='flex-col font-thin flex-center'>
+          <UserProfile nickname={user.nickname} accountType={user.accountType} />
         </div>
-        <p className='text-purple-300 flex-center mb-100pxr'>
-          {user.accountType === 'seller' ? '판매자 회원' : '구매자 회원'}
-        </p>
 
         <div>
           <div className='flex items-center justify-center mb-50pxr'>
-            <button
-              className={`text-3xl font-semibold ${
-                tab === 'main' ? 'text-purple-300 active' : 'text-gray-400 hover:text-purple-300'
-              } relative mr-85pxr`}
-              onClick={() => setTab('main')}
-            >
-              {user.accountType === 'seller' ? '판매중인 프로젝트' : '펀딩중인 프로젝트'}
-              {tab === 'main' && (
-                <span className='absolute transform -translate-x-1/2 bg-purple-300 rounded-full w-8pxr h-8pxr -top-16pxr left-1/2'></span>
-              )}
-            </button>
-            <button
-              className={`text-3xl font-semibold ${
-                tab === 'liked' ? 'text-purple-300 active' : 'text-gray-400 hover:text-purple-300'
-              } relative`}
-              onClick={() => setTab('liked')}
-            >
-              좋아요한 프로젝트
-              {tab === 'liked' && (
-                <span className='absolute transform -translate-x-1/2 bg-purple-300 rounded-full w-8pxr h-8pxr -top-16pxr left-1/2'></span>
-              )}
-            </button>
+            <TabButton activeTab={tab} setTab={setTab} userAccountType={user.accountType} />
           </div>
           {tab === 'main' && <MyPageMainList></MyPageMainList>}
           {tab === 'liked' && <MyPageLikeList></MyPageLikeList>}
         </div>
+
         {isModalOpen && (
           <UserModal
             imageUrl={user.imageUrl}
-            nickname={user.nickname}
+            nickname={nickname}
             accountType={user.accountType}
             address={address}
             onClose={closeModal}
-            onSave={saveAddress}
+            onSave={saveUser}
           />
         )}
       </div>
     </>
   );
-};
+}
 
 export default MyPage;
