@@ -4,12 +4,14 @@ import { ReactComponent as ExitSvg } from '@/assets/icons/exit_icon.svg';
 import { successToast } from '@/common/utils/toast';
 import { useLocation } from 'react-router-dom';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
+import { ModalData } from '../project/ProjectInfo';
 
 type Props = {
   onModalClosed: () => void;
+  modalData: ModalData;
 };
 
-function ShareModal({ onModalClosed }: Props) {
+function ShareModal({ onModalClosed, modalData }: Props) {
   const [shareButton, setShareButton] = useState(false);
   const location = useLocation();
   const modalRef = useRef(null);
@@ -47,7 +49,7 @@ function ShareModal({ onModalClosed }: Props) {
       <div className='flex w-full gap-10pxr h-37pxr'>
         <div className='relative flex w-full h-full'>
           <input
-            value='http://localhost:5173/project/1'
+            value={`http://localhost:5173${location.pathname}`}
             className='border-[1.5px] rounded w-full border-gray-300 ellipsis pl-10pxr pr-55pxr'
           />
           <button
@@ -57,7 +59,7 @@ function ShareModal({ onModalClosed }: Props) {
             Copy
           </button>
         </div>
-        {shareButton && <KakaoShareButton />}
+        {shareButton && <KakaoShareButton modalData={modalData} />}
       </div>
       <button onClick={onModalClosed}>
         <ExitSvg className='absolute right-10pxr top-10pxr' />

@@ -1,12 +1,23 @@
 import { Patch, SquareButton, Button } from '../ui';
 import { arrowRight } from '@/assets/common';
 import { emptyHeart, heart, share } from '@/assets/like';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
+
+export type ModalData = {
+  title: string;
+  desc: string;
+  imgUrl: string;
+};
 
 function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
-  const modalRef = useRef();
+
+  const modalData: ModalData = {
+    title: '프로젝트 제목',
+    desc: '프로젝트 상세',
+    imgUrl: 'https://haitikkot.org/gv5/theme/cookie/img/noimage.png',
+  };
 
   const onModalClosed = () => {
     setModalOpen(false);
@@ -42,7 +53,7 @@ function ProjectInfo() {
         </div>
         <div className='bg-gray-500/50 h-1pxr'></div>
         <div className='relative flex justify-between'>
-          {modalOpen && <ShareModal onModalClosed={onModalClosed} />}
+          {modalOpen && <ShareModal onModalClosed={onModalClosed} modalData={modalData} />}
           <div className='flex justify-between gap-20pxr'>
             <SquareButton text='396' imgSrc={heart} />
             <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />

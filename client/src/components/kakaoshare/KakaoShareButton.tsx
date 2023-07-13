@@ -1,6 +1,13 @@
 import { useEffect } from 'react';
+import { ModalData } from '../project/ProjectInfo';
 
-const KakaoShareButton = () => {
+type Props = {
+  modalData: ModalData;
+};
+
+const KakaoShareButton = ({ modalData }: Props) => {
+  const { title, desc, imgUrl } = modalData;
+
   useEffect(() => {
     createKakaoButton();
   }, []);
@@ -17,9 +24,9 @@ const KakaoShareButton = () => {
         container: '#kakao-link-btn',
         objectType: 'feed',
         content: {
-          title: '펀딩 프로젝트',
-          description: '펀딩 상세 설명',
-          imageUrl: 'https://haitikkot.org/gv5/theme/cookie/img/noimage.png',
+          title: title,
+          description: desc,
+          imageUrl: imgUrl,
           link: {
             mobileWebUrl: window.location.href,
             webUrl: window.location.href,
