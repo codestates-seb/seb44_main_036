@@ -2,6 +2,7 @@ package com.codestates.server.project.entity;//package com.codestates.server.pro
 
 import com.codestates.server.audit.Auditable;
 import com.codestates.server.member.entity.Member;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class Project extends Auditable {
 
     @Column(name = "EXPIRED_DATE",updatable = false)
     private LocalDateTime expiredDate;
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
