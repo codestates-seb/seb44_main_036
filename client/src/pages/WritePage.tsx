@@ -5,12 +5,13 @@ import { combineClassNames } from '@/common/utils/functions';
 import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { options } from '@/common/constants/sort';
 import { customStyles, style } from '@/components/writepage/styles';
 import { TagType } from '@/components/writepage/TagInput';
 import { projectApi } from '@/common/api/api';
 import { imageCompressor, dday } from '@/common/utils/functions';
+import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
 
 type Category = {
   value: number;
@@ -20,7 +21,8 @@ type Category = {
 type FormData = {
   title: string;
   targetAmount: number;
-  expiredAt: number;
+  endDay: number;
+  memberId: number;
   imageUrl?: string;
   tags?: string[];
   category?: number;
@@ -29,6 +31,8 @@ type FormData = {
 };
 
 function WritePage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [emptyError, setIsEmptyError] = useState(false);
   const editorRef = useRef<Editor>(null);
   const selectRef = useRef<Category>({ value: 10, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -41,9 +45,22 @@ function WritePage() {
     formState: { errors },
   } = useForm<FormData>();
 
+  const hasContent = (str: string) => {
+    return !!str.replace(/<br>/g, '').trim().length;
+  };
+
   const onSubmit: SubmitHandler<FormData> = (data) => {
+    const content = editorRef.current?.getInstance().getMarkdown();
+
+    if (!hasContent(content)) {
+      setIsEmptyError(true);
+      return;
+    }
+
     buttonRef.current?.click();
-    data.expiredAt = dday(data.expiredAt as unknown as Date);
+    // TODO: 로그인 후 로직 수정 필요
+    data.memberId = 1;
+    data.endDay = dday(data.endDay as unknown as Date);
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     // data.category = selectRef.current.value;
@@ -59,13 +76,30 @@ function WritePage() {
     tagRef.current = tags.map((tag) => tag.label);
   };
 
-  const getImageUrl = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const image = e.target.files?.[0];
-    if (image) {
+  const getImageUrl = async (image: File) => {
+    setIsLoading(true);
+    try {
       const compressionImage = await imageCompressor(image);
       const { data: imageUrl } = await projectApi.getImageUrl({ image: compressionImage });
+      return imageUrl;
+    } catch (error) {
+      console.error('이미지 URL 변환 에러:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getThumbnailUrl = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files?.[0];
+    if (image) {
+      const imageUrl = await getImageUrl(image);
       imageRef.current = imageUrl;
     }
+  };
+
+  const handleImage = async (file: File, callback: typeof Function) => {
+    const imageUrl = await getImageUrl(file);
+    callback(imageUrl);
   };
 
   return (
@@ -91,7 +125,7 @@ function WritePage() {
           type='file'
           accept='.png, .jpg, .jpeg'
           className={style.fileInput}
-          onChange={getImageUrl}
+          onChange={getThumbnailUrl}
         />
         <h3 className={style.subTitle}>목표 금액</h3>
         <div className='relative w-[80%]'>
@@ -118,13 +152,13 @@ function WritePage() {
         <div className='relative'>
           <input
             type='date'
-            {...register('expiredAt', {
+            {...register('endDay', {
               required: '❗️ 필수 항목입니다.',
               valueAsDate: true,
             })}
             className={combineClassNames(style.input, 'w-[80%] mb-30pxr')}
           />
-          <p className={style.error}>{errors.expiredAt?.message}</p>
+          <p className={style.error}>{errors.endDay?.message}</p>
         </div>
         <h3 className={style.subTitle}>카테고리 설정</h3>
         <Select
@@ -138,24 +172,32 @@ function WritePage() {
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
         <h3 className={style.subTitle}>프로젝트 요약</h3>
-        <textarea
-          className={combineClassNames(style.input, style.textarea)}
-          placeholder='나만의 프로젝트 이야기를 요약해 주세요.'
-          {...register('summary', {
-            required: '❗️ 필수 항목입니다. 최대 100자까지 입력 가능합니다.',
-            maxLength: 100,
-          })}
-        ></textarea>
+        <div className='relative'>
+          <textarea
+            className={combineClassNames(style.input, style.textarea)}
+            placeholder='나만의 프로젝트 이야기를 요약해 주세요.'
+            {...register('summary', {
+              required: '❗️ 필수 항목입니다. 최대 100자까지 입력 가능합니다.',
+              maxLength: 100,
+            })}
+          ></textarea>
+          <p className={style.error}>{errors.summary?.message}</p>
+        </div>
         <h3 className={style.subTitle}>프로젝트 스토리</h3>
         <div className={style.editor}>
-          <TuiEditor editorRef={editorRef} />
+          <TuiEditor editorRef={editorRef} imageHandler={handleImage} />
         </div>
-        <input
+        {emptyError && (
+          <p className={style.empty}>❗️필수 항목입니다. 내용 혹은 이미지가 포함되어야 합니다.</p>
+        )}
+        <button
           type='button'
-          value='프로젝트 생성'
+          disabled={isLoading}
           className={style.submitButton}
           onClick={handleSubmit(onSubmit)}
-        />
+        >
+          {isLoading ? <Spinner /> : '프로젝트 생성'}
+        </button>
       </form>
       <ScrollUpButton />
     </>

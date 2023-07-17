@@ -8,12 +8,13 @@ export const style = {
   fileInput:
     'border-b border-solid border-gray-400 w-[80%] py-5pxr mb-30pxr text-sm text-gray-900 focus:border-purple-300 file:py-3pxr file:px-15pxr file:rounded-full file:border-0 file:bg-purple-300 file:text-white file:mr-10pxr',
   tagInput: 'w-[80%] flex items-center overflow-hidden mb-10pxr',
-  textarea: 'w-[80%] mb-30pxr outline-none h-150pxr',
+  textarea: 'w-[80%] mb-25pxr outline-none h-150pxr',
   submitButton:
-    'text-xl text-white bg-purple-300 rounded-full hover:bg-purple-400 w-300pxr h-50pxr my-40pxr',
+    'text-xl text-white bg-purple-300 rounded-full hover:bg-purple-400 w-300pxr h-50pxr my-40pxr flex-center gap-10pxr disabled:cursor-not-allowed disabled:hover:bg-purple-300',
   error: 'absolute bottom-5pxr text-red-500 text-sm',
   editor:
-    'w-[80%] rounded focus-within:outline-[1px] focus-within:outline focus-within:outline-purple-300',
+    'w-[80%] rounded focus-within:outline-[1px] focus-within:outline focus-within:outline-purple-300 relative',
+  empty: 'text-red-500 text-sm mt-5pxr',
 };
 
 export const customStyles: StylesConfig = {

@@ -4,6 +4,7 @@ import { Editor } from '@toast-ui/react-editor';
 type Props = {
   editorRef: React.RefObject<Editor> | null;
   content?: string;
+  imageHandler: (blob: File, callback: typeof Function) => void;
 };
 
 const toolbar = [
@@ -13,7 +14,7 @@ const toolbar = [
   ['image', 'link'],
 ];
 
-function TuiEditor({ content, editorRef }: Props) {
+function TuiEditor({ content, editorRef, imageHandler }: Props) {
   return (
     <Editor
       initialValue={content ?? ' '}
@@ -23,6 +24,7 @@ function TuiEditor({ content, editorRef }: Props) {
       toolbarItems={toolbar}
       hideModeSwitch
       height='500px'
+      hooks={{ addImageBlobHook: imageHandler }}
     />
   );
 }

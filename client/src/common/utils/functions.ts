@@ -5,7 +5,6 @@ export const combineClassNames = (...classNames: string[]) => {
 };
 
 export const dday = (date: Date) => {
-  console.log(date);
   const today = new Date();
   const expiredDate = new Date(date);
   let diff = Math.abs(expiredDate.getTime() - today.getTime());
