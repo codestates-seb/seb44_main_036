@@ -40,6 +40,11 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
+    public List<Project> findByMemberId(long memberId){
+        List<Project> findProject = projectRepository.findByMemberId(memberId);
+        return findProject;
+    }
+
     private Project findVerifiedProject(long projectId) {
         Project findProject = projectRepository.findById(projectId).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND));
