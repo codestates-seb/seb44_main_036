@@ -20,6 +20,7 @@ public interface ProjectMapper {
         project.setSummary(post.getSummary());
         project.setTitle(post.getTitle());
         project.setImageUrl(post.getImageUrl());
+        project.setPrice(post.getPrice());
         project.setTargetAmount(post.getTargetAmount());
         project.setEndDay(post.getEndDay());
         project.setMember(member);
@@ -29,17 +30,17 @@ public interface ProjectMapper {
 
 
      default ProjectDto.Response projectToProjectResponseDto(Project project){
-        ProjectDto.Response response = new ProjectDto.Response(
-                project.getProjectId(),
-                project.getMember().getMemberId(),
-                project.getImageUrl(),
-                project.getTitle(),
-                project.getSummary(),
-                project.getContent(),
-                project.getCurrentAmount(),
-                project.getTargetAmount(),
-                project.getExpiredDate()
-        );
+        ProjectDto.Response response = new ProjectDto.Response();
+            response.setProjectId(project.getProjectId());
+            response.setMemberId(project.getMember().getMemberId());
+            response.setPrice(project.getPrice());
+            response.setContent(project.getContent());
+            response.setSummary(project.getSummary());
+            response.setCurrentAmount(project.getCurrentAmount());
+            response.setTitle(project.getTitle());
+            response.setExpiredDate(project.getExpiredDate());
+            response.setTargetAmount(project.getTargetAmount());
+            response.setImageUrl(project.getImageUrl());
 
         return response;
      }

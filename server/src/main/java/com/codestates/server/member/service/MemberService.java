@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
+
 @Service
 public class MemberService {
 
@@ -53,7 +53,7 @@ public class MemberService {
         return (List<Member>) memberRepository.findAll();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+
     public Member updateMember(Member member) {
         Member findMember = findVerifiedMember(member.getMemberId());
 
