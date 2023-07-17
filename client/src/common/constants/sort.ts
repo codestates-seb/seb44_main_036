@@ -23,3 +23,10 @@ export const PROGRESS = {
   ongoing: '진행중',
   end: '종료',
 } as const;
+
+export const options = Object.values(CATEGORIES)
+  .filter(([categoryNUM]) => categoryNUM !== null)
+  .map(([categoryNUM, categoryKO]) => ({
+    value: categoryNUM,
+    label: categoryKO,
+  }));
