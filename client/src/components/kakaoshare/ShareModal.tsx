@@ -27,7 +27,7 @@ function ShareModal({ onModalClosed, modalData }: Props) {
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.3.0/kakao.min.js';
     script.async = true;
     document.body.appendChild(script);
 
@@ -49,7 +49,7 @@ function ShareModal({ onModalClosed, modalData }: Props) {
       <div className='flex w-full gap-10pxr h-37pxr'>
         <div className='relative flex w-full h-full'>
           <input
-            value={`http://localhost:5173${location.pathname}`}
+            defaultValue={`http://localhost:5173${location.pathname}`}
             className='border-[1.5px] rounded w-full border-gray-300 ellipsis pl-10pxr pr-55pxr'
           />
           <button
