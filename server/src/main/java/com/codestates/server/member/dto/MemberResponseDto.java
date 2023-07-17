@@ -1,9 +1,13 @@
 package com.codestates.server.member.dto;
 
+import com.codestates.server.project.dto.ProjectDto;
+import com.codestates.server.project.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,6 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MemberResponseDto {
     private long memberId;
-    private String nickName;
+    private String nickname;
     private String email;
+
+    private List<Project> projects;
 }

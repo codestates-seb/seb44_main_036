@@ -11,10 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @Validated
-@CrossOrigin
 public class MemberController {
 
     private final MemberService memberService;
@@ -52,12 +52,12 @@ public class MemberController {
 //    }
 //
 //
-//    //회원 정보 조회
-//    @GetMapping("/{member-id}")
-//    public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId) {
-//        Member response = memberService.findMember(memberId);
-//        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
-//    }
+    //회원 정보 조회
+    @GetMapping("/{member-id}")
+    public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId) {
+        Member response = memberService.findMember(memberId);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
+    }
 //
 //    // 회원 정보 삭제
 //    @DeleteMapping("/{member-id}")

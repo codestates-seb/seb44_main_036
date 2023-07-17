@@ -1,17 +1,25 @@
 import { loginData, signUpData } from '../types/authTypes';
+import { removeCookie } from '../utils/cookie';
 import { authApi, userApi } from './api';
 
 export const postSignUp = async (formData: signUpData) => {
-  return (await authApi.signup(formData)).data;
+  await authApi.signup(formData);
 };
 
 export const postLogin = async (formData: loginData) => {
-  return (await authApi.login(formData)).data;
+  const response = await authApi.login(formData);
+  return response;
+};
+
+export const logout = async () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('memberId');
+  removeCookie('refreshToken', { path: '/' });
 };
 
 export const getUserInfo = async () => {
-  const userId = localStorage.getItem('userId');
-  if (userId) {
-    return (await userApi.getUser(userId)).data;
+  const memberId = localStorage.getItem('memberId');
+  if (memberId) {
+    return (await userApi.getUser(memberId)).data;
   }
 };

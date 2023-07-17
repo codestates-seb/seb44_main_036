@@ -37,6 +37,7 @@ public class MemberService {
             member.setPassword(encryptedPassword);
         }
 
+
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
         Member savedMember = memberRepository.save(member);
@@ -73,7 +74,7 @@ public class MemberService {
 
         Member findMember =
                 optionalMember.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.USER_EXIST));
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         return findMember;
     }
@@ -82,6 +83,6 @@ public class MemberService {
         Optional<Member> member = memberRepository.findByEmail(email);
 
         if (member.isPresent())
-            throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
+            throw new BusinessLogicException(ExceptionCode.MEMBER_EXIST);
     }
 }
