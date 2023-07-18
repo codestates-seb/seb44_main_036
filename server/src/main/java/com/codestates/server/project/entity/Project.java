@@ -45,6 +45,9 @@ public class Project extends Auditable {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "project")
+    private List<Funding> fundings = new ArrayList<>();
 
     public void setMember(Member member) {
         this.member = member;
