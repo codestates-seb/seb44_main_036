@@ -21,6 +21,6 @@ public abstract class Auditable {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "MODIFIED_AT")
+    @Column(name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt;
 }
