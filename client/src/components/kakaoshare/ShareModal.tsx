@@ -19,7 +19,7 @@ function ShareModal({ onModalClosed, modalData }: Props) {
   useOnClickOutside(modalRef, onModalClosed);
 
   const onCopyClick = () => {
-    // TODO : 배포한뒤에 배포주소로 변경
+    // const address = import.meta.env.VITE_API_URL + location.pathname;
     const address = 'http://localhost:5173' + location.pathname;
     navigator.clipboard.writeText(address);
     successToast('주소가 복사 되었습니다.');

@@ -1,5 +1,4 @@
-import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
 
 declare global {
@@ -10,80 +9,97 @@ declare global {
 }
 
 function KakaoMap() {
-  const [map, setMap] = useState<any>();
-  const [marker, setMarker] = useState<any>();
-  const [address, setAdress] = useState<string>();
+  const [map, setMap] = useState<kakao.maps.Map | null>();
+  const [marker, setMarker] = useState<kakao.maps.Marker | null>();
+  const [address, setAdress] = useState<string>('');
+  const [isLoad, setIsLoad] = useState(false);
 
   useEffect(() => {
-    window.kakao.maps.load(() => {
-      const container = document.getElementById('map');
-      const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
+    const script = document.createElement('script');
+    script.src =
+      '//dapi.kakao.com/v2/maps/sdk.js?appkey=7a038aabe9dfb4987ea5fa1fa39aa3f1&autoload=false&libraries=services';
+    script.async = true;
+    document.body.appendChild(script);
 
-      setMap(new window.kakao.maps.Map(container, options));
-      setMarker(new window.kakao.maps.Marker());
-    });
-  }, []);
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById('map');
+        const map = new window.kakao.maps.LatLng(33.450701, 126.570667);
+        const options = {
+          center: map,
+          level: 3,
+        };
 
-  useDidMountEffect(() => {
-    if (map) {
-      window.kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
-        // 주소-좌표 변환 객체를 생성합니다
-        const geocoder = new window.kakao.maps.services.Geocoder();
+        const imageSrc = '/src/assets/icons/marker_icon.png';
+        const imageSize = new kakao.maps.Size(34, 45);
+        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-        geocoder.coord2Address(
-          mouseEvent.latLng.getLng(),
-          mouseEvent.latLng.getLat(),
-          (result: any, status: any) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              const addr = result[0].road_address
-                ? result[0].road_address.address_name
-                : result[0].address.address_name;
-
-              // 클릭한 위치 주소를 가져온다.
-              console.log(addr);
-              setAdress(addr);
-
-              // 기존 마커를 제거하고 새로운 마커를 넣는다.
-              marker.setMap(null);
-              // 마커를 클릭한 위치에 표시합니다
-              marker.setPosition(mouseEvent.latLng);
-              marker.setMap(map);
-            }
-          }
-        );
+        setMap(new window.kakao.maps.Map(container, options));
+        setMarker(new window.kakao.maps.Marker({ position: map, image: markerImage }));
+        setIsLoad(true);
       });
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [isLoad]);
+
+  useEffect(() => {
+    if (map && marker) {
+      window.kakao.maps.event.addListener(
+        map,
+        'click',
+        function (mouseEvent: kakao.maps.event.MouseEvent) {
+          const geocoder = new window.kakao.maps.services.Geocoder();
+
+          geocoder.coord2Address(
+            mouseEvent.latLng.getLng(),
+            mouseEvent.latLng.getLat(),
+            (result: kakao.maps.services.GeocoderResult[], status: kakao.maps.services.Status) => {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const addr = result[0].road_address
+                  ? result[0].road_address.address_name
+                  : result[0]?.address?.address_name;
+
+                if (addr) setAdress(addr);
+                marker.setMap(map);
+                marker.setPosition(mouseEvent.latLng);
+              }
+            }
+          );
+        }
+      );
     }
   }, [map, marker]);
 
-  const onClickAddr = () => {
-    // 3) 주소 검색
-    new window.daum.Postcode({
-      // 4) 검색된 주소 클릭 시 콜백 함수
-      oncomplete: function (addrData: any) {
-        const geocoder = new window.kakao.maps.services.Geocoder();
-        console.log('지오', geocoder);
+  const onInputClickHandler = () => {
+    if (map && marker) {
+      new window.daum.Postcode({
+        oncomplete: function (addrData: any) {
+          const geocoder = new window.kakao.maps.services.Geocoder();
 
-        geocoder.addressSearch(
-          addrData.address, // 검색된 주소
-          function (result: any, status: any) {
-            // 5) 성공시 좌표 값을 가져온다.
-            if (status === window.kakao.maps.services.Status.OK) {
-              const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-              console.log('체크');
-              (document.getElementById('addr') as HTMLInputElement).value = addrData.address;
-              map.panTo(currentPos);
-              // 결과값으로 받은 위치를 마커로 표시합니다
-              marker.setMap(null);
-              marker.setPosition(currentPos);
-              marker.setMap(map);
+          geocoder.addressSearch(
+            addrData.address,
+            function (
+              result: kakao.maps.services.GeocoderResult[],
+              status: kakao.maps.services.Status
+            ) {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+                console.log('체크');
+                (document.getElementById('addr') as HTMLInputElement).value = addrData.address;
+                map.panTo(currentPos);
+
+                marker.setMap(null);
+                marker.setPosition(currentPos);
+                marker.setMap(map);
+              }
             }
-          }
-        );
-      },
-    }).open();
+          );
+        },
+      }).open();
+    }
   };
 
   return (
@@ -92,9 +108,9 @@ function KakaoMap() {
         <input
           id='addr'
           type='text h-35pxr'
-          value={address}
+          defaultValue={address}
           className='w-full h-full border'
-          onClick={onClickAddr}
+          onClick={onInputClickHandler}
         />
         <SearchIconSvg className='absolute right-20pxr top-8pxr ' />
       </div>
