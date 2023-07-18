@@ -12,6 +12,7 @@ import { TagType } from '@/components/writepage/TagInput';
 import { projectApi } from '@/common/api/api';
 import { imageCompressor, dday } from '@/common/utils/functions';
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
+import { useNavigate } from 'react-router-dom';
 
 type Category = {
   value: number;
@@ -38,6 +39,7 @@ function WritePage() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
   const imageRef = useRef('');
+  const navigate = useNavigate();
 
   const {
     register,
@@ -49,7 +51,9 @@ function WritePage() {
     return !!str.replace(/<br>/g, '').trim().length;
   };
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setIsLoading(true);
+    const memberId = localStorage.getItem('memberId');
     const content = editorRef.current?.getInstance().getMarkdown();
 
     if (!hasContent(content)) {
@@ -58,14 +62,21 @@ function WritePage() {
     }
 
     buttonRef.current?.click();
-    // TODO: 로그인 후 로직 수정 필요
-    data.memberId = 1;
+    if (memberId) data.memberId = +memberId;
     data.endDay = dday(data.endDay as unknown as Date);
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     // data.category = selectRef.current.value;
     // data.tags = tagRef.current;
     console.log(data);
+    try {
+      await projectApi.addProject<FormData>(data);
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onSelect = (value: unknown) => {
@@ -114,7 +125,7 @@ function WritePage() {
             {...register('title', {
               required: '❗️ 필수 항목입니다. 최소 2자, 최대 20자까지 입력 가능합니다.',
               minLength: 2,
-              maxLength: 20,
+              maxLength: 50,
             })}
             className={combineClassNames(style.input, 'w-[80%] mb-30pxr')}
           />

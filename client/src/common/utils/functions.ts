@@ -17,3 +17,11 @@ export const imageCompressor = async (image: File) => {
   const resizingFile = new File([resizingBlob], image.name, { type: image.type });
   return resizingFile;
 };
+
+export const formattingNumber = (num: number) => num.toLocaleString();
+
+export const calculateAchievementRate = (targetAmount: number, currentAmount: number) => {
+  if (currentAmount === 0) return 0;
+  const achievementRate = (currentAmount / targetAmount) * 100;
+  return achievementRate > 1 ? achievementRate : 1;
+};
