@@ -1,6 +1,9 @@
 package com.codestates.server.member.controller;
 
 import com.codestates.server.dto.SingleResponseDto;
+import com.codestates.server.funding.entity.Funding;
+import com.codestates.server.funding.mapper.FundingMapper;
+import com.codestates.server.funding.service.FundingService;
 import com.codestates.server.member.dto.SignupPostDto;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.member.mapper.MemberMapper;
@@ -28,12 +31,18 @@ public class MemberController {
 
     private final ProjectMapper projectMapper;
 
+    private final FundingMapper fundingMapper;
 
-    public MemberController(MemberService memberService, MemberMapper mapper, ProjectService projectService, ProjectMapper projectMapper) {
+    private final FundingService fundingService;
+
+
+    public MemberController(MemberService memberService, MemberMapper mapper, ProjectService projectService, ProjectMapper projectMapper, FundingMapper fundingMapper, FundingService fundingService) {
         this.memberService = memberService;
         this.mapper = mapper;
         this.projectService = projectService;
         this.projectMapper = projectMapper;
+        this.fundingMapper = fundingMapper;
+        this.fundingService = fundingService;
     }
     //회원 정보 등록
     @PostMapping("/signup")
@@ -77,12 +86,19 @@ public class MemberController {
 //        memberService.deleteMember(memberId);
 //        return new ResponseEntity(HttpStatus.OK);
 //    }
-    @GetMapping("/members/{member-id}/myproject")
+    @GetMapping("/members/{member-id}/project")
     public ResponseEntity getProjectsByMemberId(@PathVariable("member-id") long memberId){
         List<Project> findProjects = projectService.findByMemberId(memberId);
 
     return new ResponseEntity(projectMapper.projectsToProjectResponseDtos(findProjects),HttpStatus.OK);
 }
+
+    @GetMapping("/members/{member-id}/funding")
+    public ResponseEntity getFundingByMemberId(@PathVariable("member-id") long memberId){
+        List<Funding> findFundings = fundingService.findByMemberId(memberId);
+
+        return new ResponseEntity(fundingMapper.fundingsToFundingResponseDtos(findFundings),HttpStatus.OK);
+    }
 
 
 }

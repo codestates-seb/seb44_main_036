@@ -7,6 +7,8 @@ import com.codestates.server.project.entity.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface FundingMapper {
     default Funding fundingPostDtoToFunding(FundingDto.Post post){
@@ -23,14 +25,13 @@ public interface FundingMapper {
         return funding;
     }
 
-
     default FundingDto.Response fundingToFundingResponseDto(Funding funding){
         FundingDto.Response response = new FundingDto.Response();
         response.setAddress(funding.getAddress());
         response.setQuantity(funding.getQuantity());
         response.setMemberId(funding.getMember().getMemberId());
         response.setProjectId(funding.getProject().getProjectId());
-
         return response;
     }
+    List<FundingDto.Response> fundingsToFundingResponseDtos(List<Funding> fundings);
 }

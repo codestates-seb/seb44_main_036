@@ -40,6 +40,12 @@ public class FundingService {
         return fundingRepository.findAll();
     }
 
+    public List<Funding> findByMemberId(long memberId){
+        List<Funding> findFundings = fundingRepository.findByMemberId(memberId);
+
+        return findFundings;
+    }
+
     public void cancelFunding(long fundingId){
         fundingRepository.deleteById(fundingId);
     }
