@@ -51,4 +51,9 @@ public class ProjectService {
         return findProject;
     }
 
+    public List<Project> findByCategoryType(long categoryId){
+        List<Project> findProject = projectRepository.findByCategoryType(categoryId);
+
+        return findProject;
+    }
 }

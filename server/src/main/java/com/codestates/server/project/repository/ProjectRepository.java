@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query(value = "SELECT p FROM Project p WHERE p.member.memberId =:memberId")
     List<Project> findByMemberId(long memberId);
+
+    @Query(value = "SELECT p FROM Project p WHERE p.category.categoryId =:categoryId")
+    List<Project> findByCategoryType(long categoryId);
 }
