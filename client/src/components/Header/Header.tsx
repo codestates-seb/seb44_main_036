@@ -1,9 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 
 import { ReactComponent as LogoSvg } from '@/assets/logos/logo.svg';
-import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
 import Button from '../ui/Button';
 import { useAppSelector } from '@/hooks/useReducer';
+import Search from '../search/Search';
 
 function Header() {
   const navigate = useNavigate();
@@ -20,13 +20,8 @@ function Header() {
         <Link to='/' className='flex-center mr-20pxr'>
           <LogoSvg className='h-30pxr w-165pxr' />
         </Link>
-        <div className='relative flex w-full max-w-3xl '>
-          <input
-            type='text'
-            placeholder='내가 원하는 모든 펀딩이 여기에!'
-            className='w-full text-sm border-[1.5px] border-gray-200 border-solid h-35pxr rounded-3xl py-7pxr px-24pxr focus:border-purple-300'
-          />
-          <SearchIconSvg className='absolute right-20pxr top-8pxr' />
+        <div className='flex w-full max-w-3xl '>
+          <Search></Search>
         </div>
         <div className='flex-center ellipsis'>
           {isLogin ? (
