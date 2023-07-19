@@ -1,5 +1,6 @@
 package com.codestates.server.project.mapper;//package com.codestates.server.project.mapper;
 
+import com.codestates.server.category.entity.Category;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.project.dto.ProjectDto;
 import com.codestates.server.project.entity.Project;
@@ -16,6 +17,8 @@ public interface ProjectMapper {
         Project project = new Project();
         Member member = new Member();
         member.setMemberId(post.getMemberId());
+        Category category = new Category();
+        category.setCategoryId(post.getCategoryId());
         project.setContent(post.getContent());
         project.setSummary(post.getSummary());
         project.setTitle(post.getTitle());
@@ -24,6 +27,7 @@ public interface ProjectMapper {
         project.setTargetAmount(post.getTargetAmount());
         project.setEndDay(post.getEndDay());
         project.setMember(member);
+        project.setCategory(category);
 
         return project;
     }
