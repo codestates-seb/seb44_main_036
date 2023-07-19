@@ -1,7 +1,6 @@
 import type { Editor } from '@toast-ui/react-editor';
 import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
 import Select from 'react-select';
-import { combineClassNames } from '@/common/utils/functions';
 import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -10,7 +9,7 @@ import { options } from '@/common/constants/sort';
 import { customStyles, style } from '@/components/writepage/styles';
 import { TagType } from '@/components/writepage/TagInput';
 import { projectApi } from '@/common/api/api';
-import { imageCompressor, dday } from '@/common/utils/functions';
+import { imageCompressor, dday, combineClassNames } from '@/common/utils';
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
 import { useNavigate } from 'react-router-dom';
 

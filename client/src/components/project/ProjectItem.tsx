@@ -1,6 +1,6 @@
 import { Patch, Like } from '../ui';
 import type { Project } from '@/common/types/responseTypes';
-import { dday, formattingNumber, calculateAchievementRate } from '@/common/utils/functions';
+import { dday, formattingNumber, calculateAchievementRate } from '@/common/utils';
 
 type Props = {
   project: Project;
@@ -11,10 +11,19 @@ function ProjectItem({ project }: Props) {
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = 'https://haitikkot.org/gv5/theme/cookie/img/noimage.png';
+  };
+
   return (
     <article className='relative flex flex-col cursor-pointer w-400pxr'>
       {isDueSoon && <Patch type='alert'>마감임박</Patch>}
-      <img src={imageUrl} alt='기본 이미지' className='h-250pxr rounded-xl mb-10pxr' />
+      <img
+        src={imageUrl}
+        alt='기본 이미지'
+        className='h-250pxr rounded-xl mb-10pxr'
+        onError={handleImageError}
+      />
       <Like like={false} position='top-12pxr right-12pxr' />
       <div className='flex items-center justify-between'>
         <div className='flex-center'>

@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { ProjectItem } from '.';
 import type { Projects } from '@/common/types/responseTypes';
+import useSWR from 'swr';
+import { projectApi } from '@/common/api/api';
 
-type Props = {
-  projectList: Projects;
-};
+function ProjectList() {
+  const { data: projectList } = useSWR<Projects>('/projects', projectApi.getProjects);
 
-function ProjectList({ projectList }: Props) {
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {projectList?.map((project) => (
