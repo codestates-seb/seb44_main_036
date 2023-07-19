@@ -39,6 +39,8 @@ public class ProjectDto {
 
         @Positive
         private int price;
+
+        private long categoryId;
     }
 
     @Getter

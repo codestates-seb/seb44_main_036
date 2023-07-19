@@ -48,6 +48,11 @@ public class ProjectService {
     private Project findVerifiedProject(long projectId) {
         Project findProject = projectRepository.findById(projectId).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND));
+        return findProject;
+    }
+
+    public List<Project> findByCategoryType(long categoryId){
+        List<Project> findProject = projectRepository.findByCategoryType(categoryId);
 
         return findProject;
     }

@@ -44,5 +44,9 @@ public class ProjectController {
         return new ResponseEntity(mapper.projectsToProjectResponseDtos(projects),HttpStatus.OK);
     }
 
+    @GetMapping("/category/{category-id}")
+    public ResponseEntity getProjectByCategoryType(@PathVariable("category-id")long categoryId){
+        return new ResponseEntity(mapper.projectsToProjectResponseDtos(projectService.findByCategoryType(categoryId)),HttpStatus.OK);
+    }
 
 }

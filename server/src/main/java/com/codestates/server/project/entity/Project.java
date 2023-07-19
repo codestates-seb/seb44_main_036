@@ -1,6 +1,7 @@
 package com.codestates.server.project.entity;//package com.codestates.server.project.entity;
 
 import com.codestates.server.audit.Auditable;
+import com.codestates.server.category.entity.Category;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -45,6 +46,12 @@ public class Project extends Auditable {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "project")
+    private List<Funding> fundings = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
 
     public void setMember(Member member) {
         this.member = member;

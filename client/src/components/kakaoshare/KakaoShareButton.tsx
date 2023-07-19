@@ -1,6 +1,12 @@
 import { useEffect } from 'react';
 import { ModalData } from '../project/ProjectInfo';
 
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
 type Props = {
   modalData: ModalData;
 };
@@ -20,8 +26,8 @@ const KakaoShareButton = ({ modalData }: Props) => {
         kakao.init(import.meta.env.VITE_KAKAO_KEY);
       }
 
-      kakao.Link.createDefaultButton({
-        container: '#kakao-link-btn',
+      kakao.Share.createDefaultButton({
+        container: '#kakaotalk-sharing-btn',
         objectType: 'feed',
         content: {
           title: title,
@@ -41,17 +47,16 @@ const KakaoShareButton = ({ modalData }: Props) => {
             },
           },
         ],
-        serverCallbackArgs: '{"key":"value"}',
       });
     }
   };
 
   return (
     <div className='h-full'>
-      <button id='kakao-link-btn' className='h-37pxr w-37pxr'>
+      <button id='kakaotalk-sharing-btn' className='h-37pxr w-37pxr'>
         <img
           src='https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png'
-          alt='카카오링크 보내기 버튼'
+          alt='카카오 공유'
         />
       </button>
     </div>

@@ -14,8 +14,6 @@ public interface MemberMapper {
         responseDto.setMemberId(member.getMemberId());
         responseDto.setNickname(member.getNickname());
         responseDto.setEmail(member.getEmail());
-        responseDto.setProjects(member.getProjects());
-        responseDto.setFundings(member.getFundings());
         return responseDto;
     }
 }

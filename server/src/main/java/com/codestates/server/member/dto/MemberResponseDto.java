@@ -18,7 +18,4 @@ public class MemberResponseDto {
     private long memberId;
     private String nickname;
     private String email;
-    private List<Project> projects;
-
-    private List<Funding> fundings;
 }

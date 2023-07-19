@@ -30,6 +30,7 @@ public class Funding extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID")
     private Project project;

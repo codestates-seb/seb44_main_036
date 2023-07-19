@@ -4,6 +4,7 @@ import { ReactComponent as LogoSvg } from '@/assets/logos/logo.svg';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
 import Button from '../ui/Button';
 import { useAppSelector } from '@/hooks/useReducer';
+import { profile } from '@/assets/mypage/index';
 
 function Header() {
   const navigate = useNavigate();
@@ -34,14 +35,7 @@ function Header() {
               to='/mypage'
               className='overflow-hidden bg-gray-400 rounded-full h-35pxr w-35pxr mr-20pxr'
             >
-              <img
-                src={
-                  userData?.userImg
-                    ? userData.userImg
-                    : 'https://scontent-gmp1-1.xx.fbcdn.net/v/t39.30808-6/301699229_495029505958367_2122837022415143500_n.jpg?_nc_cat=108&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=8fX5M9O1SbMAX-n-qiV&_nc_ht=scontent-gmp1-1.xx&oh=00_AfAHUTKiZrB-LKlTbaCvEDDB5k3mwj-M97Y65Rdn7DXTCw&oe=64AFC6D7'
-                }
-                alt='유저'
-              />
+              <img src={userData?.userImg ? userData.userImg : profile} alt='유저' />
             </Link>
           ) : (
             <>
