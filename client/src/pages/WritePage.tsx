@@ -19,22 +19,22 @@ type Category = {
 };
 
 type FormData = {
+  categoryId: number;
   title: string;
   targetAmount: number;
   endDay: number;
   memberId: number;
-  imageUrl?: string;
+  imageUrl: string;
+  summary: string;
+  content: string;
   tags?: string[];
-  category?: number;
-  summary?: string;
-  content?: string;
 };
 
 function WritePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emptyError, setIsEmptyError] = useState(false);
   const editorRef = useRef<Editor>(null);
-  const selectRef = useRef<Category>({ value: 10, label: '기타' });
+  const selectRef = useRef<Category>({ value: 11, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
   const imageRef = useRef('');
@@ -65,7 +65,7 @@ function WritePage() {
     data.endDay = dday(data.endDay as unknown as Date);
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
-    // data.category = selectRef.current.value;
+    data.categoryId = selectRef.current.value;
     // data.tags = tagRef.current;
     console.log(data);
     try {
@@ -171,14 +171,17 @@ function WritePage() {
           <p className={style.error}>{errors.endDay?.message}</p>
         </div>
         <h3 className={style.subTitle}>카테고리 설정</h3>
-        <Select
-          options={options}
-          className='w-[25%] mb-40pxr'
-          styles={customStyles}
-          placeholder='카테고리 선택'
-          components={{ IndicatorSeparator: null }}
-          onChange={onSelect}
-        />
+        <div className='flex gap-20pxr'>
+          <Select
+            options={options}
+            className='w-[25%] mb-40pxr'
+            styles={customStyles}
+            placeholder='카테고리 선택'
+            components={{ IndicatorSeparator: null }}
+            onChange={onSelect}
+          />
+          <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류됩니다.</p>
+        </div>
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
         <h3 className={style.subTitle}>프로젝트 요약</h3>

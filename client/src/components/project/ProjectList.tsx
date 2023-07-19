@@ -6,6 +6,7 @@ import { projectApi } from '@/common/api/api';
 
 function ProjectList() {
   const { data: projectList } = useSWR<Projects>('/projects', projectApi.getProjects);
+  console.log(projectList);
 
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>

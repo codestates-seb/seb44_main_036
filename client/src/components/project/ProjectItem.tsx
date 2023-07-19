@@ -1,6 +1,6 @@
 import { Patch, Like } from '../ui';
 import type { Project } from '@/common/types/responseTypes';
-import { dday, formattingNumber, calculateAchievementRate } from '@/common/utils';
+import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 
 type Props = {
   project: Project;
@@ -10,10 +10,6 @@ function ProjectItem({ project }: Props) {
   const { currentAmount, expiredDate, imageUrl, targetAmount, title } = project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
-
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = 'https://haitikkot.org/gv5/theme/cookie/img/noimage.png';
-  };
 
   return (
     <article className='relative flex flex-col cursor-pointer w-400pxr'>
