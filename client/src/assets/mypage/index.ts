@@ -5,3 +5,4 @@ export { default as setting } from './setting.png';
 export { default as settingHover } from './setting-hover.png';
 export { default as resign } from './resign.png';
 export { default as resignHover } from './resign-hover.png';
+export { default as profile } from './profile.jpg';

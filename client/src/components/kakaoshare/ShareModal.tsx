@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import KakaoShareButton from './KakaoShareButton';
 import { ReactComponent as ExitSvg } from '@/assets/icons/exit_icon.svg';
 import { successToast } from '@/common/utils/toast';
-import { useLocation } from 'react-router-dom';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
 import { ModalData } from '../project/ProjectInfo';
 
@@ -13,21 +12,19 @@ type Props = {
 
 function ShareModal({ onModalClosed, modalData }: Props) {
   const [shareButton, setShareButton] = useState(false);
-  const location = useLocation();
   const modalRef = useRef(null);
 
   useOnClickOutside(modalRef, onModalClosed);
 
-  const onCopyClick = () => {
-    // TODO : 배포한뒤에 배포주소로 변경
-    const address = 'http://localhost:5173' + location.pathname;
+  const onCopyClick = useCallback(() => {
+    const address = window.location.href;
     navigator.clipboard.writeText(address);
     successToast('주소가 복사 되었습니다.');
-  };
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.3.0/kakao.min.js';
     script.async = true;
     document.body.appendChild(script);
 
@@ -49,7 +46,7 @@ function ShareModal({ onModalClosed, modalData }: Props) {
       <div className='flex w-full gap-10pxr h-37pxr'>
         <div className='relative flex w-full h-full'>
           <input
-            value={`http://localhost:5173${location.pathname}`}
+            defaultValue={window.location.href}
             className='border-[1.5px] rounded w-full border-gray-300 ellipsis pl-10pxr pr-55pxr'
           />
           <button
