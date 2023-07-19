@@ -14,6 +14,14 @@ export const userApi = {
     authInstance.get(`/mypage/${userId}`, { headers }),
 };
 
+export const projectApi = {
+  getImageUrl: (image: { image: File }) =>
+    authInstance.post('/upload', image, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  getProjects: (url: string) => authInstance.get(url).then(({ data }) => data),
+  getProject: (url: string) => authInstance.get(url).then(({ data }) => data),
+  addProject: <T>(project: T) => authInstance.post('/projects', project),
+};
+
 // export const ApiCaller = async <T, U>(
 //   url: string,
 //   data: U,

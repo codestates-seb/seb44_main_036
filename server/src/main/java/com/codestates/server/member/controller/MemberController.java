@@ -5,12 +5,17 @@ import com.codestates.server.member.dto.SignupPostDto;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.member.mapper.MemberMapper;
 import com.codestates.server.member.service.MemberService;
+import com.codestates.server.project.entity.Project;
+import com.codestates.server.project.mapper.ProjectMapper;
+import com.codestates.server.project.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @Validated
@@ -18,9 +23,17 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberMapper mapper;
-    public MemberController(MemberService memberService, MemberMapper mapper) {
+
+    private final ProjectService projectService;
+
+    private final ProjectMapper projectMapper;
+
+
+    public MemberController(MemberService memberService, MemberMapper mapper, ProjectService projectService, ProjectMapper projectMapper) {
         this.memberService = memberService;
         this.mapper = mapper;
+        this.projectService = projectService;
+        this.projectMapper = projectMapper;
     }
     //회원 정보 등록
     @PostMapping("/signup")
@@ -51,12 +64,12 @@ public class MemberController {
 //    }
 //
 //
-//    //회원 정보 조회
-//    @GetMapping("/{member-id}")
-//    public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId) {
-//        Member response = memberService.findMember(memberId);
-//        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
-//    }
+    //회원 정보 조회
+    @GetMapping("/members/{member-id}")
+    public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId) {
+        Member response = memberService.findMember(memberId);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(response), HttpStatus.OK);
+    }
 //
 //    // 회원 정보 삭제
 //    @DeleteMapping("/{member-id}")
@@ -64,4 +77,12 @@ public class MemberController {
 //        memberService.deleteMember(memberId);
 //        return new ResponseEntity(HttpStatus.OK);
 //    }
+    @GetMapping("/members/{member-id}/myproject")
+    public ResponseEntity getProjectsByMemberId(@PathVariable("member-id") long memberId){
+        List<Project> findProjects = projectService.findByMemberId(memberId);
+
+    return new ResponseEntity(projectMapper.projectsToProjectResponseDtos(findProjects),HttpStatus.OK);
+}
+
+
 }

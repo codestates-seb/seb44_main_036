@@ -1,5 +1,5 @@
 import { ProjectInfo, ProjectDetail } from '@/components/project';
-import { RewardList } from '@/components/reward';
+// import { RewardList } from '@/components/reward';
 
 function ProjectPage() {
   return (
@@ -7,7 +7,7 @@ function ProjectPage() {
       <ProjectInfo />
       <section className='flex justify-between my-40pxr'>
         <ProjectDetail />
-        <RewardList />
+        {/* <RewardList /> */}
       </section>
     </main>
   );

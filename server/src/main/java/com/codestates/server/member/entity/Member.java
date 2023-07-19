@@ -1,7 +1,9 @@
 package com.codestates.server.member.entity;
 
 import com.codestates.server.audit.Auditable;
+import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.project.entity.Project;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,8 +29,13 @@ public class Member extends Auditable {
     @Column(length = 100)
     private String password;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "member")
     private List<Project> projects = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "member")
+    private List<Funding> fundings = new ArrayList<>();
 
 
     @ElementCollection(fetch = FetchType.EAGER)

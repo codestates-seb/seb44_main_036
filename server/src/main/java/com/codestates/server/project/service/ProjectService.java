@@ -2,10 +2,10 @@ package com.codestates.server.project.service;//package com.codestates.server.pr
 
 import com.codestates.server.exception.BusinessLogicException;
 import com.codestates.server.exception.ExceptionCode;
+import com.codestates.server.member.entity.Member;
+import com.codestates.server.member.service.MemberService;
 import com.codestates.server.project.entity.Project;
 import com.codestates.server.project.repository.ProjectRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,12 +15,16 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository projectRepository){
+    private final MemberService memberService;
+
+    public ProjectService(ProjectRepository projectRepository, MemberService memberService){
         this.projectRepository = projectRepository;
+        this.memberService = memberService;
     }
 
     public Project createProject(Project project){
         project.setExpiredDate(LocalDateTime.now().plusDays(project.getEndDay()));
+        project.setCurrentAmount(0);
         return projectRepository.save(project);
     }
 
@@ -34,6 +38,11 @@ public class ProjectService {
 
     public List<Project> findProjects(){
         return projectRepository.findAll();
+    }
+
+    public List<Project> findByMemberId(long memberId){
+        List<Project> findProject = projectRepository.findByMemberId(memberId);
+        return findProject;
     }
 
     private Project findVerifiedProject(long projectId) {

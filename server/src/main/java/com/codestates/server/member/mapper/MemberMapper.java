@@ -9,5 +9,13 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {
     Member signupPostDtoToMember(SignupPostDto signupPostDto);
-    MemberResponseDto memberToMemberResponseDto(Member member);
+    default MemberResponseDto memberToMemberResponseDto(Member member){
+        MemberResponseDto responseDto = new MemberResponseDto();
+        responseDto.setMemberId(member.getMemberId());
+        responseDto.setNickname(member.getNickname());
+        responseDto.setEmail(member.getEmail());
+        responseDto.setProjects(member.getProjects());
+        responseDto.setFundings(member.getFundings());
+        return responseDto;
+    }
 }
