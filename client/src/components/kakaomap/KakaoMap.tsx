@@ -15,14 +15,14 @@ type postData = {
 function KakaoMap() {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [marker, setMarker] = useState<kakao.maps.Marker | null>(null);
-  const [customOverlay, setCustomOverlay] = useState<any>(null);
   const [address, setAdress] = useState<string>('');
   const [isLoad, setIsLoad] = useState(false);
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src =
-      '//dapi.kakao.com/v2/maps/sdk.js?appkey=7a038aabe9dfb4987ea5fa1fa39aa3f1&autoload=false&libraries=services';
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${
+      import.meta.env.VITE_KAKAO_KEY
+    }&autoload=false&libraries=services`;
     script.async = true;
     document.body.appendChild(script);
 

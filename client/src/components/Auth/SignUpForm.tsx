@@ -8,6 +8,7 @@ import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '@/common/constants/rege
 import { FormValues } from '@/common/types/authTypes';
 import { postSignUp } from '@/common/api/authApi';
 import { successToast } from '@/common/utils/toast';
+import axios from 'axios';
 
 function SignUpForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +32,10 @@ function SignUpForm() {
       successToast('회원가입 성공');
       navigate('/users/login');
     } catch (error) {
-      return error;
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.message;
+        alert(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }

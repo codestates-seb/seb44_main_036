@@ -10,6 +10,7 @@ import userSlice from '@/reducer/userSlice';
 import { useAppDispatch } from '@/hooks/useReducer';
 import { successToast } from '@/common/utils/toast';
 import { useState } from 'react';
+import axios from 'axios';
 
 function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,8 +42,10 @@ function LoginForm() {
       successToast('환영합니다. eyo25님');
       navigate('/');
     } catch (error) {
-      console.log('회원가입 에러');
-      return error;
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.message;
+        alert(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
