@@ -3,7 +3,7 @@ import { arrowRight } from '@/assets/common';
 import { emptyHeart, heart, share } from '@/assets/like';
 import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Project } from '@/common/types/responseTypes';
 import { projectApi } from '@/common/api/api';
@@ -18,6 +18,7 @@ export type ModalData = {
 
 function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const { projectId } = useParams();
   const { data: projectDetail, isLoading } = useSWR<Project>(
     `/projects/${projectId}`,
@@ -73,7 +74,11 @@ function ProjectInfo() {
             <SquareButton text='396' imgSrc={heart} />
             <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />
           </div>
-          <Button text='펀딩하기' style='w-[70%] text-xl' />
+          <Button
+            text='펀딩하기'
+            style='w-[70%] text-xl'
+            onClick={() => navigate(`/project/${projectId}/payment`)}
+          />
         </div>
       </div>
     </section>
