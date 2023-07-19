@@ -15,6 +15,7 @@ export const style = {
   editor:
     'w-[80%] rounded focus-within:outline-[1px] focus-within:outline focus-within:outline-purple-300 relative',
   empty: 'text-red-500 text-sm mt-5pxr',
+  info: 'text-gray-600 text-sm mt-10pxr italic',
 };
 
 export const customStyles: StylesConfig = {

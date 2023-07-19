@@ -1,7 +1,6 @@
 import type { Editor } from '@toast-ui/react-editor';
 import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
 import Select from 'react-select';
-import { combineClassNames } from '@/common/utils/functions';
 import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -10,8 +9,9 @@ import { options } from '@/common/constants/sort';
 import { customStyles, style } from '@/components/writepage/styles';
 import { TagType } from '@/components/writepage/TagInput';
 import { projectApi } from '@/common/api/api';
-import { imageCompressor, dday } from '@/common/utils/functions';
+import { imageCompressor, dday, combineClassNames } from '@/common/utils';
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
+import { useNavigate } from 'react-router-dom';
 
 type Category = {
   value: number;
@@ -19,25 +19,26 @@ type Category = {
 };
 
 type FormData = {
+  categoryId: number;
   title: string;
   targetAmount: number;
   endDay: number;
   memberId: number;
-  imageUrl?: string;
+  imageUrl: string;
+  summary: string;
+  content: string;
   tags?: string[];
-  category?: number;
-  summary?: string;
-  content?: string;
 };
 
 function WritePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emptyError, setIsEmptyError] = useState(false);
   const editorRef = useRef<Editor>(null);
-  const selectRef = useRef<Category>({ value: 10, label: '기타' });
+  const selectRef = useRef<Category>({ value: 11, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
   const imageRef = useRef('');
+  const navigate = useNavigate();
 
   const {
     register,
@@ -49,7 +50,9 @@ function WritePage() {
     return !!str.replace(/<br>/g, '').trim().length;
   };
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setIsLoading(true);
+    const memberId = localStorage.getItem('memberId');
     const content = editorRef.current?.getInstance().getMarkdown();
 
     if (!hasContent(content)) {
@@ -58,14 +61,21 @@ function WritePage() {
     }
 
     buttonRef.current?.click();
-    // TODO: 로그인 후 로직 수정 필요
-    data.memberId = 1;
+    if (memberId) data.memberId = +memberId;
     data.endDay = dday(data.endDay as unknown as Date);
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
-    // data.category = selectRef.current.value;
+    data.categoryId = selectRef.current.value;
     // data.tags = tagRef.current;
     console.log(data);
+    try {
+      await projectApi.addProject<FormData>(data);
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onSelect = (value: unknown) => {
@@ -114,7 +124,7 @@ function WritePage() {
             {...register('title', {
               required: '❗️ 필수 항목입니다. 최소 2자, 최대 20자까지 입력 가능합니다.',
               minLength: 2,
-              maxLength: 20,
+              maxLength: 50,
             })}
             className={combineClassNames(style.input, 'w-[80%] mb-30pxr')}
           />
@@ -161,14 +171,17 @@ function WritePage() {
           <p className={style.error}>{errors.endDay?.message}</p>
         </div>
         <h3 className={style.subTitle}>카테고리 설정</h3>
-        <Select
-          options={options}
-          className='w-[25%] mb-40pxr'
-          styles={customStyles}
-          placeholder='카테고리 선택'
-          components={{ IndicatorSeparator: null }}
-          onChange={onSelect}
-        />
+        <div className='flex gap-20pxr'>
+          <Select
+            options={options}
+            className='w-[25%] mb-40pxr'
+            styles={customStyles}
+            placeholder='카테고리 선택'
+            components={{ IndicatorSeparator: null }}
+            onChange={onSelect}
+          />
+          <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류됩니다.</p>
+        </div>
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
         <h3 className={style.subTitle}>프로젝트 요약</h3>

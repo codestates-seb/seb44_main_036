@@ -1,6 +1,6 @@
 function Reward() {
   return (
-    <div className='flex flex-col text-gray-900 border border-solid rounded border-gray-700/80 justify-evenly px-15pxr py-20pxr gap-12pxr hover:bg-purple-50 hover:border-purple-300'>
+    <div className='flex flex-col text-gray-900 border border-solid rounded cursor-pointer border-gray-700/80 justify-evenly px-15pxr py-20pxr gap-12pxr hover:bg-purple-50 hover:border-purple-300'>
       <p>
         <span className='text-xl italic font-extrabold'>39,500</span> 원
       </p>
