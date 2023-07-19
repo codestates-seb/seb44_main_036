@@ -8,9 +8,14 @@ declare global {
   }
 }
 
+type postData = {
+  address: string;
+};
+
 function KakaoMap() {
-  const [map, setMap] = useState<kakao.maps.Map | null>();
-  const [marker, setMarker] = useState<kakao.maps.Marker | null>();
+  const [map, setMap] = useState<kakao.maps.Map | null>(null);
+  const [marker, setMarker] = useState<kakao.maps.Marker | null>(null);
+  const [customOverlay, setCustomOverlay] = useState<any>(null);
   const [address, setAdress] = useState<string>('');
   const [isLoad, setIsLoad] = useState(false);
 
@@ -33,9 +38,13 @@ function KakaoMap() {
         const imageSrc = '/src/assets/icons/marker_icon.png';
         const imageSize = new kakao.maps.Size(34, 45);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        const marker = new window.kakao.maps.Marker({
+          position: map,
+          image: markerImage,
+        });
 
         setMap(new window.kakao.maps.Map(container, options));
-        setMarker(new window.kakao.maps.Marker({ position: map, image: markerImage }));
+        setMarker(marker);
         setIsLoad(true);
       });
     };
@@ -57,12 +66,12 @@ function KakaoMap() {
             mouseEvent.latLng.getLng(),
             mouseEvent.latLng.getLat(),
             (result: kakao.maps.services.GeocoderResult[], status: kakao.maps.services.Status) => {
-              if (status === window.kakao.maps.services.Status.OK) {
+              if (status === window.kakao.maps.services.Status.OK && result[0]) {
                 const addr = result[0].road_address
                   ? result[0].road_address.address_name
-                  : result[0]?.address?.address_name;
+                  : result[0].address?.address_name;
 
-                if (addr) setAdress(addr);
+                addr && setAdress(addr);
                 marker.setMap(map);
                 marker.setPosition(mouseEvent.latLng);
               }
@@ -76,23 +85,21 @@ function KakaoMap() {
   const onInputClickHandler = () => {
     if (map && marker) {
       new window.daum.Postcode({
-        oncomplete: function (addrData: any) {
+        oncomplete: function (data: postData) {
           const geocoder = new window.kakao.maps.services.Geocoder();
 
           geocoder.addressSearch(
-            addrData.address,
+            data.address,
             function (
               result: kakao.maps.services.GeocoderResult[],
               status: kakao.maps.services.Status
             ) {
               if (status === window.kakao.maps.services.Status.OK) {
-                const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-                console.log('체크');
-                (document.getElementById('addr') as HTMLInputElement).value = addrData.address;
-                map.panTo(currentPos);
+                const searchPosition = new window.kakao.maps.LatLng(result[0].y, result[0].x);
 
-                marker.setMap(null);
-                marker.setPosition(currentPos);
+                map.panTo(searchPosition);
+                setAdress(data.address);
+                marker.setPosition(searchPosition);
                 marker.setMap(map);
               }
             }
