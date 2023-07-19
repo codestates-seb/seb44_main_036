@@ -28,11 +28,16 @@ public class S3UploadService {
 
     public String upload(MultipartFile multipartFile) throws IOException {
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+        System.out.println(s3FileName);
+        System.out.println(multipartFile.getOriginalFilename());
 
         ObjectMetadata objMeta = new ObjectMetadata();
-        objMeta.setContentLength(multipartFile.getInputStream().available());
+        objMeta.setContentType(multipartFile.getContentType());
 
-        amazonS3Client.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta);
+    amazonS3Client.putObject(
+            new PutObjectRequest(bucket,s3FileName,multipartFile.getInputStream(),objMeta)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+
 
         return amazonS3Client.getUrl(bucket, s3FileName).toString();
     }
