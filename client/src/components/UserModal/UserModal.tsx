@@ -9,12 +9,13 @@ import {
   settingHover,
 } from '@/assets/mypage';
 import { DaumPostcodeButton } from '.';
+import { profile } from '@/assets/mypage/index';
 // import axios from 'axios';
 // import { mutate } from 'swr';
 
 interface UserModalProps {
-  imageUrl: string;
-  nickname: string;
+  imageUrl?: string;
+  nickname?: string;
   accountType: 'seller' | 'buyer';
   address: string | null;
   onClose: () => void;
@@ -27,13 +28,13 @@ interface PostcodeData {
 }
 
 function UserModal({ imageUrl, accountType, nickname, address, onClose, onSave }: UserModalProps) {
-  const [newAddress, setNewAddress] = useState(address || '');
-  const [newNickname, setNewNickname] = useState(nickname);
+  const [newAddress, setNewAddress] = useState<string>(address || '');
+  const [newNickname, setNewNickname] = useState<string>(nickname || '');
   const [IsExitHovered, setIsExitHovered] = useState(false);
   const [isResignHovered, setisResignHovered] = useState(false);
   const [isSettingHovered, setisSettingHovered] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
-  const [previewImage, setPreviewImage] = useState(imageUrl);
+  const [previewImage, setPreviewImage] = useState(imageUrl ? imageUrl : profile);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewAddress(event.target.value);

@@ -1,5 +1,5 @@
 interface UserProfileProps {
-  nickname: string;
+  nickname?: string;
   accountType: 'seller' | 'buyer';
 }
 

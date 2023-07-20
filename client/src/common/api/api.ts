@@ -10,8 +10,8 @@ export const authApi = {
 };
 
 export const userApi = {
-  getUser: (userId: string, headers?: AxiosRequestConfig['headers']) =>
-    authInstance.get(`/members/${userId}`, { headers }),
+  getUser: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
+    authInstance.get(`/members/${memberId}`, { headers }),
 };
 
 export const projectApi = {
