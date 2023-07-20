@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Header from './components/@header/Header';
+import Header from './components/header/Header';
 import Toast from './components/toast/toast';
 import { useEffect } from 'react';
 import { useAppDispatch } from './hooks/useReducer';

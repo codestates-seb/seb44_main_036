@@ -1,5 +1,4 @@
 import type { Editor } from '@toast-ui/react-editor';
-import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
 import Select from 'react-select';
 import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
@@ -13,6 +12,7 @@ import { imageCompressor, dday, combineClassNames, dateToString } from '@/common
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
 import { useNavigate } from 'react-router-dom';
 import KakaoMap from '@/components/kakaomap/KakaoMap';
+import ScrollUpButton from '@/components/ui/ScrollUpButton';
 
 type Category = {
   value: number;

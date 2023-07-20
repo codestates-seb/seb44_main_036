@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import axios from 'axios';
 
-import AuthInput from '@/components/@auth/AuthInput';
+import AuthInput from '@/components/auth/AuthInput';
 import { Button, Strong } from '@/components/ui';
 import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '@/common/constants/regexs';
 import { FormValues } from '@/common/types/authTypes';
