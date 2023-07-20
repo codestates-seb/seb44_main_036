@@ -31,9 +31,9 @@ function ProjectInfo() {
   const { imageUrl, summary, title, currentAmount, targetAmount, categoryId = 11 } = projectDetail!;
 
   const modalData: ModalData = {
-    title: '프로젝트 제목',
-    desc: '프로젝트 상세',
-    imgUrl: 'https://haitikkot.org/gv5/theme/cookie/img/noimage.png',
+    title: title,
+    desc: summary,
+    imgUrl: imageUrl || 'https://haitikkot.org/gv5/theme/cookie/img/noimage.png',
   };
 
   const onModalClosed = () => {
