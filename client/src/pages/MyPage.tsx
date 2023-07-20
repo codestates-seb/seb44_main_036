@@ -6,7 +6,7 @@ import {
   MyPageLikeList,
   MyPageMainList,
 } from '@/components/mypage';
-import { UserModal } from '@/components/usermodal';
+import { UserModal } from '@/components/@usermodal';
 // import useSWR from 'swr';
 // import axios from 'axios';
 
