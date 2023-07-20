@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DaumPostcodeButton } from '../@usermodal';
+import { DaumPostcodeButton } from '../usermodal';
 import { calculateTotalPrice } from '@/common/utils/calculateTotalPrice';
 import { paymentEqual, paymentMinus } from '@/assets/payment';
 import useSWR from 'swr';

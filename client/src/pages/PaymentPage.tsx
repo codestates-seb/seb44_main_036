@@ -1,5 +1,5 @@
-import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
 import { PaymentInfo, PaymentReward } from '@/components/payment';
+import ScrollUpButton from '@/components/ui/ScrollUpButton';
 import { useState } from 'react';
 
 function PaymentPage() {
