@@ -12,3 +12,5 @@ export type Project = {
 };
 
 export type Projects = Project[];
+
+export type ProjectDetail = Project & { categoryId: number };

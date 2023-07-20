@@ -9,9 +9,10 @@ import { options } from '@/common/constants/sort';
 import { customStyles, style } from '@/components/writepage/styles';
 import { TagType } from '@/components/writepage/TagInput';
 import { projectApi } from '@/common/api/api';
-import { imageCompressor, dday, combineClassNames } from '@/common/utils';
+import { imageCompressor, dday, combineClassNames, dateToString } from '@/common/utils';
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
 import { useNavigate } from 'react-router-dom';
+import KakaoMap from '@/components/kakaomap/KakaoMap';
 
 type Category = {
   value: number;
@@ -28,16 +29,19 @@ type FormData = {
   summary: string;
   content: string;
   tags?: string[];
+  location?: string;
 };
 
 function WritePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emptyError, setIsEmptyError] = useState(false);
+
   const editorRef = useRef<Editor>(null);
   const selectRef = useRef<Category>({ value: 11, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
   const imageRef = useRef('');
+  const locationRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const {
@@ -66,6 +70,7 @@ function WritePage() {
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     data.categoryId = selectRef.current.value;
+    data.location = locationRef.current?.value;
     // data.tags = tagRef.current;
     console.log(data);
     try {
@@ -123,8 +128,8 @@ function WritePage() {
             type='text'
             {...register('title', {
               required: '❗️ 필수 항목입니다. 최소 2자, 최대 20자까지 입력 가능합니다.',
-              minLength: 2,
-              maxLength: 50,
+              minLength: { value: 2, message: '❗️ 최소 2자 이상 입력해야 합니다.' },
+              maxLength: { value: 50, message: '❗️ 최대 50자 까지 입력할 수 있습니다.' },
             })}
             className={combineClassNames(style.input, 'w-[80%] mb-30pxr')}
           />
@@ -144,8 +149,8 @@ function WritePage() {
             {...register('targetAmount', {
               required: '❗️ 필수 항목입니다. 최소 5만원부터 최대 천만원까지 입력 가능합니다.',
               valueAsNumber: true,
-              min: 50000,
-              max: 10000000,
+              min: { value: 50000, message: '❗️ 최소 5만원 부터 입력 가능합니다.' },
+              max: { value: 10000000, message: '❗️ 최대 천만원 까지 입력 가능합니다.' },
             })}
             className={combineClassNames(style.input, 'w-full mb-30pxr')}
           />
@@ -162,6 +167,7 @@ function WritePage() {
         <div className='relative'>
           <input
             type='date'
+            min={dateToString()}
             {...register('endDay', {
               required: '❗️ 필수 항목입니다.',
               valueAsDate: true,
@@ -182,6 +188,14 @@ function WritePage() {
           />
           <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류됩니다.</p>
         </div>
+        <h2 className={style.title}>픽업 지점 설정</h2>
+        <p className={style.desc}>
+          빠르게 리워드를 가져갈 수 있도록 픽업 지점을 설정할 수 있습니다.
+        </p>
+        <div className='flex flex-col mb-55pxr'>
+          <h3 className={style.subTitle}>주소</h3>
+          <KakaoMap locationRef={locationRef} />
+        </div>
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
         <h3 className={style.subTitle}>프로젝트 요약</h3>
@@ -191,7 +205,7 @@ function WritePage() {
             placeholder='나만의 프로젝트 이야기를 요약해 주세요.'
             {...register('summary', {
               required: '❗️ 필수 항목입니다. 최대 100자까지 입력 가능합니다.',
-              maxLength: 100,
+              maxLength: { value: 100, message: '❗️ 최대 100자까지 입력 가능합니다.' },
             })}
           ></textarea>
           <p className={style.error}>{errors.summary?.message}</p>

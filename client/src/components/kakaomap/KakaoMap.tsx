@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
+import { style } from '../writepage/styles';
+import { onInputClickHandler } from './DaumPost';
 
 declare global {
   interface Window {
@@ -8,11 +10,11 @@ declare global {
   }
 }
 
-type postData = {
-  address: string;
+type Props = {
+  locationRef: React.RefObject<HTMLInputElement> | null;
 };
 
-function KakaoMap() {
+function KakaoMap({ locationRef }: Props) {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [marker, setMarker] = useState<kakao.maps.Marker | null>(null);
   const [address, setAdress] = useState<string>('');
@@ -33,6 +35,7 @@ function KakaoMap() {
         const options = {
           center: map,
           level: 3,
+          scrollwheel: false,
         };
 
         const imageSrc = '/src/assets/icons/marker_icon.png';
@@ -56,6 +59,7 @@ function KakaoMap() {
 
   useEffect(() => {
     if (map && marker) {
+      console.log('a');
       window.kakao.maps.event.addListener(
         map,
         'click',
@@ -82,44 +86,18 @@ function KakaoMap() {
     }
   }, [map, marker]);
 
-  const onInputClickHandler = () => {
-    if (map && marker) {
-      new window.daum.Postcode({
-        oncomplete: function (data: postData) {
-          const geocoder = new window.kakao.maps.services.Geocoder();
-
-          geocoder.addressSearch(
-            data.address,
-            function (
-              result: kakao.maps.services.GeocoderResult[],
-              status: kakao.maps.services.Status
-            ) {
-              if (status === window.kakao.maps.services.Status.OK) {
-                const searchPosition = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-
-                map.panTo(searchPosition);
-                setAdress(data.address);
-                marker.setPosition(searchPosition);
-                marker.setMap(map);
-              }
-            }
-          );
-        },
-      }).open();
-    }
-  };
-
   return (
     <div className='flex-col flex-center w-500pxr'>
       <div className='relative w-full mb-25pxr'>
         <input
           id='addr'
           type='text h-35pxr'
+          ref={locationRef}
           defaultValue={address}
-          className='w-full h-full border'
-          onClick={onInputClickHandler}
+          className={`${style.input} w-full border`}
+          onClick={() => onInputClickHandler(map, marker, setAdress)}
         />
-        <SearchIconSvg className='absolute right-20pxr top-8pxr ' />
+        <SearchIconSvg className='absolute right-15pxr top-8pxr' />
       </div>
       <div id='map' className='h-400pxr w-500pxr'></div>
     </div>

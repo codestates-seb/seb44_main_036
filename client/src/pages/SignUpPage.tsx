@@ -1,5 +1,4 @@
-import SocialForm from '@/components/auth/SocialForm';
-import SignUpForm from '@/components/auth/SignUpForm';
+import { SignUpForm, SocialForm } from '@/components/auth';
 
 function SignUpPage() {
   return (

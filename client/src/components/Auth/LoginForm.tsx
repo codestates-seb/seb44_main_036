@@ -1,16 +1,16 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from 'react';
 
 import { getUserInfo, postLogin } from '@/common/api/authApi';
 import { EMAIL_REGEX, PASSWORD_REGEX } from '@/common/constants/regexs';
 import { LoginFormValues } from '@/common/types/authTypes';
-import AuthInput from '@/components/auth/AuthInput';
 import { Button, Strong } from '@/components/ui';
 import userSlice from '@/reducer/userSlice';
 import { useAppDispatch } from '@/hooks/useReducer';
 import { successToast } from '@/common/utils/toast';
-import { useState } from 'react';
-import axios from 'axios';
+import { AuthInput } from '.';
 
 function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,22 +29,18 @@ function LoginForm() {
     setIsSubmitting(true);
     try {
       await postLogin({ email, password });
-      // const userInfo = await getUserInfo();
-      // dispatch(userSlice.actions.logIn(userInfo));
-      dispatch(
-        userSlice.actions.logIn({
-          nickname: 'eyo25',
-          address: null,
-          userImg: null,
-        })
-      );
+      const userInfo = await getUserInfo();
+      console.log(userInfo);
+      dispatch(userSlice.actions.logIn(userInfo));
 
-      successToast('환영합니다. eyo25님');
+      successToast(`환영합니다. ${userInfo.nickname}님`);
       navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.message;
         alert(errorMessage);
+      } else {
+        alert('error');
       }
     } finally {
       setIsSubmitting(false);

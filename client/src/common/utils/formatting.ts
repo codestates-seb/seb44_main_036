@@ -17,3 +17,11 @@ export const calculateAchievementRate = (targetAmount: number, currentAmount: nu
   const achievementRate = (currentAmount / targetAmount) * 100;
   return achievementRate > 1 ? achievementRate : 1;
 };
+
+export const dateToString = (date = new Date()) => {
+  const year: number = date.getFullYear();
+  const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day: string = date.getDate().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
