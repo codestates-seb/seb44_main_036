@@ -7,12 +7,7 @@ type Props = {
   imageHandler: (blob: File, callback: typeof Function) => void;
 };
 
-const toolbar = [
-  ['heading', 'bold', 'italic', 'strike'],
-  ['hr', 'quote'],
-  ['ul', 'ol', 'task', 'indent', 'outdent'],
-  ['image', 'link'],
-];
+const toolbar = [['heading', 'bold', 'italic', 'strike'], ['hr', 'quote', 'ul', 'ol'], ['image']];
 
 function TuiEditor({ content, editorRef, imageHandler }: Props) {
   return (
