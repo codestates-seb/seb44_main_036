@@ -12,6 +12,7 @@ import { projectApi } from '@/common/api/api';
 import { imageCompressor, dday, combineClassNames } from '@/common/utils';
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
 import { useNavigate } from 'react-router-dom';
+import KakaoMap from '@/components/kakaomap/KakaoMap';
 
 type Category = {
   value: number;
@@ -28,16 +29,19 @@ type FormData = {
   summary: string;
   content: string;
   tags?: string[];
+  location?: string;
 };
 
 function WritePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emptyError, setIsEmptyError] = useState(false);
+
   const editorRef = useRef<Editor>(null);
   const selectRef = useRef<Category>({ value: 11, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
   const imageRef = useRef('');
+  const locationRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const {
@@ -66,6 +70,7 @@ function WritePage() {
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     data.categoryId = selectRef.current.value;
+    data.location = locationRef.current?.value;
     // data.tags = tagRef.current;
     console.log(data);
     try {
@@ -181,6 +186,14 @@ function WritePage() {
             onChange={onSelect}
           />
           <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류됩니다.</p>
+        </div>
+        <h2 className={style.title}>픽업 지점 설정</h2>
+        <p className={style.desc}>
+          빠르게 리워드를 가져갈 수 있도록 픽업 지점을 설정할 수 있습니다.
+        </p>
+        <div className='flex flex-col mb-55pxr'>
+          <h3 className={style.subTitle}>주소</h3>
+          <KakaoMap locationRef={locationRef} />
         </div>
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>

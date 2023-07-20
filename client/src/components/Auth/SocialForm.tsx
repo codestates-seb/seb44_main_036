@@ -1,8 +1,9 @@
+import { useMatch } from 'react-router-dom';
+
 import { TitleText } from '../ui';
 import { ReactComponent as GoogleLogoSvg } from '@/assets/logos/google_logo.svg';
 import { ReactComponent as KakaoLogoSvg } from '@/assets/logos/kakao_logo.svg';
 import SocialButton from './SocialButton';
-import { useMatch } from 'react-router-dom';
 
 function SocialForm() {
   const isSignUp = useMatch('/users/signup');
