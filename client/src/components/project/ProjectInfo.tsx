@@ -3,12 +3,13 @@ import { arrowRight } from '@/assets/common';
 import { emptyHeart, heart, share } from '@/assets/like';
 import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Project } from '@/common/types/responseTypes';
+import { ProjectDetail } from '@/common/types/responseTypes';
 import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
+import { CATEGORY_NUMBER_TO_KO, CategoryNumber } from '@/common/constants/sort';
 
 export type ModalData = {
   title: string;
@@ -20,14 +21,14 @@ function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { data: projectDetail, isLoading } = useSWR<Project>(
+  const { data: projectDetail, isLoading } = useSWR<ProjectDetail>(
     `/projects/${projectId}`,
     projectApi.getProject
   );
 
   if (isLoading) return <div>Loading...</div>;
 
-  const { imageUrl, summary, title, currentAmount, targetAmount } = projectDetail!;
+  const { imageUrl, summary, title, currentAmount, targetAmount, categoryId = 11 } = projectDetail!;
 
   const modalData: ModalData = {
     title: '프로젝트 제목',
@@ -49,7 +50,9 @@ function ProjectInfo() {
       />
       <div className='flex flex-col w-[42%] justify-between'>
         <div className='flex items-center gap-5pxr'>
-          <span className='text-gray-500 mr-5pxr'>뷰티</span>
+          <span className='text-gray-500 mr-5pxr'>
+            {CATEGORY_NUMBER_TO_KO[categoryId as CategoryNumber]}
+          </span>
           <img src={arrowRight} className='h-12pxr mr-5pxr' alt='' />
           {/* todo: 태그 기능 구현시 추가 */}
           {/* <Patch type='tag'># 남성 화장품</Patch>
