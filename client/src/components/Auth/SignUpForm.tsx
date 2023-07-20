@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
+import axios from 'axios';
 
 import AuthInput from '@/components/auth/AuthInput';
 import { Button, Strong } from '@/components/ui';
@@ -8,7 +9,6 @@ import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '@/common/constants/rege
 import { FormValues } from '@/common/types/authTypes';
 import { postSignUp } from '@/common/api/authApi';
 import { successToast } from '@/common/utils/toast';
-import axios from 'axios';
 
 function SignUpForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +35,8 @@ function SignUpForm() {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.message;
         alert(errorMessage);
+      } else {
+        alert('error');
       }
     } finally {
       setIsSubmitting(false);

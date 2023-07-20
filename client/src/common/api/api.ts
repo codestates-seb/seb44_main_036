@@ -11,32 +11,13 @@ export const authApi = {
 
 export const userApi = {
   getUser: (userId: string, headers?: AxiosRequestConfig['headers']) =>
-    authInstance.get(`/mypage/${userId}`, { headers }),
+    authInstance.get(`/members/${userId}`, { headers }),
 };
 
 export const projectApi = {
   getImageUrl: (image: { image: File }) =>
     authInstance.post('/upload', image, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  getProjects: (url: string) => authInstance.get(url).then(({ data }) => data),
+  getProject: (url: string) => authInstance.get(url).then(({ data }) => data),
+  addProject: <T>(project: T) => authInstance.post('/projects', project),
 };
-
-// export const ApiCaller = async <T, U>(
-//   url: string,
-//   data: U,
-//   method: Method,
-//   apiInstance: AxiosInstance = instance
-// ): Promise<T> => {
-//   let response: AxiosResponse<T>;
-//   try {
-//     response = await axios({
-//       baseURL: import.meta.env.VITE_API_URL,
-//       method,
-//       data: { ...data },
-//       url,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-//   return response.data;
-// };
-

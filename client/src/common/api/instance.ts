@@ -1,8 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { decodeJWT } from '../utils/decodeJWT';
 import { setCookie } from '../utils/cookie';
 
-const timeout = 1500;
+const timeout = 5000;
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
