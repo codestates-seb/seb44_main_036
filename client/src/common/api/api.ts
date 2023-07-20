@@ -20,4 +20,6 @@ export const projectApi = {
   getProjects: (url: string) => authInstance.get(url).then(({ data }) => data),
   getProject: (url: string) => authInstance.get(url).then(({ data }) => data),
   addProject: <T>(project: T) => authInstance.post('/projects', project),
+  editProject: <T>(id: string, project: T) => authInstance.patch(`/projects/${id}`, project),
+  deleteProject: (id: string) => authInstance.delete(`/projects/${id}`),
 };
