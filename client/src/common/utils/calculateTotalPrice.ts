@@ -1,5 +1,4 @@
-export const calculateTotalPrice = (quantity: number): number => {
-  const unitPrice = 39500; // Unit price per item
+export const calculateTotalPrice = (quantity: number, unitPrice: number): number => {
   const totalAmount: number = unitPrice * quantity;
   return totalAmount;
 };
