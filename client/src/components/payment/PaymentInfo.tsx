@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { DaumPostcodeButton } from '../usermodal';
 import { calculateTotalPrice } from '@/common/utils/calculateTotalPrice';
 import { paymentEqual, paymentMinus } from '@/assets/payment';
+import useSWR from 'swr';
+import { projectApi } from '@/common/api/api';
+import { useParams } from 'react-router-dom';
 
 interface PostcodeData {
   zonecode: string;
@@ -13,6 +16,9 @@ interface PaymentInfoProps {
 }
 
 function PaymentInfo({ quantity }: PaymentInfoProps) {
+  const { projectId } = useParams();
+  const { data } = useSWR(`/projects/${projectId}`, projectApi.getProject);
+  const unitPrice = data?.price;
   const [newAddress, setNewAddress] = useState<string>('');
   const currentBalance = 2902000;
   const [showModal, setShowModal] = useState(false);
@@ -37,7 +43,7 @@ function PaymentInfo({ quantity }: PaymentInfoProps) {
     setShowModal(false);
   };
 
-  const totalProductPrice: number = calculateTotalPrice(quantity);
+  const totalProductPrice: number = calculateTotalPrice(quantity, unitPrice);
   const remainingBalance: number = currentBalance - totalProductPrice;
 
   return (
@@ -68,7 +74,7 @@ function PaymentInfo({ quantity }: PaymentInfoProps) {
           <p className='flex-center'>총 상품가격</p>
           <div className='flex flex-row'>
             <p className='text-2xl italic font-bold flex-center'>
-              {calculateTotalPrice(quantity).toLocaleString()}
+              {calculateTotalPrice(quantity, unitPrice).toLocaleString()}
             </p>
             <p className='flex items-end ml-10pxr'>원</p>
           </div>
