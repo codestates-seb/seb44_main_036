@@ -13,7 +13,7 @@ type Props = {
   getTags: (tags: TagType[]) => void;
 };
 
-const MAX_TAGS = 10;
+const MAX_TAGS = 5;
 const TAG_MAX_LEN = 10;
 
 function TagInput({ initialTags = [], style, tagRef, getTags }: Props) {
@@ -70,7 +70,9 @@ function TagInput({ initialTags = [], style, tagRef, getTags }: Props) {
           onKeyUp={setTagsByKey}
         />
       </div>
-      <div className='text-sm text-purple-300 ml-12pxr mb-30pxr'>{tags.length} / 10 개의 태그</div>
+      <div className='text-sm text-purple-300 ml-12pxr mb-30pxr'>
+        {tags.length} / {MAX_TAGS} 개의 태그
+      </div>
       <button className='hidden' type='button' onClick={() => getTags(tags)} ref={tagRef}></button>
     </>
   );

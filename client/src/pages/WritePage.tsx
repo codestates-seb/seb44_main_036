@@ -10,7 +10,7 @@ import { TagType } from '@/components/writepage/TagInput';
 import { projectApi } from '@/common/api/api';
 import { imageCompressor, dday, combineClassNames, dateToString } from '@/common/utils';
 import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import KakaoMap from '@/components/kakaomap/KakaoMap';
 import ScrollUpButton from '@/components/ui/ScrollUpButton';
 
@@ -28,6 +28,7 @@ type FormData = {
   imageUrl: string;
   summary: string;
   content: string;
+  price: number;
   tags?: string[];
   location?: string;
 };
@@ -43,12 +44,17 @@ function WritePage() {
   const imageRef = useRef('');
   const locationRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialState = location.state ?? {};
+  const isEditPage = location.pathname.includes('edit');
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: { ...initialState, endDay: dateToString(new Date(initialState.expiredDate)) },
+  });
 
   const hasContent = (str: string) => {
     return !!str.replace(/<br>/g, '').trim().length;
@@ -70,12 +76,17 @@ function WritePage() {
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     data.categoryId = selectRef.current.value;
-    data.location = locationRef.current?.value;
+    // data.location = locationRef.current?.value;
     // data.tags = tagRef.current;
     console.log(data);
     try {
-      await projectApi.addProject<FormData>(data);
-      navigate('/');
+      if (isEditPage) {
+        await projectApi.editProject<FormData>(initialState.projectId, data);
+        navigate(`/project/${initialState.projectId}`);
+      } else {
+        await projectApi.addProject<FormData>(data);
+        navigate('/');
+      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -136,12 +147,29 @@ function WritePage() {
           <p className={style.error}>{errors.title?.message}</p>
         </div>
         <h3 className={style.subTitle}>대표 이미지</h3>
-        <input
-          type='file'
-          accept='.png, .jpg, .jpeg'
-          className={style.fileInput}
-          onChange={getThumbnailUrl}
-        />
+        <div className='flex gap-15pxr'>
+          <input
+            type='file'
+            accept='.png, .jpg, .jpeg'
+            className={style.fileInput}
+            onChange={getThumbnailUrl}
+          />
+          {isEditPage && <p className={style.info}>※ 미첨부시 기존 이미지가 유지됩니다.</p>}
+        </div>
+        <h3 className={style.subTitle}>상품 가격</h3>
+        <div className='relative w-[80%]'>
+          <input
+            type='number'
+            {...register('price', {
+              required: '❗️ 필수 항목입니다.',
+              valueAsNumber: true,
+              max: { value: 10000000, message: '❗️ 최대 천만원 까지 입력 가능합니다.' },
+            })}
+            className={combineClassNames(style.input, 'w-full mb-30pxr')}
+          />
+          <span className='absolute top-[10%] right-15pxr'>원</span>
+          <p className={style.error}>{errors.price?.message}</p>
+        </div>
         <h3 className={style.subTitle}>목표 금액</h3>
         <div className='relative w-[80%]'>
           <input
@@ -185,6 +213,7 @@ function WritePage() {
             placeholder='카테고리 선택'
             components={{ IndicatorSeparator: null }}
             onChange={onSelect}
+            defaultValue={options.find((option) => option.value === initialState.categoryId)}
           />
           <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류됩니다.</p>
         </div>
@@ -212,7 +241,11 @@ function WritePage() {
         </div>
         <h3 className={style.subTitle}>프로젝트 스토리</h3>
         <div className={style.editor}>
-          <TuiEditor editorRef={editorRef} imageHandler={handleImage} />
+          <TuiEditor
+            editorRef={editorRef}
+            imageHandler={handleImage}
+            content={initialState.content}
+          />
         </div>
         {emptyError && (
           <p className={style.empty}>❗️필수 항목입니다. 내용 혹은 이미지가 포함되어야 합니다.</p>
@@ -223,7 +256,7 @@ function WritePage() {
           className={style.submitButton}
           onClick={handleSubmit(onSubmit)}
         >
-          {isLoading ? <Spinner /> : '프로젝트 생성'}
+          {isLoading ? <Spinner /> : isEditPage ? '프로젝트 수정' : '프로젝트 생성'}
         </button>
       </form>
       <ScrollUpButton />

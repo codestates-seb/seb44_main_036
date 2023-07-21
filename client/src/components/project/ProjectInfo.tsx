@@ -4,7 +4,7 @@ import { emptyHeart, heart, share } from '@/assets/like';
 import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
 import { useNavigate, useParams } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { ProjectDetail } from '@/common/types/responseTypes';
 import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
@@ -28,7 +28,17 @@ function ProjectInfo() {
 
   if (isLoading) return <div>Loading...</div>;
 
-  const { imageUrl, summary, title, currentAmount, targetAmount, categoryId = 11 } = projectDetail!;
+  const {
+    imageUrl,
+    summary,
+    title,
+    currentAmount,
+    targetAmount,
+    memberId,
+    categoryId = 11,
+  } = projectDetail!;
+  const userId = localStorage.getItem('memberId') ?? '비로그인 유저';
+  const isWriter = userId === String(memberId);
 
   const modalData: ModalData = {
     title: title,
@@ -40,6 +50,24 @@ function ProjectInfo() {
     setModalOpen(false);
   };
 
+  const deleteProject = async () => {
+    const deleteConfirm = confirm('게시글을 삭제하시겠습니까?');
+    if (deleteConfirm) {
+      try {
+        await projectApi.deleteProject(projectId ?? '');
+        mutate('/projects');
+        alert('게시글 삭제가 완료되었습니다.');
+        navigate('/');
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const editProject = () => {
+    navigate('/project/edit', { state: projectDetail });
+  };
+
   return (
     <section className='flex justify-between h-410pxr'>
       <img
@@ -49,14 +77,26 @@ function ProjectInfo() {
         onError={handleImageError}
       />
       <div className='flex flex-col w-[42%] justify-between'>
-        <div className='flex items-center gap-5pxr'>
-          <span className='text-gray-500 mr-5pxr'>
-            {CATEGORY_NUMBER_TO_KO[categoryId as CategoryNumber]}
-          </span>
-          <img src={arrowRight} className='h-12pxr mr-5pxr' alt='' />
-          {/* todo: 태그 기능 구현시 추가 */}
-          {/* <Patch type='tag'># 남성 화장품</Patch>
-          <Patch type='tag'># 케어</Patch> */}
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-5pxr'>
+            <span className='text-gray-500 mr-5pxr'>
+              {CATEGORY_NUMBER_TO_KO[categoryId as CategoryNumber]}
+            </span>
+            <img src={arrowRight} className='h-12pxr mr-5pxr' alt='' />
+            {/* todo: 태그 기능 구현시 추가 */}
+            {/* <Patch type='tag'># 남성 화장품</Patch>
+            <Patch type='tag'># 케어</Patch> */}
+          </div>
+          {isWriter && (
+            <div className='flex gap-12pxr'>
+              <button className='text-gray-500' onClick={editProject}>
+                수정
+              </button>
+              <button className='text-gray-500' onClick={deleteProject}>
+                삭제
+              </button>
+            </div>
+          )}
         </div>
         <h1 className='text-2xl font-semibold'>{title}</h1>
         <p className='text-sm text-gray-800'>{summary}</p>
