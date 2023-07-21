@@ -6,7 +6,7 @@ export const style = {
   subTitle: 'text-2xl font-bold text-gray-900 my-10pxr',
   input: 'border border-solid rounded border-gray-400 py-5pxr px-10pxr focus:border-purple-300',
   fileInput:
-    'border-b border-solid border-gray-400 w-[80%] py-5pxr mb-30pxr text-sm text-gray-900 focus:border-purple-300 file:py-3pxr file:px-15pxr file:rounded-full file:border-0 file:bg-purple-300 file:text-white file:mr-10pxr',
+    'border-b border-solid border-gray-400 w-[30%] py-5pxr mb-30pxr text-sm text-gray-900 focus:border-purple-300 file:py-3pxr file:px-15pxr file:rounded-full file:border-0 file:bg-purple-300 file:text-white file:mr-10pxr',
   tagInput: 'w-[80%] flex items-center overflow-hidden mb-10pxr',
   textarea: 'w-[80%] mb-25pxr outline-none h-150pxr',
   submitButton:

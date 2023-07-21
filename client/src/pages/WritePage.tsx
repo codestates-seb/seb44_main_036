@@ -147,12 +147,15 @@ function WritePage() {
           <p className={style.error}>{errors.title?.message}</p>
         </div>
         <h3 className={style.subTitle}>대표 이미지</h3>
-        <input
-          type='file'
-          accept='.png, .jpg, .jpeg'
-          className={style.fileInput}
-          onChange={getThumbnailUrl}
-        />
+        <div className='flex gap-15pxr'>
+          <input
+            type='file'
+            accept='.png, .jpg, .jpeg'
+            className={style.fileInput}
+            onChange={getThumbnailUrl}
+          />
+          {isEditPage && <p className={style.info}>※ 미첨부시 기존 이미지가 유지됩니다.</p>}
+        </div>
         <h3 className={style.subTitle}>상품 가격</h3>
         <div className='relative w-[80%]'>
           <input
