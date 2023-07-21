@@ -13,7 +13,14 @@ function UserNav() {
   const userProfileImg = useMemo(() => userData?.userImg || profile, [userData]);
 
   const onProjectAddClick = () => {
-    navigate('/project/add');
+    if (isLogin) {
+      navigate('/project/add');
+    } else {
+      const ok = confirm('로그인이 필요한 서비스 입니다.');
+      if (ok) {
+        navigate('/users/login');
+      }
+    }
   };
 
   return (
