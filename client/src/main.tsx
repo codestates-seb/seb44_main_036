@@ -18,7 +18,11 @@ import store from './store';
 import { CookiesProvider } from 'react-cookie';
 import { storage } from './common/utils/storage';
 
-const isLogin = storage.get('accessToken');
+const isLogin = () => {
+  const a = storage.get('accessToken');
+  console.log('로그인 했니?', a);
+  return a;
+};
 
 const router = createBrowserRouter([
   {
@@ -36,19 +40,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/project/:projectId/payment',
-        element: isLogin ? <PaymentPage /> : <LoginPage />,
+        element: <PaymentPage />,
       },
       {
         path: '/project/edit',
-        element: isLogin ? <WritePage /> : <LoginPage />,
+        element: <WritePage />,
       },
       {
         path: '/project/add',
-        element: isLogin ? <WritePage /> : <LoginPage />,
+        element: <WritePage />,
       },
       {
         path: '/mypage',
-        element: isLogin ? <MyPage /> : <LoginPage />,
+        element: <MyPage />,
       },
       {
         path: '/users/signup',

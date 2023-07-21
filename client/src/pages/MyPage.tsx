@@ -49,12 +49,12 @@ function MyPage() {
     }
   }, [userData]);
 
-  // useEffect(() => {
-  //   const accessToken = storage.get('accessToken');
-  //   if (!accessToken) {
-  //     navigate('/users/login');
-  //   }
-  // }, [navigate]);
+  useEffect(() => {
+    const accessToken = storage.get('accessToken');
+    if (!accessToken) {
+      navigate('/users/login');
+    }
+  }, [navigate]);
 
   const openModal = () => {
     setIsModalOpen(true);
