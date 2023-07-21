@@ -4,9 +4,10 @@ import { logout } from '@/common/api/authApi';
 import { useAppDispatch } from '@/hooks/useReducer';
 import userSlice from '@/reducer/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { profile } from '@/assets/mypage/index';
 
 interface MyPageHeaderProps {
-  imageUrl: string;
+  imageUrl?: string;
   openModal: () => void;
 }
 
@@ -38,7 +39,7 @@ function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
             프로필 수정
           </button>
           <p className='text-gray-100 mr-10pxr'>|</p>
-          <button className='text-gray-100 mr-320pxr' onClick={onLogOutClick}>
+          <button className='text-gray-100' onClick={onLogOutClick}>
             로그아웃
           </button>
         </div>
@@ -46,7 +47,7 @@ function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
       <div className='absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-180pxr'>
         <img
           className='object-cover overflow-hidden bg-gray-100 rounded-full w-120pxr h-120pxr'
-          src={imageUrl}
+          src={imageUrl ? imageUrl : profile}
           alt={imageUrl}
         />
         <button

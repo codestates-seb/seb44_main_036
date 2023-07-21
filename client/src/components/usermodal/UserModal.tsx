@@ -9,12 +9,13 @@ import {
   settingHover,
 } from '@/assets/mypage';
 import { DaumPostcodeButton } from '.';
-// import axios from 'axios';
-// import { mutate } from 'swr';
+import { profile } from '@/assets/mypage/index';
+// import { userApi } from '@/common/api/api';
 
 interface UserModalProps {
-  imageUrl: string;
-  nickname: string;
+  memberId?: string;
+  imageUrl?: string;
+  nickname?: string;
   accountType: 'seller' | 'buyer';
   address: string | null;
   onClose: () => void;
@@ -26,14 +27,22 @@ interface PostcodeData {
   address: string;
 }
 
-function UserModal({ imageUrl, accountType, nickname, address, onClose, onSave }: UserModalProps) {
-  const [newAddress, setNewAddress] = useState(address || '');
-  const [newNickname, setNewNickname] = useState(nickname);
+function UserModal({
+  // memberId,
+  imageUrl,
+  accountType,
+  nickname,
+  address,
+  onClose,
+  onSave,
+}: UserModalProps) {
+  const [newAddress, setNewAddress] = useState<string>(address || '');
+  const [newNickname, setNewNickname] = useState<string>(nickname || '');
   const [IsExitHovered, setIsExitHovered] = useState(false);
   const [isResignHovered, setisResignHovered] = useState(false);
   const [isSettingHovered, setisSettingHovered] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
-  const [previewImage, setPreviewImage] = useState(imageUrl);
+  const [previewImage, setPreviewImage] = useState(imageUrl ? imageUrl : profile);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewAddress(event.target.value);
@@ -43,9 +52,32 @@ function UserModal({ imageUrl, accountType, nickname, address, onClose, onSave }
     setNewNickname(event.target.value);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     onSave(newNickname, newAddress);
     setEditingNickname(false);
+    // try {
+    //   if (!memberId) {
+    //     console.error('memberId가 유효하지 않습니다.');
+    //     return;
+    //   }
+
+    //   // 수정할 사용자 정보
+    //   const updatedUserData = {
+    //     nickname: newNickname,
+    //     address: newAddress,
+    //     // imageUrl: previewImage ? previewImage : imageUrl,
+    //   };
+
+    //   // PATCH 요청 보내기
+    //   await userApi.updateUser(memberId, updatedUserData);
+
+    //   // 데이터 업데이트
+    //   onSave(newNickname, newAddress);
+
+    //   console.log('사용자 정보가 업데이트되었습니다.');
+    // } catch (error) {
+    //   console.error('사용자 정보 업데이트 오류:', error);
+    // }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,34 +96,7 @@ function UserModal({ imageUrl, accountType, nickname, address, onClose, onSave }
 
   const handleSelectedAddress = (data: PostcodeData) => {
     setNewAddress(data.address);
-    // Process the selected address
-    // ...
   };
-
-  // API 완성 후 변경 될 코드
-  // const handleSave = async () => {
-  //   const data = {
-  //   nickname: newNickname,
-  //   address: newAddress,
-  //   imageUrl: selectedImage ? URL.createObjectURL(selectedImage) : imageUrl,
-  // };
-
-  // const response = await axios.patch(`/서버 url/users/${userId}`, data, {
-  //   headers: {
-  //     'Content-Type': 'application/json', // Set the Content-Type header to application/json
-  //   },
-  // });
-
-  //     if (response.status === 200) {
-  //       // When mutate is called with the SWR key and no data,
-  //       // it revalidates the data instead of mutating the cache
-  //       mutate(`/api/users/${userId}`);
-  //       setEditingNickname(false);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   return (
     <>

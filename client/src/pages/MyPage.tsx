@@ -7,12 +7,13 @@ import {
   MyPageMainList,
 } from '@/components/mypage';
 import { UserModal } from '@/components/usermodal';
-// import useSWR from 'swr';
-// import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '@/hooks/useReducer';
+import { userApi } from '@/common/api/api';
+import useSWR from 'swr';
 
 interface IUser {
   imageUrl: string;
-  nickname: string;
   path: string;
   accountType: 'seller' | 'buyer';
   address: string | null;
@@ -21,19 +22,27 @@ interface IUser {
 // 임시 사용자 데이터
 const user: IUser = {
   imageUrl: '/test.svg',
-  nickname: '신일전자',
   path: 'google',
-  accountType: 'seller',
+  accountType: 'buyer',
   address: '(06931) 경상남도 김해시....',
 };
 
-// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
 function MyPage() {
+  const navigate = useNavigate();
+  const userData = useAppSelector((state) => state.user.data);
+  const isLogin = useAppSelector((state) => state.user.isLogin);
+  const memberId = userData?.memberId;
+  const { data } = useSWR(memberId, userApi.getUser);
+  console.log(data);
   const [tab, setTab] = useState<'main' | 'liked'>('main');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [address, setAddress] = useState<string | null>(user.address);
-  const [nickname, setNickname] = useState<string>(user.nickname);
+  const [address, setAddress] = useState<string | null>(userData?.address || null);
+  const [nickname, setNickname] = useState<string | undefined>(userData?.nickname);
+
+  if (!isLogin) {
+    alert('로그인이 필요합니다.');
+    navigate('/users/login');
+  }
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -76,11 +85,11 @@ function MyPage() {
     <>
       <div className='flex-col'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
-          <MyPageHeader imageUrl={user.imageUrl} openModal={openModal} />
+          <MyPageHeader imageUrl={userData?.userImg} openModal={openModal} />
         </div>
 
         <div className='flex-col font-thin flex-center'>
-          <UserProfile nickname={user.nickname} accountType={user.accountType} />
+          <UserProfile nickname={nickname} accountType={user.accountType} />
         </div>
 
         <div>
@@ -93,7 +102,8 @@ function MyPage() {
 
         {isModalOpen && (
           <UserModal
-            imageUrl={user.imageUrl}
+            memberId={memberId}
+            imageUrl={userData?.userImg}
             nickname={nickname}
             accountType={user.accountType}
             address={address}

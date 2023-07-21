@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 type userDataType = {
+  memberId: string;
   nickname: string;
   address: string | null;
   userImg: string;
