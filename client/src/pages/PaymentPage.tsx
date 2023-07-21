@@ -1,4 +1,4 @@
-import ScrollUpButton from '@/components/ui/ScrollUpButton';
+import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
 import { PaymentInfo, PaymentReward } from '@/components/payment';
 import { useState } from 'react';
 

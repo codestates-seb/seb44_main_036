@@ -1,5 +1,5 @@
 import type { Editor } from '@toast-ui/react-editor';
-import ScrollUpButton from '@/components/ui/ScrollUpButton';
+import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton';
 import Select from 'react-select';
 import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
