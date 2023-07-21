@@ -20,4 +20,31 @@
     top: 50%;
     left: 50%;
   }
+
+  .grid-auto {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(400px, auto));
+  }
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: gray !important;
+  --swiper-navigation-size: 20px !important;
+}
+
+input:focus {
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.toastui-editor-contents p,
+.toastui-editor-contents h6 {
+  font-size: 1rem !important;
 }

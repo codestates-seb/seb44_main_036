@@ -1,0 +1,12 @@
+export { default as all } from './all.png';
+export { default as tech } from './tech.png';
+export { default as fashion } from './fashion.png';
+export { default as living } from './living.png';
+export { default as beauty } from './beauty.png';
+export { default as food } from './food.png';
+export { default as culture } from './culture.png';
+export { default as sport } from './sport.png';
+export { default as character } from './character.png';
+export { default as game } from './game.png';
+export { default as pet } from './pet.png';
+export { default as etc } from './beauty.png';
