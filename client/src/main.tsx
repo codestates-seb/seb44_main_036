@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -16,6 +16,13 @@ import {
 } from '@/pages';
 import store from './store';
 import { CookiesProvider } from 'react-cookie';
+import { storage } from './common/utils/storage';
+
+const isLogin = () => {
+  const a = storage.get('accessToken');
+  console.log('로그인 했니?', a);
+  return a;
+};
 
 const router = createBrowserRouter([
   {
@@ -36,11 +43,11 @@ const router = createBrowserRouter([
         element: <PaymentPage />,
       },
       {
-        path: '/project/add',
+        path: '/project/edit',
         element: <WritePage />,
       },
       {
-        path: '/project/edit',
+        path: '/project/add',
         element: <WritePage />,
       },
       {

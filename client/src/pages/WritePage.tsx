@@ -13,6 +13,7 @@ import { ReactComponent as Spinner } from '@/assets/common/spinner.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import KakaoMap from '@/components/kakaomap/KakaoMap';
 import ScrollUpButton from '@/components/ui/ScrollUpButton';
+import { storage } from '@/common/utils/storage';
 
 type Category = {
   value: number;
@@ -62,7 +63,7 @@ function WritePage() {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
-    const memberId = localStorage.getItem('memberId');
+    const memberId = storage.get('memberId');
     const content = editorRef.current?.getInstance().getMarkdown();
 
     if (!hasContent(content)) {

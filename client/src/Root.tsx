@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from './hooks/useReducer';
 import userSlice from './reducer/userSlice';
 import { getUserInfo } from './common/api/authApi';
+import { storage } from './common/utils/storage';
 
 function Root() {
   const dispatch = useAppDispatch();
@@ -15,8 +16,8 @@ function Root() {
   };
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const memberId = localStorage.getItem('accessToken');
+    const accessToken = storage.get('accessToken');
+    const memberId = storage.get('memberId');
     if (accessToken && memberId) {
       getUser();
     }
