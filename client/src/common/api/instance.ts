@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { decodeJWT } from '../utils/decodeJWT';
 import { setCookie } from '../utils/cookie';
+import { storage } from '../utils/storage';
 
 const timeout = 5000;
 
@@ -17,8 +18,8 @@ instance.interceptors.response.use(
       const refreshToken = headers['refresh'];
       const memberId = decodeJWT(accessToken).memberId;
 
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('memberId', memberId);
+      storage.set('accessToken', accessToken);
+      storage.set('memberId', memberId);
       setCookie('refreshToken', refreshToken, {
         path: '/',
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -46,7 +47,7 @@ export const authInstance = axios.create({
 
 authInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = storage.get('accessToken');
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

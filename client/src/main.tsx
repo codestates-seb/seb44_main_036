@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -16,6 +16,9 @@ import {
 } from '@/pages';
 import store from './store';
 import { CookiesProvider } from 'react-cookie';
+import { storage } from './common/utils/storage';
+
+const isLogin = storage.get('accessToken');
 
 const router = createBrowserRouter([
   {
@@ -33,19 +36,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/project/:projectId/payment',
-        element: <PaymentPage />,
-      },
-      {
-        path: '/project/add',
-        element: <WritePage />,
+        element: isLogin ? <PaymentPage /> : <LoginPage />,
       },
       {
         path: '/project/edit',
-        element: <WritePage />,
+        element: isLogin ? <WritePage /> : <LoginPage />,
+      },
+      {
+        path: '/project/add',
+        element: isLogin ? <WritePage /> : <LoginPage />,
       },
       {
         path: '/mypage',
-        element: <MyPage />,
+        element: isLogin ? <MyPage /> : <LoginPage />,
       },
       {
         path: '/users/signup',

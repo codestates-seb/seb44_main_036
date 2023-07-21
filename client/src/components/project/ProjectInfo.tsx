@@ -10,6 +10,7 @@ import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
 import { CATEGORY_NUMBER_TO_KO, CategoryNumber } from '@/common/constants/sort';
+import { storage } from '@/common/utils/storage';
 
 export type ModalData = {
   title: string;
@@ -37,7 +38,7 @@ function ProjectInfo() {
     memberId,
     categoryId = 11,
   } = projectDetail!;
-  const userId = localStorage.getItem('memberId') ?? '비로그인 유저';
+  const userId = storage.get('memberId') ?? '비로그인 유저';
   const isWriter = userId === String(memberId);
 
   const modalData: ModalData = {

@@ -1,5 +1,6 @@
 import { loginData, signUpData } from '../types/authTypes';
 import { removeCookie } from '../utils/cookie';
+import { storage } from '../utils/storage';
 import { authApi, userApi } from './api';
 
 export const postSignUp = async (formData: signUpData) => {
@@ -12,13 +13,13 @@ export const postLogin = async (formData: loginData) => {
 };
 
 export const logout = async () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('memberId');
+  storage.remove('accessToken');
+  storage.remove('memberId');
   removeCookie('refreshToken', { path: '/' });
 };
 
 export const getUserInfo = async () => {
-  const memberId = localStorage.getItem('memberId');
+  const memberId = storage.get('memberId');
   console.log('memberId', memberId);
   if (memberId) {
     return (await userApi.getUser(memberId)).data;

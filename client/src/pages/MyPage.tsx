@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/useReducer';
 import { userApi } from '@/common/api/api';
 import useSWR from 'swr';
+import { storage } from '@/common/utils/storage';
 
 interface IUser {
   imageUrl: string;
@@ -32,9 +33,9 @@ function MyPage() {
   const userData = useAppSelector((state) => state.user.data);
   const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
-  console.log(userData);
+  // console.log(userData);
   const { data } = useSWR(memberId, userApi.getUser);
-  console.log(data);
+  // console.log(data);
 
   const [tab, setTab] = useState<'main' | 'liked'>('main');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,11 +49,12 @@ function MyPage() {
     }
   }, [userData]);
 
-  useEffect(() => {
-    if (!isLogin) {
-      navigate('/users/login');
-    }
-  });
+  // useEffect(() => {
+  //   const accessToken = storage.get('accessToken');
+  //   if (!accessToken) {
+  //     navigate('/users/login');
+  //   }
+  // }, [navigate]);
 
   const openModal = () => {
     setIsModalOpen(true);
