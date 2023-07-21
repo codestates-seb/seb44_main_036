@@ -12,7 +12,7 @@ function ProjectItem({ project }: Props) {
   const isDueSoon = daysUntilDeadline <= 7;
 
   return (
-    <article className='relative flex flex-col cursor-pointer w-400pxr'>
+    <article className='relative flex flex-col cursor-pointer w-400pxr mb-35pxr'>
       {isDueSoon && <Patch type='alert'>마감임박</Patch>}
       <img
         src={imageUrl}

@@ -59,7 +59,6 @@ function KakaoMap({ locationRef }: Props) {
 
   useEffect(() => {
     if (map && marker) {
-      console.log('a');
       window.kakao.maps.event.addListener(
         map,
         'click',
@@ -90,10 +89,12 @@ function KakaoMap({ locationRef }: Props) {
     <div className='flex-col flex-center w-500pxr'>
       <div className='relative w-full mb-25pxr'>
         <input
+          placeholder='주소를 검색하고 싶다면 클릭해 주세요'
           id='addr'
           type='text h-35pxr'
           ref={locationRef}
-          defaultValue={address}
+          value={address}
+          readOnly
           className={`${style.input} w-full border`}
           onClick={() => onInputClickHandler(map, marker, setAdress)}
         />
