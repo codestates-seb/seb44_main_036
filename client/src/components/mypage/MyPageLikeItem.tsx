@@ -21,9 +21,7 @@ function MyPageLikeItem() {
         </div>
         <Patch type='deadline'>11일 남음</Patch>
       </div>
-      <h2 className='text-xl mt-7pxr line-clamp-2'>
-        맥세이프 악세서리 최종 종결자 | 미니멀 디자인 보조배터리 & 맥세이프톡
-      </h2>
+      <h2 className='text-xl mt-7pxr line-clamp-2'>아직 개발중인 기능입니다.</h2>
     </article>
   );
 }

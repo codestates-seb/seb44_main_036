@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   UserProfile,
   MyPageHeader,
@@ -32,17 +32,27 @@ function MyPage() {
   const userData = useAppSelector((state) => state.user.data);
   const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
+  console.log(userData);
   const { data } = useSWR(memberId, userApi.getUser);
   console.log(data);
+
   const [tab, setTab] = useState<'main' | 'liked'>('main');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(userData?.address || null);
   const [nickname, setNickname] = useState<string | undefined>(userData?.nickname);
 
-  if (!isLogin) {
-    alert('로그인이 필요합니다.');
-    navigate('/users/login');
-  }
+  useEffect(() => {
+    if (userData) {
+      setAddress(userData.address || null);
+      setNickname(userData.nickname);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (!isLogin) {
+      navigate('/users/login');
+    }
+  });
 
   const openModal = () => {
     setIsModalOpen(true);
