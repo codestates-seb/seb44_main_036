@@ -14,7 +14,6 @@ import useSWR from 'swr';
 
 interface IUser {
   imageUrl: string;
-  nickname: string;
   path: string;
   accountType: 'seller' | 'buyer';
   address: string | null;
@@ -23,29 +22,26 @@ interface IUser {
 // 임시 사용자 데이터
 const user: IUser = {
   imageUrl: '/test.svg',
-  nickname: '신일전자',
   path: 'google',
-  accountType: 'seller',
+  accountType: 'buyer',
   address: '(06931) 경상남도 김해시....',
 };
 
-// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
 function MyPage() {
-  const [tab, setTab] = useState<'main' | 'liked'>('main');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [address, setAddress] = useState<string | null>(user.address);
-  const [nickname, setNickname] = useState<string>(user.nickname);
   const navigate = useNavigate();
   const userData = useAppSelector((state) => state.user.data);
   const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
-  const { data } = useSWR(memberId, userApi.getUser); // Assign the fetched data to the 'data' variable
+  const { data } = useSWR(memberId, userApi.getUser);
   console.log(data);
+  const [tab, setTab] = useState<'main' | 'liked'>('main');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [address, setAddress] = useState<string | null>(userData?.address || null);
+  const [nickname, setNickname] = useState<string | undefined>(userData?.nickname);
 
   if (!isLogin) {
     alert('로그인이 필요합니다.');
-    navigate('/login');
+    navigate('/users/login');
   }
 
   const openModal = () => {
@@ -93,7 +89,7 @@ function MyPage() {
         </div>
 
         <div className='flex-col font-thin flex-center'>
-          <UserProfile nickname={userData?.nickname} accountType={user.accountType} />
+          <UserProfile nickname={nickname} accountType={user.accountType} />
         </div>
 
         <div>
@@ -106,8 +102,9 @@ function MyPage() {
 
         {isModalOpen && (
           <UserModal
+            memberId={memberId}
             imageUrl={userData?.userImg}
-            nickname={userData?.nickname}
+            nickname={nickname}
             accountType={user.accountType}
             address={address}
             onClose={closeModal}

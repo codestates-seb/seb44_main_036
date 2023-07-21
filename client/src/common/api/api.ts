@@ -12,6 +12,8 @@ export const authApi = {
 export const userApi = {
   getUser: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
     authInstance.get(`/members/${memberId}`, { headers }),
+  updateUser: (memberId: string, userData: any, headers?: AxiosRequestConfig['headers']) =>
+    authInstance.patch(`/members/${memberId}`, userData, { headers }),
 };
 
 export const projectApi = {
