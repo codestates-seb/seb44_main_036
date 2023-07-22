@@ -1,16 +1,10 @@
-package com.codestates.server.project.dto;//package com.codestates.server.project.dto;
+package com.codestates.server.project.dto;
 
-import com.codestates.server.validator.NotSpace;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class ProjectDto {
@@ -21,38 +15,66 @@ public class ProjectDto {
 
         @Positive
         private long memberId;
-        @NotBlank
+        @NotBlank(message = "제목은 공백이 아니어야 합니다.")
+        @Size(min = 2,max = 50,message = "제목은 2자~50자 내외로 써주세요")
         private String title;
-        @NotBlank
+        @NotBlank(message = "내용은 공백이 아니어야 합니다.")
+        @Size(min = 2,max = 10000,message = "내용은 2자~10000자 내외로 써주세요")
         private String content;
 
-        @NotBlank
+        @NotBlank(message = "요약은 공백이 아니어야 합니다.")
+        @Size(max = 100,message = "요약은 100자 내외로 써주세요")
         private String summary;
 
         @Positive
+        @Min(50000)
+        @Max(10000000)
+        @NotBlank(message = "목표금액은 공백이 아니어야 합니다.")
         private Integer targetAmount;
         @Positive
+        @NotBlank(message = "마감일자는 공백이 아니어야 합니다.")
         private int endDay; //일 단위
 
-        @NotBlank
+        @NotBlank(message = "이미지 url는 공백이 아니어야 합니다.")
         private String imageUrl;
 
-        @Positive
-        private int price;
+        @NotBlank(message = "가격은 공백이 아니어야 합니다.")
+        private Integer price;
 
+        @NotBlank(message = "카테고리는 공백이 아니어야 합니다.")
         private long categoryId;
     }
 
     @Getter
     @AllArgsConstructor
     public static class Patch {
+
         private long projectId;
 
-        @NotSpace(message = "회원 이름은 공백이 아니어야 합니다")
-        private String name;
-        @NotSpace(message = "주소는 공백이 아니여야 합니다")
-        private String address;
-        public void setMemberId(long projectId) {
+
+        @Size(min = 2,max = 30,message = "제목은 2자~50자 내외로 써주세요")
+        private String title;
+
+        @Size(min = 2,max = 10000,message = "내용은 2자~10000자 내외로 써주세요")
+        private String content;
+
+
+        @Size(max = 100,message = "요약은 100자 내외로 써주세요")
+        private String summary;
+
+
+        @Min(50000)
+        @Max(10000000)
+        private Integer targetAmount;
+
+        private int endDay; //일 단위
+
+
+        private String imageUrl;
+
+        private Integer price;
+
+        public void setProjectId(long projectId) {
             this.projectId = projectId;
         }
     }
@@ -66,10 +88,12 @@ public class ProjectDto {
         private String title;
         private String summary;
         private String content;
-        private int price;
+        private Integer price;
         private int currentAmount;
         private Integer targetAmount;
         private LocalDateTime expiredDate;
+        private long categoryId;
+        private int likedProject;
 
     }
 }
