@@ -26,12 +26,10 @@ public class MemberService {
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
         if (member.getPassword() != null) {
-            String encryptedPassword = passwordEncoder.encode(member.getPassword());
-            member.setPassword(encryptedPassword);
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
         }
 
-        List<String> roles = authorityUtils.createRoles(member.getEmail());
-        member.setRoles(roles);
+        member.setRoles(authorityUtils.createRoles(member.getEmail()));
         return memberRepository.save(member);
     }
 

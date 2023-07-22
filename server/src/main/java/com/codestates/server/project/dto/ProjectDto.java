@@ -94,6 +94,6 @@ public class ProjectDto {
         private LocalDateTime expiredDate;
         private long categoryId;
         private int likedProject;
-
+        private int view;
     }
 }

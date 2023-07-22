@@ -74,5 +74,10 @@ public class MemberController {
         return new ResponseEntity(fundingService.findByMemberId(memberId),HttpStatus.OK);
     }
 
+    @GetMapping("/members/{member-id}/like")
+    public ResponseEntity findByMyProjectLiked(@PathVariable("member-id") long memberId){
+        return new ResponseEntity(projectService.findByLikedProject(memberId),HttpStatus.OK);
+    }
+
 
 }

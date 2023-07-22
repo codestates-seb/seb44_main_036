@@ -29,9 +29,11 @@ public class Member extends Auditable {
     private String email;
     @Column(length = 100)
     private String password;
-
     @Column
     private String address;
+
+    @Column(nullable = false)
+    private Integer cash;
 
 
     @OneToMany(mappedBy = "member")
