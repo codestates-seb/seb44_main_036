@@ -5,31 +5,24 @@ import com.codestates.server.exception.BusinessLogicException;
 import com.codestates.server.exception.ExceptionCode;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.member.repository.MemberRepository;
-import org.springframework.context.ApplicationEventPublisher;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
 
-    public MemberService(MemberRepository memberRepository, ApplicationEventPublisher publisher, PasswordEncoder passwordEncoder, CustomAuthorityUtils authorityUtils) {
-        this.memberRepository = memberRepository;
-        this.publisher = publisher;
-        this.passwordEncoder = passwordEncoder;
-        this.authorityUtils = authorityUtils;
-    }
+
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
         if (member.getPassword() != null) {
@@ -37,11 +30,9 @@ public class MemberService {
             member.setPassword(encryptedPassword);
         }
 
-
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
-        Member savedMember = memberRepository.save(member);
-        return savedMember;
+        return memberRepository.save(member);
     }
 
 
@@ -50,39 +41,34 @@ public class MemberService {
     }
 
     public List<Member> findMembers() {
-        return (List<Member>) memberRepository.findAll();
+        return memberRepository.findAll();
     }
 
 
     public Member updateMember(Member member) {
-        Member findMember = findVerifiedMember(member.getMemberId());
+        Member findMember = findMember(member.getMemberId());
 
-        Optional.ofNullable(member.getEmail())
-                .ifPresent(name -> findMember.setEmail(name));
+        Optional.ofNullable(member.getNickname())
+                .ifPresent(nickname -> findMember.setNickname(nickname));
+        Optional.ofNullable(member.getAddress())
+                .ifPresent(address -> findMember.setAddress(address));
 
         return memberRepository.save(findMember);
     }
 
     public void deleteMember(long memberId) {
-        Member findMember = findVerifiedMember(memberId);
-        memberRepository.delete(findMember);
+        memberRepository.delete(findVerifiedMember(memberId));
     }
 
     public Member findVerifiedMember(long memberId) {
-        Optional<Member> optionalMember =
-                memberRepository.findById(memberId);
-
-        Member findMember =
-                optionalMember.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-
-        return findMember;
+        return  memberRepository.findById(memberId).orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
     private void verifyExistsEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
 
-        if (member.isPresent())
+
+        if (memberRepository.findByEmail(email).isPresent())
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXIST);
     }
 }

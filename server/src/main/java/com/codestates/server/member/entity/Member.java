@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,11 +30,13 @@ public class Member extends Auditable {
     @Column(length = 100)
     private String password;
 
-    @JsonManagedReference
+    @Column
+    private String address;
+
+
     @OneToMany(mappedBy = "member")
     private List<Project> projects = new ArrayList<>();
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "member")
     private List<Funding> fundings = new ArrayList<>();
 
