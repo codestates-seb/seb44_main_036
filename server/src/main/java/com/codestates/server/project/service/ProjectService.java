@@ -10,14 +10,21 @@ import com.codestates.server.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
+
+    private final static String VIEWCOOKIENAME = "alreadyViewCookie";
     private final ProjectRepository projectRepository;
 
     private final MemberService memberService;
@@ -82,8 +89,8 @@ public class ProjectService {
         return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
     }
 
-    public List<ProjectDto.Response> findByLikedProject(long memberId,Integer likedProject){
-        return mapper.projectsToProjectResponseDtos(projectRepository.findByLikedProject(memberId,likedProject));
+    public List<ProjectDto.Response> findByLikedProject(long memberId){
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByLikedProject(memberId,1));
     }
 
     public void deleteProject(long projectId){
@@ -91,6 +98,42 @@ public class ProjectService {
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);
         }
         projectRepository.delete(findProject(projectId));
+    }
+
+    @Transactional
+    public int updateView(long projectId, HttpServletRequest request, HttpServletResponse response){
+        Cookie[] cookies = request.getCookies();
+        boolean checkCookie = false;
+        int result = 0;
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals(VIEWCOOKIENAME+projectId)) checkCookie = true;
+            }
+            if(!checkCookie){
+                Cookie newCookie = createCookie(projectId);
+                response.addCookie(newCookie);
+                result = projectRepository.updateView(projectId);
+            }
+        }else {
+            Cookie newCookie = createCookie(projectId);
+            response.addCookie(newCookie);
+            result = projectRepository.updateView(projectId);
+        }
+        return result;
+    }
+
+
+    private Cookie createCookie(long projectId){
+        Cookie cookie = new Cookie(VIEWCOOKIENAME+projectId,String.valueOf(projectId));
+        cookie.setComment("조회수 중복 증가 방지 쿠키");
+        cookie.setMaxAge(getRemainForTomorrow());
+        cookie.setHttpOnly(true);
+        return cookie;
+    }
+
+    private int getRemainForTomorrow(){
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1L).truncatedTo(ChronoUnit.DAYS);
+        return (int) LocalDateTime.now().until(tomorrow,ChronoUnit.SECONDS);
     }
 
 

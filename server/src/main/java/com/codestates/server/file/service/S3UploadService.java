@@ -34,6 +34,7 @@ public class S3UploadService {
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentType(multipartFile.getContentType());
 
+
     amazonS3Client.putObject(
             new PutObjectRequest(bucket,s3FileName,multipartFile.getInputStream(),objMeta)
                     .withCannedAcl(CannedAccessControlList.PublicRead));

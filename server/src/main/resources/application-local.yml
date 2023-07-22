@@ -21,8 +21,8 @@ aws:
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 2MB
+      max-request-size: 2MB
   config:
     import: 'aws-parameterstore:'
   datasource:
@@ -66,7 +66,7 @@ server:
       force-response: true
 mail:
   address:
-    admin: admin@gmail.com
+    admin: ${ADMIN}
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30

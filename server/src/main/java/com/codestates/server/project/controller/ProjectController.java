@@ -7,11 +7,14 @@ import com.codestates.server.project.mapper.ProjectMapper;
 import com.codestates.server.project.repository.ProjectRepository;
 import com.codestates.server.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -24,8 +27,6 @@ public class ProjectController {
 
     private final ProjectMapper mapper;
     private final ProjectService projectService;
-
-    private final ProjectRepository projectRepository;
 
 
 
@@ -48,10 +49,12 @@ public class ProjectController {
     }
 
     @GetMapping("/{project-id}")
-    public ResponseEntity getProject(@PathVariable("project-id") long projectId){
-        Project findProject = projectService.findProject(projectId);
+    public ResponseEntity getProject(@PathVariable("project-id") long projectId,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response){
+        projectService.updateView(projectId,request,response);
 
-        return new ResponseEntity(mapper.projectToProjectResponseDto(findProject),HttpStatus.OK);
+        return new ResponseEntity(mapper.projectToProjectResponseDto(projectService.findProject(projectId)),HttpStatus.OK);
     }
 
     @GetMapping
@@ -64,11 +67,6 @@ public class ProjectController {
     @GetMapping("/category/{category-id}")
     public ResponseEntity getProjectByCategoryType(@PathVariable("category-id")long categoryId){
         return new ResponseEntity(projectService.findByCategoryType(categoryId),HttpStatus.OK);
-    }
-
-    @GetMapping("/like/{member-id}/{liked}")
-    public ResponseEntity findByMyProjectLiked(@PathVariable("member-id") long memberId,@PathVariable("liked") Integer likedProject){
-        return new ResponseEntity(projectService.findByLikedProject(memberId,likedProject),HttpStatus.OK);
     }
 
     @DeleteMapping("/{project-id}")

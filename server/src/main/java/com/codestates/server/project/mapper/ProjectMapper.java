@@ -32,13 +32,7 @@ public interface ProjectMapper {
         return project;
     }
 
-
      Project projectPatchDtoToProject(ProjectDto.Patch patch);
-
-
-
-
-
 
      default ProjectDto.Response projectToProjectResponseDto(Project project){
         ProjectDto.Response response = new ProjectDto.Response();
@@ -53,6 +47,7 @@ public interface ProjectMapper {
             response.setTargetAmount(project.getTargetAmount());
             response.setImageUrl(project.getImageUrl());
             response.setCategoryId(project.getCategory().getCategoryId());
+            response.setView(project.getView());
 
         return response;
      }
