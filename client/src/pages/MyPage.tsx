@@ -9,9 +9,9 @@ import {
 import { UserModal } from '@/components/usermodal';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/useReducer';
-import { userApi } from '@/common/api/api';
-import useSWR from 'swr';
 import { storage } from '@/common/utils/storage';
+// import { userApi } from '@/common/api/api';
+// import useSWR from 'swr';
 
 interface IUser {
   imageUrl: string;
@@ -31,10 +31,9 @@ const user: IUser = {
 function MyPage() {
   const navigate = useNavigate();
   const userData = useAppSelector((state) => state.user.data);
-  const isLogin = useAppSelector((state) => state.user.isLogin);
+  // const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
-  // console.log(userData);
-  const { data } = useSWR(memberId, userApi.getUser);
+  // const { data } = useSWR(memberId, userApi.getUserLikedProjects);
   // console.log(data);
 
   const [tab, setTab] = useState<'main' | 'liked'>('main');

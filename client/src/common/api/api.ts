@@ -12,6 +12,8 @@ export const authApi = {
 export const userApi = {
   getUser: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
     authInstance.get(`/members/${memberId}`, { headers }),
+  getUserLikedProjects: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
+    authInstance.get(`/projects/like/${memberId}/liked`, { headers }),
   updateUser: (memberId: string, userData: any, headers?: AxiosRequestConfig['headers']) =>
     authInstance.patch(`/members/${memberId}`, userData, { headers }),
 };
