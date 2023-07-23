@@ -13,6 +13,5 @@ public interface MemberMapper {
 
     Member memberPatchDtoToMember(MemberDto.Patch patch);
     MemberDto.Response memberToMemberResponseDto(Member member);
-
     List<MemberDto.Response> membersToMemberResponseDtos(List<Member> members);
 }

@@ -11,9 +11,4 @@ import java.util.Optional;
 
 public interface ProjectLikeRepository extends JpaRepository<ProjectLike,Long> {
     Optional<ProjectLike> findByMemberAndProject(Member member, Project project);
-//    @Query(value = "SELECT pl FROM ProjectLike pl WHERE pl.member.memberId :=memberId")
-//    List<ProjectLike> findProjectLikeByMemberId(long memberId);
-
-
-
 }

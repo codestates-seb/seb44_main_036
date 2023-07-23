@@ -23,7 +23,6 @@ public class FundingController {
     public ResponseEntity postFunding(@Valid @RequestBody FundingDto.Post requestBody){
         return new ResponseEntity(mapper.fundingToFundingResponseDto(fundingService.createFunding(mapper.fundingPostDtoToFunding(requestBody))), HttpStatus.CREATED);
     }
-
     @GetMapping("/{funding-id}")
     public ResponseEntity getFunding(@PathVariable("funding-id") long fundingId){
         return new ResponseEntity(mapper.fundingToFundingResponseDto(fundingService.findFunding(fundingId)),HttpStatus.OK);

@@ -28,7 +28,7 @@ public class MemberService {
         if (member.getPassword() != null) {
             member.setPassword(passwordEncoder.encode(member.getPassword()));
         }
-
+        member.setCash(3000000);
         member.setRoles(authorityUtils.createRoles(member.getEmail()));
         return memberRepository.save(member);
     }
@@ -68,5 +68,9 @@ public class MemberService {
 
         if (memberRepository.findByEmail(email).isPresent())
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXIST);
+    }
+
+    public void save(Member member){
+        memberRepository.save(member);
     }
 }

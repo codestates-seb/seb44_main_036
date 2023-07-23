@@ -4,10 +4,8 @@ package com.codestates.server.project.controller;//package com.codestates.server
 import com.codestates.server.project.dto.ProjectDto;
 import com.codestates.server.project.entity.Project;
 import com.codestates.server.project.mapper.ProjectMapper;
-import com.codestates.server.project.repository.ProjectRepository;
 import com.codestates.server.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
