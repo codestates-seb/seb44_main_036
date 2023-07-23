@@ -1,6 +1,6 @@
 package com.codestates.server.category.entity;
 
-import com.codestates.server.project.entity.Project;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -44,6 +44,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private void saveMember(String email,OAuth2User oAuth2User){
         Member member = new Member(email);
         member.setNickname(String.valueOf(oAuth2User.getAttributes().get("name")));
+        member.setCash(3000000);
         memberService.createMember(member);
     }
 

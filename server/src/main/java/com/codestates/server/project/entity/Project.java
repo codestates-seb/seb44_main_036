@@ -5,14 +5,9 @@ import com.codestates.server.category.entity.Category;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.projectLike.entity.ProjectLike;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

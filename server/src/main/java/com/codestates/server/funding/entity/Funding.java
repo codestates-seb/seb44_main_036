@@ -3,8 +3,6 @@ package com.codestates.server.funding.entity;
 import com.codestates.server.audit.Auditable;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.project.entity.Project;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

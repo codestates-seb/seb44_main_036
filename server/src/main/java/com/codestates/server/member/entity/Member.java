@@ -3,12 +3,9 @@ package com.codestates.server.member.entity;
 import com.codestates.server.audit.Auditable;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.project.entity.Project;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

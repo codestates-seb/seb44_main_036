@@ -27,10 +27,4 @@ public class ProjectLikeController {
         return ResponseEntity.ok(null);
     }
 
-//    @GetMapping("/{member-id}")
-//    public ResponseEntity getProjectLike(@PathVariable("member-id") long memberId){
-//
-//
-//            return new ResponseEntity(projectLikeService.findByMemberId(memberId), HttpStatus.OK);
-//    }
 }
