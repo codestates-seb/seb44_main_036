@@ -4,9 +4,9 @@ import { Autoplay } from 'swiper/modules';
 import { SlideController } from '.';
 import { ProgressBar } from '../ui';
 import { useState } from 'react';
+import { coin, lizard } from '@/assets/common';
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
 const CAROUSEL_LIST = [
@@ -14,43 +14,39 @@ const CAROUSEL_LIST = [
     id: 1,
     title: (
       <>
-        놓치면 아쉬운 <br /> 종료 임박 프로젝트
+        지금 회원가입하면 <br /> 300만 포인트 증정!
       </>
     ),
-    desc: '프로젝트',
-    imageUrl:
-      'https://cdn.wadiz.kr/ft/images/green001/2023/0703/20230703170823045_6537.jpg/wadiz/resize/3200/format/jpg/quality/85/',
+    desc: '회원가입 이벤트 진행 중',
+    imageUrl: coin,
+    link: '/users/signup',
   },
   {
     id: 2,
     title: (
       <>
-        지금 알림신청만 해도
+        내가 원하는 모든 펀딩
         <br />
-        네이버 웹툰 쿠키 300개
+        Mi Funding
       </>
     ),
-    desc: '이벤트',
-    imageUrl: 'https://cdn1.wadiz.kr/images/20230704/1688445677508.png/wadiz/optimize',
-  },
-  {
-    id: 3,
-    title: (
-      <>
-        한번에 펼치고 회전까지 <br /> 피벗체어 원액션
-      </>
-    ),
-    desc: '스토어',
-    imageUrl:
-      'https://cdn.wadiz.kr/ft/images/green001/2023/0619/20230619113152840_5099.jpg/wadiz/resize/3200/format/jpg/quality/85/',
+    desc: 'Mi Funding',
+    imageUrl: lizard,
+    link: null,
   },
 ];
 
 function Carousel() {
   const [activeIndex, setActiveIndex] = useState(1);
+  const navigate = useNavigate();
 
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.activeIndex + 1);
+  };
+
+  const handleClickCarousel = (link: string | null) => {
+    if (!link) return;
+    navigate(link);
   };
 
   return (
@@ -61,7 +57,7 @@ function Carousel() {
       className='relative'
     >
       {CAROUSEL_LIST.map((carousel) => (
-        <SwiperSlide key={carousel.id}>
+        <SwiperSlide key={carousel.id} onClick={() => handleClickCarousel(carousel.link)}>
           <img src={carousel.imageUrl} alt='캐러셀 이미지' />
           <div className='absolute top-[0px] left-[0px] w-full h-full bg-gradient-to-tr from-black opacity-60'></div>
           <section className='absolute text-white left-80pxr bottom-50pxr max-w-400pxr'>
