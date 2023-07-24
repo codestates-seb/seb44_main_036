@@ -1,5 +1,5 @@
 type Props = {
-  text: string;
+  text: number | string;
   imgSrc: string;
   onClick?: () => void;
 };

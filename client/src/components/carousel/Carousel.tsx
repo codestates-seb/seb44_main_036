@@ -5,6 +5,7 @@ import { SlideController } from '.';
 import { ProgressBar } from '../ui';
 import { useState } from 'react';
 import { coin, lizard } from '@/assets/common';
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 
@@ -18,6 +19,7 @@ const CAROUSEL_LIST = [
     ),
     desc: '회원가입 이벤트 진행 중',
     imageUrl: coin,
+    link: '/users/signup',
   },
   {
     id: 2,
@@ -30,14 +32,21 @@ const CAROUSEL_LIST = [
     ),
     desc: 'Mi Funding',
     imageUrl: lizard,
+    link: null,
   },
 ];
 
 function Carousel() {
   const [activeIndex, setActiveIndex] = useState(1);
+  const navigate = useNavigate();
 
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.activeIndex + 1);
+  };
+
+  const handleClickCarousel = (link: string | null) => {
+    if (!link) return;
+    navigate(link);
   };
 
   return (
@@ -48,7 +57,7 @@ function Carousel() {
       className='relative'
     >
       {CAROUSEL_LIST.map((carousel) => (
-        <SwiperSlide key={carousel.id}>
+        <SwiperSlide key={carousel.id} onClick={() => handleClickCarousel(carousel.link)}>
           <img src={carousel.imageUrl} alt='캐러셀 이미지' />
           <div className='absolute top-[0px] left-[0px] w-full h-full bg-gradient-to-tr from-black opacity-60'></div>
           <section className='absolute text-white left-80pxr bottom-50pxr max-w-400pxr'>
