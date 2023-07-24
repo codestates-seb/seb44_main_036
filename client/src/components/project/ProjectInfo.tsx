@@ -25,7 +25,7 @@ function ProjectInfo() {
   const { data: projectDetail, isLoading } = useSWRImmutable<Project>(
     `/projects/${projectId}`,
     projectApi.getProject,
-    { revalidateIfStale: false, dedupingInterval: Infinity }
+    { dedupingInterval: Infinity }
   );
 
   if (isLoading) return <div>Loading...</div>;
@@ -78,7 +78,7 @@ function ProjectInfo() {
       `/projects/${projectId}`,
       {
         ...projectDetail,
-        likedProject: !likeProject,
+        likedProject: likedProject === 0 ? 1 : 0,
         likeCount: likedProject ? likeCount - 1 : likeCount + 1,
       },
       false

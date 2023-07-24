@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { ProjectItem } from '.';
 import type { Projects } from '@/common/types/responseTypes';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr';
 import { projectApi } from '@/common/api/api';
 import { useCallback, useEffect, useState } from 'react';
 import { isPastDeadline } from '@/common/utils';
@@ -10,7 +10,9 @@ type Progress = 'all' | 'ongoing' | 'end';
 type Order = 'recent' | 'popular' | 'closing';
 
 function ProjectList() {
-  const { data: projectList } = useSWR<Projects>('/projects', projectApi.getProjects);
+  const { data: projectList } = useSWRImmutable<Projects>('/projects', projectApi.getProjects, {
+    dedupingInterval: Infinity,
+  });
   const [filteredProjects, setFilteredProjects] = useState(projectList);
   const [searchParams] = useSearchParams();
 
@@ -51,11 +53,13 @@ function ProjectList() {
     applyFilters();
   }, [projectList, searchParams, sortByOrder, filterByProgress]);
 
+  console.log(projectList);
+
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {filteredProjects?.map((project) => (
         <Link to={`/project/${project.projectId}`} key={project.projectId}>
-          <ProjectItem project={project} />
+          <ProjectItem project={project} projects={projectList ?? []} />
         </Link>
       ))}
     </section>
