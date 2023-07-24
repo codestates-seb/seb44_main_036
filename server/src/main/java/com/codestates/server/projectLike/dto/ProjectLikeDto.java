@@ -12,12 +12,12 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 public class ProjectLikeDto {
         @Positive
-        private Long memberId;
+        private long memberId;
 
         @Positive
-        private Long projectId;
+        private long projectId;
 
-        public ProjectLikeDto(Long memberId,Long projectId){
+        public ProjectLikeDto(long memberId,long projectId){
                 this.projectId = projectId;
                 this.memberId = memberId;
         }

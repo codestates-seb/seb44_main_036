@@ -65,6 +65,7 @@ public interface ProjectMapper {
             response.setLocation(project.getLocation());
             response.setCreatedAt(project.getCreatedAt());
             response.setLikeCount(project.getLikeCount());
+            response.setLikedProject(project.getLikedProject());
 
         return response;
      }

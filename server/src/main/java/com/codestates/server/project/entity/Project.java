@@ -49,7 +49,7 @@ public class Project extends Auditable {
     @Column(nullable = false)
     private int likeCount = this.projectLikes.size();
 
-    @Column(nullable = false)
+    @Column
     private Integer likedProject = 0;
     @Column(name = "EXPIRED_DATE")
     private LocalDateTime expiredDate;
