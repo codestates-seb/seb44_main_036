@@ -58,7 +58,7 @@ function Carousel() {
     >
       {CAROUSEL_LIST.map((carousel) => (
         <SwiperSlide key={carousel.id} onClick={() => handleClickCarousel(carousel.link)}>
-          <img src={carousel.imageUrl} alt='캐러셀 이미지' />
+          <img src={carousel.imageUrl} alt='캐러셀 이미지' width={'100%'} />
           <div className='absolute top-[0px] left-[0px] w-full h-full bg-gradient-to-tr from-black opacity-60'></div>
           <section className='absolute text-white left-80pxr bottom-50pxr max-w-400pxr'>
             <h2 className='max-w-sm text-[2.1rem] font-extrabold max-w-1280 mb-10pxr leading-10'>

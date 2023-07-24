@@ -3,6 +3,8 @@ import { projectApi } from '@/common/api/api';
 import { Patch, Like } from '../ui';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
+import { useAppSelector } from '@/hooks/useReducer';
+import { redirect, useNavigate, useParams } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
@@ -24,11 +26,20 @@ function ProjectItem({ project, projects }: Props) {
   } = project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
+  const userData = useAppSelector((state) => state.user.data);
+  const navigate = useNavigate();
+  const { categoryId } = useParams();
 
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
-    await projectApi.likeProject({ memberId, projectId });
 
+    if (!userData) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/users/login');
+      return;
+    }
+
+    await projectApi.likeProject({ memberId, projectId });
     const targetProject = projects.find((project) => project.projectId === projectId);
 
     if (targetProject) {
@@ -40,7 +51,7 @@ function ProjectItem({ project, projects }: Props) {
         likeCount: updatedLikeCount,
       };
       mutate(
-        '/projects',
+        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
         projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
         false
       );

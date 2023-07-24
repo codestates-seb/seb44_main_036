@@ -58,8 +58,6 @@ function ProjectList() {
     applyFilters();
   }, [projectList, searchParams, sortByOrder, filterByProgress]);
 
-  console.log(projectList);
-
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {filteredProjects?.map((project) => (

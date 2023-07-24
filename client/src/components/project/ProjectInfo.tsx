@@ -11,6 +11,7 @@ import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
 import { CATEGORY_NUMBER_TO_KO, CategoryNumber } from '@/common/constants/sort';
 import { storage } from '@/common/utils/storage';
+import { useAppSelector } from '@/hooks/useReducer';
 
 export type ModalData = {
   title: string;
@@ -27,6 +28,7 @@ function ProjectInfo() {
     projectApi.getProject,
     { dedupingInterval: Infinity }
   );
+  const userData = useAppSelector((state) => state.user.data);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -73,6 +75,11 @@ function ProjectInfo() {
   };
 
   const likeProject = async () => {
+    if (!userData) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/users/login');
+      return;
+    }
     await projectApi.likeProject({ projectId, memberId });
     mutate(
       `/projects/${projectId}`,
