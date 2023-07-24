@@ -17,7 +17,8 @@ interface IUser {
   imageUrl: string;
   path: string;
   accountType: 'seller' | 'buyer';
-  address: string | null;
+  address: string;
+  cash: string;
 }
 
 // 임시 사용자 데이터
@@ -26,6 +27,7 @@ const user: IUser = {
   path: 'google',
   accountType: 'buyer',
   address: '(06931) 경상남도 김해시....',
+  cash: '',
 };
 
 function MyPage() {
@@ -92,11 +94,13 @@ function MyPage() {
   //   return <div>로딩중...</div>;
   // }
 
+  console.log(userData);
+
   return (
     <>
       <div className='flex-col'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
-          <MyPageHeader imageUrl={userData?.userImg} openModal={openModal} />
+          <MyPageHeader imageUrl={userData?.userImg} cash={userData?.cash} openModal={openModal} />
         </div>
 
         <div className='flex-col font-thin flex-center'>
