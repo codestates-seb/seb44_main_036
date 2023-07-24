@@ -5,6 +5,7 @@ import useSWRImmutable from 'swr';
 import { projectApi } from '@/common/api/api';
 import { useCallback, useEffect, useState } from 'react';
 import { isPastDeadline } from '@/common/utils';
+import { Empty } from '../ui';
 
 type Progress = 'all' | 'ongoing' | 'end';
 type Order = 'recent' | 'popular' | 'closing';
@@ -58,9 +59,11 @@ function ProjectList() {
     applyFilters();
   }, [projectList, searchParams, sortByOrder, filterByProgress]);
 
+  if (!filteredProjects || filteredProjects.length === 0) return <Empty />;
+
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
-      {filteredProjects?.map((project) => (
+      {filteredProjects.map((project) => (
         <Link to={`/project/${project.projectId}`} key={project.projectId}>
           <ProjectItem project={project} projects={projectList ?? []} />
         </Link>
