@@ -60,6 +60,8 @@ public class ProjectService {
                 .ifPresent(imageUrl -> findProject.setImageUrl(imageUrl));
         Optional.ofNullable(project.getPrice())
                 .ifPresent(price -> findProject.setPrice(price));
+        Optional.ofNullable(project.getLocation())
+                .ifPresent(location -> findProject.setLocation(location));
 
 
 
@@ -101,29 +103,31 @@ public class ProjectService {
     }
 
     @Transactional
-    public int updateView(long projectId, HttpServletRequest request, HttpServletResponse response) {
+    public void updateView(long projectId) {
 
-        Cookie[] cookies = request.getCookies();
-        boolean checkCookie = false;
-        int result = 0;
-        if(cookies != null){
-            for (Cookie cookie : cookies)
-            {
-                // 이미 조회를 한 경우 체크
-                if (cookie.getName().equals(VIEWCOOKIENAME+projectId)) checkCookie = true;
 
-            }
-            if(!checkCookie){
-                Cookie newCookie = createCookie(projectId);
-                response.addCookie(newCookie);
-                result = projectRepository.updateView(projectId);
-            }
-        } else {
-            Cookie newCookie = createCookie(projectId);
-            response.addCookie(newCookie);
-            result = projectRepository.updateView(projectId);
-        }
-        return result;
+        projectRepository.updateView(projectId);
+//        Cookie[] cookies = request.getCookies();
+//        boolean checkCookie = false;
+//        int result = 0;
+//        if(cookies != null){
+//            for (Cookie cookie : cookies)
+//            {
+//                // 이미 조회를 한 경우 체크
+//                if (cookie.getName().equals(VIEWCOOKIENAME+projectId)) checkCookie = true;
+//
+//            }
+//            if(!checkCookie){
+//                Cookie newCookie = createCookie(projectId);
+//                response.addCookie(newCookie);
+//                result = projectRepository.updateView(projectId);
+//            }
+//        } else {
+//            Cookie newCookie = createCookie(projectId);
+//            response.addCookie(newCookie);
+//            result = projectRepository.updateView(projectId);
+//        }
+//        return result;
     }
 
 
@@ -132,20 +136,20 @@ public class ProjectService {
      * @param cookie
      * @return
      * */
-    private Cookie createCookie(Long postId) {
-        Cookie cookie = new Cookie(VIEWCOOKIENAME+postId, String.valueOf(postId));
-        cookie.setComment("조회수 중복 증가 방지 쿠키");	// 쿠키 용도 설명 기재
-        cookie.setMaxAge(getRemainSecondForTommorow()); 	// 하루를 준다.
-        cookie.setHttpOnly(true);				// 서버에서만 조작 가능
-        return cookie;
-    }
+//    private Cookie createCookie(Long postId) {
+//        Cookie cookie = new Cookie(VIEWCOOKIENAME+postId, String.valueOf(postId));
+//        cookie.setComment("조회수 중복 증가 방지 쿠키");	// 쿠키 용도 설명 기재
+//        cookie.setMaxAge(getRemainSecondForTommorow()); 	// 하루를 준다.
+//        cookie.setHttpOnly(true);				// 서버에서만 조작 가능
+//        return cookie;
+//    }
 
     // 다음 날 정각까지 남은 시간(초)
-    private int getRemainSecondForTommorow() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime tommorow = LocalDateTime.now().plusDays(1L).truncatedTo(ChronoUnit.DAYS);
-        return (int) now.until(tommorow, ChronoUnit.SECONDS);
-    }
+//    private int getRemainSecondForTommorow() {
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime tommorow = LocalDateTime.now().plusDays(1L).truncatedTo(ChronoUnit.DAYS);
+//        return (int) now.until(tommorow, ChronoUnit.SECONDS);
+//    }
     public void save(Project project){
         projectRepository.save(project);
     }

@@ -34,6 +34,8 @@ public class MemberDto {
         private String nickname;
         private String address;
 
+        private String imageUrl;
+
         public void setMemberId(long memberId) {
             this.memberId= memberId;
         }
@@ -47,5 +49,7 @@ public class MemberDto {
         private String email;
         private String address;
         private Integer cash;
+
+        private String imageUrl;
     }
 }

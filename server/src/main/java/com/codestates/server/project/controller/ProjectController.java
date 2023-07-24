@@ -47,10 +47,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{project-id}")
-    public ResponseEntity getProject(@PathVariable("project-id") long projectId,
-                                     HttpServletRequest request,
-                                     HttpServletResponse response){
-        projectService.updateView(projectId,request,response);
+    public ResponseEntity getProject(@PathVariable("project-id") long projectId){
+        projectService.updateView(projectId);
 
         return new ResponseEntity(mapper.projectToProjectResponseDto(projectService.findProject(projectId)),HttpStatus.OK);
     }

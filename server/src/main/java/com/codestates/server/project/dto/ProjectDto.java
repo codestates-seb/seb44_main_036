@@ -43,6 +43,8 @@ public class ProjectDto {
 
         @NotBlank(message = "카테고리는 공백이 아니어야 합니다.")
         private long categoryId;
+
+        private String location;
     }
 
     @Getter
@@ -62,17 +64,17 @@ public class ProjectDto {
         @Size(max = 100,message = "요약은 100자 내외로 써주세요")
         private String summary;
 
-
         @Min(50000)
         @Max(10000000)
         private Integer targetAmount;
 
         private int endDay; //일 단위
 
-
         private String imageUrl;
 
         private Integer price;
+
+        private String location;
 
         public void setProjectId(long projectId) {
             this.projectId = projectId;
@@ -84,6 +86,9 @@ public class ProjectDto {
 
         private long projectId;
         private long memberId;
+
+        private LocalDateTime createdAt;
+        private int likeCount;
         private String imageUrl;
         private String title;
         private String summary;
@@ -95,5 +100,6 @@ public class ProjectDto {
         private long categoryId;
         private int likedProject;
         private int view;
+        private String location;
     }
 }
