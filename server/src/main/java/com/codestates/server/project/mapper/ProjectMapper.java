@@ -33,7 +33,20 @@ public interface ProjectMapper {
         return project;
     }
 
-     Project projectPatchDtoToProject(ProjectDto.Patch patch);
+     default Project projectPatchDtoToProject(ProjectDto.Patch patch){
+        Project project = new Project();
+        project.setProjectId(patch.getProjectId());
+        project.setTitle(patch.getTitle());
+        project.setContent(patch.getContent());
+        project.setSummary(patch.getSummary());
+        project.setPrice(patch.getPrice());
+        project.setLocation(patch.getLocation());
+        project.setEndDay(patch.getEndDay());
+        project.setTargetAmount(patch.getTargetAmount());
+        project.setImageUrl(patch.getImageUrl());
+
+        return project;
+     }
 
      default ProjectDto.Response projectToProjectResponseDto(Project project){
         ProjectDto.Response response = new ProjectDto.Response();
