@@ -26,13 +26,13 @@ public class ProjectLikeService {
 
         Project project = getProject(projectLikeDto);
 
-        if(existLike(projectLikeDto)){
+
+        if(existLike(projectLikeDto)) {
             ProjectLike projectLike = getProjectLike(projectLikeDto);
             project.removeProjectLike(projectLike);
             projectLikeRepository.delete(projectLike);
             project.setLikedProject(0);
             projectRepository.save(project);
-
         }else{
             ProjectLike projectLike = new ProjectLike();
             projectLike.setProject(getProject(projectLikeDto));
@@ -40,6 +40,7 @@ public class ProjectLikeService {
             project.addProjectLike(projectLike);
             project.setLikedProject(1);
             projectLikeRepository.save(projectLike);
+            projectRepository.save(project);
         }
     }
 
