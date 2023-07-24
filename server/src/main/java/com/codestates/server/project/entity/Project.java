@@ -36,7 +36,7 @@ public class Project extends Auditable {
     private Integer endDay;
     @Column(nullable = false)
     private Integer currentAmount = 0;
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false)
     private Integer targetAmount;
     @Column(columnDefinition = "integer default 0",nullable = false)
     private int view;
@@ -51,7 +51,7 @@ public class Project extends Auditable {
 
     @Column(nullable = false)
     private Integer likedProject = 0;
-    @Column(name = "EXPIRED_DATE",updatable = false)
+    @Column(name = "EXPIRED_DATE")
     private LocalDateTime expiredDate;
 
     @ManyToOne

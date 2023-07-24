@@ -63,9 +63,9 @@ public class ProjectService {
         Optional.ofNullable(project.getLocation())
                 .ifPresent(location -> findProject.setLocation(location));
 
+        Project savedProject = projectRepository.save(findProject);
 
-
-        return projectRepository.save(findProject);
+        return savedProject;
     }
 
     public Project findProject(long projectId){
