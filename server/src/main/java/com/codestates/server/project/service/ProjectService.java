@@ -24,11 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProjectService {
 
-    private final static String VIEWCOOKIENAME = "alreadyViewCookie";
+//    private final static String VIEWCOOKIENAME = "alreadyViewCookie";
     private final ProjectRepository projectRepository;
-
-    private final MemberService memberService;
-
     private final ProjectMapper mapper;
 
 
