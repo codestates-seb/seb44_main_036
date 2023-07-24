@@ -8,6 +8,8 @@ import java.util.List;
 
 
 public interface ProjectRepository extends JpaRepository<Project,Long> {
+
+    List<Project> findByTitleContaining(String keyword);
     @Query(value = "SELECT p FROM Project p WHERE p.member.memberId =:memberId")
     List<Project> findByMemberId(long memberId);
 

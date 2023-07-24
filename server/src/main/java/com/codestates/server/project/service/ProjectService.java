@@ -92,6 +92,10 @@ public class ProjectService {
         return mapper.projectsToProjectResponseDtos(projectRepository.findByLikedProject(memberId,1));
     }
 
+    public List<Project> searchByKeyword(String keyword){
+        return projectRepository.findByTitleContaining(keyword);
+    }
+
     public void deleteProject(long projectId){
         if(findProject(projectId).getCurrentAmount() > 0){
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);

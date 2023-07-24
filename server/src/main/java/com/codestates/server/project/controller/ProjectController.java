@@ -70,4 +70,9 @@ public class ProjectController {
         projectService.deleteProject(projectId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity searchProject(@RequestParam("q") String keyword){
+        return new ResponseEntity(mapper.projectsToProjectResponseDtos(projectService.searchByKeyword(keyword)),HttpStatus.OK);
+    }
 }
