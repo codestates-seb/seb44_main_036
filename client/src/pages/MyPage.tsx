@@ -38,7 +38,7 @@ function MyPage() {
   // const { data } = useSWR(memberId, userApi.getUserLikedProjects);
   // console.log(data);
 
-  const [tab, setTab] = useState<'main' | 'liked'>('main');
+  const [tab, setTab] = useState<'sell' | 'buy' | 'liked'>('sell');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(userData?.address || null);
   const [nickname, setNickname] = useState<string | undefined>(userData?.nickname);
@@ -109,9 +109,10 @@ function MyPage() {
 
         <div>
           <div className='flex items-center justify-center mb-50pxr'>
-            <TabButton activeTab={tab} setTab={setTab} userAccountType={user.accountType} />
+            <TabButton activeTab={tab} setTab={setTab} />
           </div>
-          {tab === 'main' && <MyPageMainList></MyPageMainList>}
+          {tab === 'sell' && <MyPageMainList></MyPageMainList>}
+          {tab === 'buy' && <MyPageMainList></MyPageMainList>}
           {tab === 'liked' && <MyPageLikeList></MyPageLikeList>}
         </div>
 
