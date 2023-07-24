@@ -50,6 +50,8 @@ public class MemberService {
                 .ifPresent(nickname -> findMember.setNickname(nickname));
         Optional.ofNullable(member.getAddress())
                 .ifPresent(address -> findMember.setAddress(address));
+        Optional.ofNullable(member.getImageUrl())
+                .ifPresent(imageUrl -> findMember.setImageUrl(imageUrl));
 
         return memberRepository.save(findMember);
     }

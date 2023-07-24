@@ -38,9 +38,11 @@ public class Project extends Auditable {
     private Integer currentAmount = 0;
     @Column(nullable = false,updatable = false)
     private Integer targetAmount;
-
     @Column(columnDefinition = "integer default 0",nullable = false)
     private int view;
+
+    @Column
+    private String location;
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
     private List<ProjectLike> projectLikes = new ArrayList<>();
 

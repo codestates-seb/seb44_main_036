@@ -26,6 +26,7 @@ public interface ProjectMapper {
         project.setPrice(post.getPrice());
         project.setTargetAmount(post.getTargetAmount());
         project.setEndDay(post.getEndDay());
+        project.setLocation(post.getLocation());
         project.setMember(member);
         project.setCategory(category);
 
@@ -48,6 +49,9 @@ public interface ProjectMapper {
             response.setImageUrl(project.getImageUrl());
             response.setCategoryId(project.getCategory().getCategoryId());
             response.setView(project.getView());
+            response.setLocation(project.getLocation());
+            response.setCreatedAt(project.getCreatedAt());
+            response.setLikeCount(project.getLikeCount());
 
         return response;
      }

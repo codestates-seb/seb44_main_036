@@ -31,12 +31,12 @@ spring:
   sql:
     init:
       data-locations: classpath*:db/data.sql
-      mode: always
+      mode: never
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     defer-datasource-initialization: true
     show-sql: true
     properties:

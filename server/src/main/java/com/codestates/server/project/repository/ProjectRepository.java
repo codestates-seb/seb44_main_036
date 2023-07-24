@@ -18,7 +18,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     List<Project> findByLikedProject(long memberId,Integer liked);
     @Modifying
     @Query("UPDATE Project set view = view + 1 WHERE projectId =:projectId")
-    int updateView(long projectId);
+    void updateView(long projectId);
 
 
 }
