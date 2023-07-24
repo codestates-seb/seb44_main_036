@@ -5,7 +5,7 @@ import userSlice from '@/reducer/userSlice';
 import { useCallback, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-const AuthGuardLayout = ({ children }: any) => {
+const AuthRoute = ({ children }: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -38,4 +38,4 @@ const AuthGuardLayout = ({ children }: any) => {
   return isLoading ? <>{children}</> : <Navigate to='/users/login' />;
 };
 
-export default AuthGuardLayout;
+export default AuthRoute;

@@ -7,9 +7,7 @@ import {
   MyPageMainList,
 } from '@/components/mypage';
 import { UserModal } from '@/components/usermodal';
-import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/useReducer';
-import { storage } from '@/common/utils/storage';
 // import { userApi } from '@/common/api/api';
 // import useSWR from 'swr';
 
@@ -31,7 +29,6 @@ const user: IUser = {
 };
 
 function MyPage() {
-  const navigate = useNavigate();
   const userData = useAppSelector((state) => state.user.data);
   // const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
@@ -49,13 +46,6 @@ function MyPage() {
       setNickname(userData.nickname);
     }
   }, [userData]);
-
-  useEffect(() => {
-    const accessToken = storage.get('accessToken');
-    if (!accessToken) {
-      navigate('/users/login');
-    }
-  }, [navigate]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -93,8 +83,6 @@ function MyPage() {
   // if (!user || !projects) {
   //   return <div>로딩중...</div>;
   // }
-
-  console.log(userData);
 
   return (
     <>

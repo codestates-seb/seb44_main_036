@@ -16,8 +16,8 @@ import {
 } from '@/pages';
 import store from './store';
 import { CookiesProvider } from 'react-cookie';
-import AuthGuardLayout from './components/route/AuthGuardLayout';
-import PrivateRoute from './components/route/PrivateRoute';
+import AuthRoute from './components/route/AuthRoute';
+import PublicRoute from './components/route/PublicRoute';
 
 interface RouterBase {
   path: string;
@@ -78,12 +78,12 @@ const router = createBrowserRouter([
       if (router.withAuth) {
         return {
           path: router.path,
-          element: <AuthGuardLayout>{router.element}</AuthGuardLayout>,
+          element: <AuthRoute>{router.element}</AuthRoute>,
         };
       } else {
         return {
           path: router.path,
-          element: <PrivateRoute>{router.element}</PrivateRoute>,
+          element: <PublicRoute>{router.element}</PublicRoute>,
         };
       }
     }),
