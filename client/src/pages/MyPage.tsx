@@ -9,15 +9,16 @@ import {
 import { UserModal } from '@/components/usermodal';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/useReducer';
-import { userApi } from '@/common/api/api';
-import useSWR from 'swr';
 import { storage } from '@/common/utils/storage';
+// import { userApi } from '@/common/api/api';
+// import useSWR from 'swr';
 
 interface IUser {
   imageUrl: string;
   path: string;
   accountType: 'seller' | 'buyer';
-  address: string | null;
+  address: string;
+  cash: string;
 }
 
 // 임시 사용자 데이터
@@ -26,18 +27,18 @@ const user: IUser = {
   path: 'google',
   accountType: 'buyer',
   address: '(06931) 경상남도 김해시....',
+  cash: '',
 };
 
 function MyPage() {
   const navigate = useNavigate();
   const userData = useAppSelector((state) => state.user.data);
-  const isLogin = useAppSelector((state) => state.user.isLogin);
+  // const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
-  // console.log(userData);
-  const { data } = useSWR(memberId, userApi.getUser);
+  // const { data } = useSWR(memberId, userApi.getUserLikedProjects);
   // console.log(data);
 
-  const [tab, setTab] = useState<'main' | 'liked'>('main');
+  const [tab, setTab] = useState<'sell' | 'buy' | 'liked'>('sell');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(userData?.address || null);
   const [nickname, setNickname] = useState<string | undefined>(userData?.nickname);
@@ -93,11 +94,13 @@ function MyPage() {
   //   return <div>로딩중...</div>;
   // }
 
+  console.log(userData);
+
   return (
     <>
       <div className='flex-col'>
         <div className='w-full bg-purple-300 mb-80pxr h-120pxr'>
-          <MyPageHeader imageUrl={userData?.userImg} openModal={openModal} />
+          <MyPageHeader imageUrl={userData?.userImg} cash={userData?.cash} openModal={openModal} />
         </div>
 
         <div className='flex-col font-thin flex-center'>
@@ -106,9 +109,10 @@ function MyPage() {
 
         <div>
           <div className='flex items-center justify-center mb-50pxr'>
-            <TabButton activeTab={tab} setTab={setTab} userAccountType={user.accountType} />
+            <TabButton activeTab={tab} setTab={setTab} />
           </div>
-          {tab === 'main' && <MyPageMainList></MyPageMainList>}
+          {tab === 'sell' && <MyPageMainList></MyPageMainList>}
+          {tab === 'buy' && <MyPageMainList></MyPageMainList>}
           {tab === 'liked' && <MyPageLikeList></MyPageLikeList>}
         </div>
 
