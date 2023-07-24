@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ProjectItem } from '.';
 import type { Projects } from '@/common/types/responseTypes';
 import useSWRImmutable from 'swr';
@@ -10,9 +10,14 @@ type Progress = 'all' | 'ongoing' | 'end';
 type Order = 'recent' | 'popular' | 'closing';
 
 function ProjectList() {
-  const { data: projectList } = useSWRImmutable<Projects>('/projects', projectApi.getProjects, {
-    dedupingInterval: Infinity,
-  });
+  const { categoryId } = useParams();
+  const { data: projectList } = useSWRImmutable<Projects>(
+    `/projects${categoryId ? `/category/${categoryId}` : ''}`,
+    projectApi.getProjects,
+    {
+      dedupingInterval: Infinity,
+    }
+  );
   const [filteredProjects, setFilteredProjects] = useState(projectList);
   const [searchParams] = useSearchParams();
 
