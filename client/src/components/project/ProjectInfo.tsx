@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR, { mutate } from 'swr';
-import { ProjectDetail } from '@/common/types/responseTypes';
+import { Project } from '@/common/types/responseTypes';
 import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
@@ -22,7 +22,7 @@ function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { data: projectDetail, isLoading } = useSWR<ProjectDetail>(
+  const { data: projectDetail, isLoading } = useSWR<Project>(
     `/projects/${projectId}`,
     projectApi.getProject
   );

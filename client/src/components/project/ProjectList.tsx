@@ -25,16 +25,15 @@ function ProjectList() {
     const now = new Date().getTime();
     switch (order) {
       case 'recent':
-        return dataList;
+        return dataList.sort(
+          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       case 'popular':
-        // TODO: 좋아요 기능 개발 후 구현
-        return dataList;
+        return dataList.sort((a, b) => b.likeCount - a.likeCount);
       case 'closing':
         return dataList
           .filter((item) => new Date(item.expiredDate).getTime() > now)
           .sort((a, b) => new Date(a.expiredDate).getTime() - new Date(b.expiredDate).getTime());
-      default:
-        return dataList;
     }
   }, []);
 

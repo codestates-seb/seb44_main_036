@@ -16,7 +16,7 @@ const CAROUSEL_LIST = [
         지금 회원가입하면 <br /> 300만 포인트 증정!
       </>
     ),
-    desc: '회원가입 이벤트',
+    desc: '회원가입 이벤트 진행 중',
     imageUrl: coin,
   },
   {
@@ -28,7 +28,7 @@ const CAROUSEL_LIST = [
         Mi Funding
       </>
     ),
-    desc: '사이트 소개',
+    desc: 'Mi Funding',
     imageUrl: lizard,
   },
 ];
