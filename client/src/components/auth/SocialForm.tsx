@@ -4,7 +4,6 @@ import { TitleText } from '../ui';
 import { ReactComponent as GoogleLogoSvg } from '@/assets/logos/google_logo.svg';
 import { ReactComponent as KakaoLogoSvg } from '@/assets/logos/kakao_logo.svg';
 import SocialButton from './SocialButton';
-import axios from 'axios';
 
 function SocialForm() {
   const isSignUp = useMatch('/users/signup');
@@ -13,7 +12,6 @@ function SocialForm() {
   return (
     <article className='w-full max-w-[370px] flex flex-col'>
       <TitleText text={isSignUp ? '간편 가입' : '간편 로그인'} style={'mb-14pxr'} />
-      <a href={url}>구글</a>
       <SocialButton
         text={'구글 계정으로 시작'}
         icon={<GoogleLogoSvg />}

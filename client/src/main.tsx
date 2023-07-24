@@ -13,6 +13,7 @@ import {
   PaymentPage,
   SignUpPage,
   WritePage,
+  SearchPage,
 } from '@/pages';
 import store from './store';
 import { CookiesProvider } from 'react-cookie';
@@ -66,6 +67,11 @@ const routerData: RouterBase[] = [
   {
     path: '/users/login',
     element: <LoginPage />,
+    withAuth: false,
+  },
+  {
+    path: '/search',
+    element: <SearchPage />,
     withAuth: false,
   },
 ];

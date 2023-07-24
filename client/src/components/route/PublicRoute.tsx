@@ -16,7 +16,7 @@ const PublicRoute = ({ children }: Props) => {
     if (accessToken && (isSignUpPage || isLoginPage)) {
       navigate('/');
     }
-  }, []);
+  }, [isLoginPage, isSignUpPage]);
 
   return <>{children}</>;
 };
