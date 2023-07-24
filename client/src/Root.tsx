@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Header from './components/header/Header';
 import Toast from './components/toast/toast';
 import { useEffect } from 'react';
@@ -9,6 +9,7 @@ import { storage } from './common/utils/storage';
 
 function Root() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const getUser = async () => {
     const userInfo = await getUserInfo();
@@ -20,6 +21,7 @@ function Root() {
     const memberId = storage.get('memberId');
     if (accessToken && memberId) {
       getUser();
+      navigate('/');
     }
   }, []);
 

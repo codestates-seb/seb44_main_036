@@ -5,6 +5,7 @@ type userDataType = {
   nickname: string;
   address: string | null;
   userImg: string;
+  cash: number;
 };
 
 export type userState = {
