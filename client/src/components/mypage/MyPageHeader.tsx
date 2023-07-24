@@ -8,10 +8,11 @@ import { profile } from '@/assets/mypage/index';
 
 interface MyPageHeaderProps {
   imageUrl?: string;
+  cash?: number;
   openModal: () => void;
 }
 
-function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
+function MyPageHeader({ cash, imageUrl, openModal }: MyPageHeaderProps) {
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -24,13 +25,16 @@ function MyPageHeader({ imageUrl, openModal }: MyPageHeaderProps) {
       navigate('/');
     }
   };
+
+  const formattedCash = cash ? cash.toLocaleString() : '0';
+
   return (
     <>
       <div className='flex flex-row items-center justify-around h-full'>
         <div>
           <p className='text-sm text-gray-100'>보유금액</p>
           <div className='flex flex-row'>
-            <p className='text-4xl font-bold text-gray-100'>2,902,000</p>
+            <p className='text-4xl font-bold text-gray-100'>{formattedCash}</p>
             <p className='flex items-end text-gray-100 ml-10pxr'>원</p>
           </div>
         </div>

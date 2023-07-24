@@ -4,12 +4,10 @@ import com.codestates.server.audit.Auditable;
 import com.codestates.server.category.entity.Category;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.entity.Member;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.codestates.server.projectLike.entity.ProjectLike;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,11 +22,11 @@ public class Project extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long projectId;
-    @Column(nullable = false)
+    @Column(nullable = false,length = 50)
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = false,length = 100)
     private String summary;
-    @Column(nullable = false)
+    @Column(nullable = false,length = 10000)
     private String content;
     @Column(nullable = false)
     private String imageUrl;
@@ -36,25 +34,51 @@ public class Project extends Auditable {
     private Integer price;
     @Column(nullable = false)
     private Integer endDay;
-    @Column(nullable = true)
-    private Integer currentAmount;
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false)
+    private Integer currentAmount = 0;
+    @Column(nullable = false)
     private Integer targetAmount;
-    @Column(name = "EXPIRED_DATE",updatable = false)
+    @Column(columnDefinition = "integer default 0",nullable = false)
+    private int view;
+
+    @Column
+    private String location;
+
+    @Column(name = "EXPIRED_DATE")
     private LocalDateTime expiredDate;
-    @JsonBackReference
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-    @JsonManagedReference
+
     @OneToMany(mappedBy = "project")
     private List<Funding> fundings = new ArrayList<>();
     @OneToOne
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
+
+    @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
+    private List<ProjectLike> projectLikes = new ArrayList<>();
+
+    @Column(nullable = false)
+    private int likeCount = this.projectLikes.size();
+
+    @Column
+    private Integer likedProject = 0;
+
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public void addProjectLike(ProjectLike projectLike){
+        this.projectLikes.add(projectLike);
+        this.likeCount = this.projectLikes.size();
+    }
+
+    public void removeProjectLike(ProjectLike projectLike){
+        this.projectLikes.remove(projectLike);
+        this.likeCount = this.projectLikes.size();
     }
 
 }

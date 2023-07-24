@@ -5,5 +5,6 @@ export {
   formattingNumber,
   calculateAchievementRate,
   dateToString,
+  isPastDeadline,
 } from './formatting';
 export { handleImageError } from './handleImageError';

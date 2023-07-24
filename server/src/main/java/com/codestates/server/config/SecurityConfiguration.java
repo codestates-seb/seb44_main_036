@@ -7,6 +7,7 @@ import com.codestates.server.auth.handler.*;
 import com.codestates.server.auth.jwt.JwtTokenizer;
 import com.codestates.server.auth.utils.CustomAuthorityUtils;
 import com.codestates.server.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
@@ -32,16 +34,6 @@ public class SecurityConfiguration {
 
     private final MemberService memberService;
 
-
-
-
-
-
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, MemberService memberService){
-        this.authorityUtils = authorityUtils;
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberService = memberService;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -62,7 +54,22 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
+                                .antMatchers(HttpMethod.POST, "/signup").permitAll()
+                                .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/members").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.GET, "/members/**").hasAnyRole("USER", "ADMIN")
+                                .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/projects").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/projects/**").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/projects").permitAll()  //테스트해보기
+                                .antMatchers(HttpMethod.DELETE, "/projects").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/fundings").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/fundings").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.DELETE, "/fundings").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/projects/like").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/upload").hasRole("USER")
+                                .anyRequest().permitAll()
+
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer,authorityUtils, memberService))
@@ -74,7 +81,9 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("https://seb44-main-036.vercel.app");
+        configuration.addAllowedOrigin("http://localhost:8080");
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("*"));

@@ -1,5 +1,6 @@
 package com.codestates.server.category.entity;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,4 +19,5 @@ public class Category {
 
     @Column(nullable = false)
     private String type;
+
 }

@@ -10,7 +10,8 @@ import {
 } from '@/assets/mypage';
 import { DaumPostcodeButton } from '.';
 import { profile } from '@/assets/mypage/index';
-// import { userApi } from '@/common/api/api';
+import { userApi } from '@/common/api/api';
+import { AxiosError } from 'axios';
 
 interface UserModalProps {
   memberId?: string;
@@ -28,9 +29,9 @@ interface PostcodeData {
 }
 
 function UserModal({
-  // memberId,
+  memberId,
   imageUrl,
-  accountType,
+  // accountType,
   nickname,
   address,
   onClose,
@@ -43,6 +44,7 @@ function UserModal({
   const [isSettingHovered, setisSettingHovered] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
   const [previewImage, setPreviewImage] = useState(imageUrl ? imageUrl : profile);
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewAddress(event.target.value);
@@ -52,32 +54,40 @@ function UserModal({
     setNewNickname(event.target.value);
   };
 
+  console.log(address);
+
   const handleSave = async () => {
-    onSave(newNickname, newAddress);
-    setEditingNickname(false);
-    // try {
-    //   if (!memberId) {
-    //     console.error('memberId가 유효하지 않습니다.');
-    //     return;
-    //   }
+    try {
+      if (!memberId) {
+        console.error('memberId가 유효하지 않습니다.');
+        return;
+      }
 
-    //   // 수정할 사용자 정보
-    //   const updatedUserData = {
-    //     nickname: newNickname,
-    //     address: newAddress,
-    //     // imageUrl: previewImage ? previewImage : imageUrl,
-    //   };
+      // 수정할 사용자 정보
+      const updatedUserData = {
+        nickname: newNickname,
+        address: newAddress,
+        // imageUrl: previewImage ? previewImage : imageUrl,
+      };
 
-    //   // PATCH 요청 보내기
-    //   await userApi.updateUser(memberId, updatedUserData);
+      // PATCH 요청 보내기
+      await userApi.updateUser(memberId, updatedUserData);
 
-    //   // 데이터 업데이트
-    //   onSave(newNickname, newAddress);
+      // 데이터 업데이트
+      onSave(newNickname, newAddress);
 
-    //   console.log('사용자 정보가 업데이트되었습니다.');
-    // } catch (error) {
-    //   console.error('사용자 정보 업데이트 오류:', error);
-    // }
+      window.alert('사용자 정보가 업데이트되었습니다.');
+      setError(null);
+    } catch (err) {
+      // Error handling
+      if (err instanceof AxiosError && err.response && err.response.status === 400) {
+        setError('요청이 잘못되었습니다. 올바른 형식으로 입력해주세요.'); // Set error message
+        window.alert('올바른 닉네임을 작성해주세요.');
+      } else {
+        // Other error handling
+        console.error('사용자 정보 업데이트 오류:', err);
+      }
+    }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,7 +158,7 @@ function UserModal({
             </div>
           </div>
 
-          <div className='flex-row text-4xl font-thin flex-center mb-30pxr'>
+          <div className='flex-row text-4xl font-thin flex-center mb-60pxr'>
             {editingNickname ? (
               <input
                 value={newNickname}
@@ -163,9 +173,6 @@ function UserModal({
               <img src={update} alt='update'></img>
             </button>
           </div>
-          <p className='text-purple-300 flex-center mb-30pxr'>
-            {accountType === 'seller' ? '판매자 회원' : '구매자 회원'}
-          </p>
           <div className='relative flex-center'>
             <textarea
               className='border border-gray-300 rounded resize-none p-20pxr w-600pxr h-200pxr'
