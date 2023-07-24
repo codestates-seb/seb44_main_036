@@ -4,9 +4,8 @@ import { Autoplay } from 'swiper/modules';
 import { SlideController } from '.';
 import { ProgressBar } from '../ui';
 import { useState } from 'react';
+import { coin, lizard } from '@/assets/common';
 import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
 const CAROUSEL_LIST = [
@@ -14,35 +13,23 @@ const CAROUSEL_LIST = [
     id: 1,
     title: (
       <>
-        놓치면 아쉬운 <br /> 종료 임박 프로젝트
+        지금 회원가입하면 <br /> 300만 포인트 증정!
       </>
     ),
-    desc: '프로젝트',
-    imageUrl:
-      'https://cdn.wadiz.kr/ft/images/green001/2023/0703/20230703170823045_6537.jpg/wadiz/resize/3200/format/jpg/quality/85/',
+    desc: '회원가입 이벤트',
+    imageUrl: coin,
   },
   {
     id: 2,
     title: (
       <>
-        지금 알림신청만 해도
+        내가 원하는 모든 펀딩
         <br />
-        네이버 웹툰 쿠키 300개
+        Mi Funding
       </>
     ),
-    desc: '이벤트',
-    imageUrl: 'https://cdn1.wadiz.kr/images/20230704/1688445677508.png/wadiz/optimize',
-  },
-  {
-    id: 3,
-    title: (
-      <>
-        한번에 펼치고 회전까지 <br /> 피벗체어 원액션
-      </>
-    ),
-    desc: '스토어',
-    imageUrl:
-      'https://cdn.wadiz.kr/ft/images/green001/2023/0619/20230619113152840_5099.jpg/wadiz/resize/3200/format/jpg/quality/85/',
+    desc: '사이트 소개',
+    imageUrl: lizard,
   },
 ];
 
