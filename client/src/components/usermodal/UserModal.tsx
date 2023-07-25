@@ -17,7 +17,6 @@ interface UserModalProps {
   memberId?: string;
   imageUrl?: string;
   nickname?: string;
-  accountType: 'seller' | 'buyer';
   address: string | null;
   onClose: () => void;
   onSave: (nickname: string, address: string) => void;
@@ -28,15 +27,7 @@ interface PostcodeData {
   address: string;
 }
 
-function UserModal({
-  memberId,
-  imageUrl,
-  // accountType,
-  nickname,
-  address,
-  onClose,
-  onSave,
-}: UserModalProps) {
+function UserModal({ memberId, imageUrl, nickname, address, onClose, onSave }: UserModalProps) {
   const [newAddress, setNewAddress] = useState<string>(address || '');
   const [newNickname, setNewNickname] = useState<string>(nickname || '');
   const [IsExitHovered, setIsExitHovered] = useState(false);

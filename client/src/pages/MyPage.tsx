@@ -5,34 +5,15 @@ import {
   TabButton,
   MyPageLikeList,
   MyPageMainList,
+  MyPageFundingList,
 } from '@/components/mypage';
 import { UserModal } from '@/components/usermodal';
 import { useAppSelector } from '@/hooks/useReducer';
-// import { userApi } from '@/common/api/api';
-// import useSWR from 'swr';
-
-interface IUser {
-  imageUrl: string;
-  path: string;
-  accountType: 'seller' | 'buyer';
-  address: string;
-  cash: string;
-}
-
-// 임시 사용자 데이터
-const user: IUser = {
-  imageUrl: '/test.svg',
-  path: 'google',
-  accountType: 'buyer',
-  address: '(06931) 경상남도 김해시....',
-  cash: '',
-};
+import ScrollUpButton from '@/components/ui/ScrollUpButton';
 
 function MyPage() {
   const userData = useAppSelector((state) => state.user.data);
-  // const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
-  // const { data } = useSWR(memberId, userApi.getUserLikedProjects);
 
   const [tab, setTab] = useState<'sell' | 'buy' | 'liked'>('sell');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,29 +41,6 @@ function MyPage() {
     closeModal();
   };
 
-  // 서버 API 구현 후 추가 될 코드
-  // const { data: user, error: userError } = useSWR<IUser>(
-  //   `서버 url/users/${userId}`,
-  //   fetcher
-  // );
-  // const { data: mainProjects, error: mainProjectsError } = useSWR<IProject[]>(
-  //   user
-  //     ? user.accountType === 'seller'
-  //       ? `서버 url/selling-projects/${userId}`
-  //       : `서버 url/funded-projects/${userId}`
-  //     : null,
-  //   fetcher
-  // );
-  // const { data: likedProjects, error: likedProjectsError } = useSWR<IProject[]>(`서버 url/users/${userId}/like`, fetcher);
-
-  // if (userError || projectsError) {
-  //   return <div>서버에러: {userError?.message ?? projectsError?.message}</div>;
-  // }
-
-  // if (!user || !projects) {
-  //   return <div>로딩중...</div>;
-  // }
-
   return (
     <>
       <div className='flex-col'>
@@ -91,16 +49,16 @@ function MyPage() {
         </div>
 
         <div className='flex-col font-thin flex-center'>
-          <UserProfile nickname={nickname} accountType={user.accountType} />
+          <UserProfile nickname={nickname} />
         </div>
 
         <div>
           <div className='flex items-center justify-center mb-50pxr'>
             <TabButton activeTab={tab} setTab={setTab} />
           </div>
-          {tab === 'sell' && <MyPageMainList></MyPageMainList>}
-          {tab === 'buy' && <MyPageMainList></MyPageMainList>}
-          {tab === 'liked' && <MyPageLikeList></MyPageLikeList>}
+          {tab === 'sell' && <MyPageMainList memberId={memberId}></MyPageMainList>}
+          {tab === 'buy' && <MyPageFundingList memberId={memberId}></MyPageFundingList>}
+          {tab === 'liked' && <MyPageLikeList memberId={memberId}></MyPageLikeList>}
         </div>
 
         {isModalOpen && (
@@ -108,13 +66,13 @@ function MyPage() {
             memberId={memberId}
             imageUrl={userData?.userImg}
             nickname={nickname}
-            accountType={user.accountType}
             address={address}
             onClose={closeModal}
             onSave={saveUser}
           />
         )}
       </div>
+      <ScrollUpButton></ScrollUpButton>
     </>
   );
 }

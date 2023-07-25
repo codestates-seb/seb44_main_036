@@ -3,6 +3,7 @@ package com.codestates.server.member.entity;
 import com.codestates.server.audit.Auditable;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.project.entity.Project;
+import com.codestates.server.projectLike.entity.ProjectLike;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,9 @@ public class Member extends Auditable {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<ProjectLike> projectLikes = new ArrayList<>();
 
     public Member(String email,String nickname,String imageUrl){
         this.nickname = nickname;
