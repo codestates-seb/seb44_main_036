@@ -5,6 +5,7 @@ import com.codestates.server.funding.service.FundingService;
 import com.codestates.server.member.dto.MemberDto;
 import com.codestates.server.member.mapper.MemberMapper;
 import com.codestates.server.member.service.MemberService;
+import com.codestates.server.project.mapper.ProjectMapper;
 import com.codestates.server.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ public class MemberController {
     private final MemberMapper mapper;
 
     private final ProjectService projectService;
+
+    private final ProjectMapper projectMapper;
     private final FundingService fundingService;
 
 
@@ -71,7 +74,8 @@ public class MemberController {
     @GetMapping("/members/{member-id}/funding")
     public ResponseEntity getFundingByMemberId(@PathVariable("member-id") long memberId){
 
-        return new ResponseEntity(fundingService.findByMemberId(memberId),HttpStatus.OK);
+
+        return new ResponseEntity(projectService.findByFundingMemberId(memberId),HttpStatus.OK);
     }
 
     @GetMapping("/members/{member-id}/like")
