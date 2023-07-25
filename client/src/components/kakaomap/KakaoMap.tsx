@@ -3,6 +3,7 @@ import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg'
 import { style } from '../writepage/styles';
 import { onInputClickHandler } from './DaumPost';
 import markerimg from '@/assets/icons/marker_icon.png';
+import { mapDataType } from '@/pages/WritePage';
 
 declare global {
   interface Window {
@@ -13,9 +14,11 @@ declare global {
 
 type Props = {
   locationRef: React.RefObject<HTMLInputElement> | null;
+  mapData: mapDataType | null;
+  setMapDataFn: (value: mapDataType) => void;
 };
 
-function KakaoMap({ locationRef }: Props) {
+function KakaoMap({ locationRef, mapData, setMapDataFn }: Props) {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [marker, setMarker] = useState<kakao.maps.Marker | null>(null);
   const [address, setAdress] = useState<string>('');
@@ -101,7 +104,7 @@ function KakaoMap({ locationRef }: Props) {
         />
         <SearchIconSvg className='absolute right-15pxr top-8pxr' />
       </div>
-      <div id='map' className='h-400pxr w-500pxr z-[-1]'></div>
+      <div id='map' className='z-0 h-400pxr w-500pxr'></div>
     </div>
   );
 }

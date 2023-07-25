@@ -36,9 +36,16 @@ type FormData = {
   expiredDate?: string;
 };
 
+export type mapDataType = {
+  address: string;
+  x: number;
+  y: number;
+};
+
 function WritePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emptyError, setIsEmptyError] = useState(false);
+  const [mapData, setMapData] = useState<mapDataType | null>(null);
 
   const editorRef = useRef<Editor>(null);
   const selectRef = useRef<Category>({ value: 11, label: '기타' });
@@ -50,6 +57,8 @@ function WritePage() {
   const location = useLocation();
   const initialState = location.state ?? {};
   const isEditPage = location.pathname.includes('edit');
+
+  console.log(initialState);
 
   const {
     register,
@@ -143,6 +152,10 @@ function WritePage() {
   const handleImage = async (file: File, callback: typeof Function) => {
     const imageUrl = await getImageUrl(file);
     callback(imageUrl);
+  };
+
+  const setMapDataFn = (value: mapDataType) => {
+    setMapData(value);
   };
 
   return (
@@ -241,7 +254,7 @@ function WritePage() {
         </p>
         <div className='flex flex-col mb-55pxr'>
           <h3 className={style.subTitle}>주소</h3>
-          <KakaoMap locationRef={locationRef} />
+          <KakaoMap locationRef={locationRef} mapData={mapData} setMapDataFn={setMapDataFn} />
         </div>
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>
