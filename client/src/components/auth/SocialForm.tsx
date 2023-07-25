@@ -7,7 +7,7 @@ import SocialButton from './SocialButton';
 
 function SocialForm() {
   const isSignUp = useMatch('/users/signup');
-  const url = `http://localhost:5173/oauth2/authorization/google`;
+  const url = `https://mifunding.vercel.app/oauth2/authorization/google`;
 
   const googleSocialLogin = () => {
     window.location.href = url;

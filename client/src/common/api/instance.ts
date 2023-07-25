@@ -28,12 +28,15 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
+    const errMsg = error.response.data.message;
+
     if (error.config.url === '/signup') {
-      error.message = '회원가입 에러';
+      error.message = errMsg === 'member exists' ? '이미 존재하는 유저입니다.' : '회원가입 오류';
     }
 
     if (error.config.url === '/login') {
-      error.message = '로그인 에러';
+      error.message =
+        errMsg === 'Unauthorized' ? '이메일이나 비밀번호를 올바르게 입력해 주세요' : '로그인 오류';
     }
 
     throw error;
