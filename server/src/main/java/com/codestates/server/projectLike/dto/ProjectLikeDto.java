@@ -5,13 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
 @Getter
 @NoArgsConstructor
 public class ProjectLikeDto {
-        private Long memberId;
-        private Long projectId;
+        @Positive
+        private long memberId;
 
-        public ProjectLikeDto(Long memberId,Long projectId){
+        @Positive
+        private long projectId;
+
+        public ProjectLikeDto(long memberId,long projectId){
                 this.projectId = projectId;
                 this.memberId = memberId;
         }

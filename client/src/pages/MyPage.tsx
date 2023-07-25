@@ -8,13 +8,11 @@ import {
   MyPageFundingList,
 } from '@/components/mypage';
 import { UserModal } from '@/components/usermodal';
-import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/useReducer';
 import { storage } from '@/common/utils/storage';
 import ScrollUpButton from '@/components/ui/ScrollUpButton';
 
 function MyPage() {
-  const navigate = useNavigate();
   const userData = useAppSelector((state) => state.user.data);
   const memberId = userData?.memberId;
 
@@ -29,13 +27,6 @@ function MyPage() {
       setNickname(userData.nickname);
     }
   }, [userData]);
-
-  useEffect(() => {
-    const accessToken = storage.get('accessToken');
-    if (!accessToken) {
-      navigate('/users/login');
-    }
-  }, [navigate]);
 
   const openModal = () => {
     setIsModalOpen(true);

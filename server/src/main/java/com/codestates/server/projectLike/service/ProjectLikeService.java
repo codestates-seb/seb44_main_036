@@ -13,6 +13,8 @@ import com.codestates.server.projectLike.repository.ProjectLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ProjectLikeService {
@@ -22,24 +24,29 @@ public class ProjectLikeService {
 
     public void addLikeProject(ProjectLikeDto projectLikeDto){
 
-        if(existLike(projectLikeDto)){
-            throw new BusinessLogicException(ExceptionCode.PROJECT_LIKE_EXIST);
+        Project project = getProject(projectLikeDto);
+
+
+        if(existLike(projectLikeDto)) {
+            ProjectLike projectLike = getProjectLike(projectLikeDto);
+            project.removeProjectLike(projectLike);
+            projectLikeRepository.delete(projectLike);
+            project.setLikedProject(0);
+            projectRepository.save(project);
+        }else{
+            ProjectLike projectLike = new ProjectLike();
+            projectLike.setProject(getProject(projectLikeDto));
+            projectLike.setMember(getMember(projectLikeDto));
+            project.addProjectLike(projectLike);
+            project.setLikedProject(1);
+            projectLikeRepository.save(projectLike);
+            projectRepository.save(project);
         }
-
-
-            projectLikeRepository.save(buildProjectLike(projectLikeDto));
     }
 
-    public void cancelLikeProject(ProjectLikeDto projectLikeDto){
-        projectLikeRepository.delete(getProjectLike(projectLikeDto));
-    }
 
-    private ProjectLike buildProjectLike(ProjectLikeDto projectLikeDto) {
-        return ProjectLike.builder()
-                .project(getProject(projectLikeDto))
-                .member(getMember(projectLikeDto))
-                .build();
-    }
+
+
 
     private ProjectLike getProjectLike(ProjectLikeDto projectLikeDto) {
         return projectLikeRepository.findByMemberAndProject(getMember(projectLikeDto), getProject(projectLikeDto))
@@ -59,4 +66,8 @@ public class ProjectLikeService {
         return projectRepository.findById(projectLikeDto.getProjectId()).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND));
     }
+
+//    public List<ProjectLike> findByMemberId(long memberId){
+//        return projectLikeRepository.findProjectLikeByMemberId(memberId);
+//    }
 }

@@ -5,7 +5,6 @@ import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.project.entity.Project;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

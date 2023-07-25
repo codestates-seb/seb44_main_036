@@ -9,8 +9,12 @@ export type Project = {
   summary: string;
   targetAmount: number;
   title: string;
+  categoryId: number;
+  createdAt: string;
+  likeCount: number;
+  likedProject: number;
+  location: string | null;
+  view: number;
 };
 
 export type Projects = Project[];
-
-export type ProjectDetail = Project & { categoryId: number };

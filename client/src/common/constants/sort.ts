@@ -48,6 +48,7 @@ export const ORDERS = {
 } as const;
 
 export const PROGRESS = {
+  all: '전체',
   ongoing: '진행중',
   end: '종료',
 } as const;

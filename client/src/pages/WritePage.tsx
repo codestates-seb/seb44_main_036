@@ -14,6 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import KakaoMap from '@/components/kakaomap/KakaoMap';
 import ScrollUpButton from '@/components/ui/ScrollUpButton';
 import { storage } from '@/common/utils/storage';
+import { mutate } from 'swr';
 
 type Category = {
   value: number;
@@ -32,6 +33,7 @@ type FormData = {
   price: number;
   tags?: string[];
   location?: string;
+  expiredDate?: string;
 };
 
 function WritePage() {
@@ -73,16 +75,30 @@ function WritePage() {
 
     buttonRef.current?.click();
     if (memberId) data.memberId = +memberId;
+    data.expiredDate = dateToString(data.endDay as unknown as Date);
     data.endDay = dday(data.endDay as unknown as Date);
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     data.categoryId = selectRef.current.value;
-    // data.location = locationRef.current?.value;
+    data.location = locationRef.current?.value;
     // data.tags = tagRef.current;
-    console.log(data);
     try {
       if (isEditPage) {
-        await projectApi.editProject<FormData>(initialState.projectId, data);
+        const editData = {
+          ...initialState,
+          content: data.content,
+          expiredDate: data.expiredDate,
+          endDay: data.endDay,
+          imageUrl: data.imageUrl || initialState.imageUrl,
+          price: data.price,
+          summary: data.summary,
+          targetAmount: data.targetAmount,
+          title: data.title,
+          location: data.location || data.location,
+        };
+        await projectApi.editProject<FormData>(initialState.projectId, editData);
+        await mutate(`/projects/${initialState.projectId}`, editData);
+        alert('수정이 완료되었습니다.');
         navigate(`/project/${initialState.projectId}`);
       } else {
         await projectApi.addProject<FormData>(data);
@@ -215,8 +231,9 @@ function WritePage() {
             components={{ IndicatorSeparator: null }}
             onChange={onSelect}
             defaultValue={options.find((option) => option.value === initialState.categoryId)}
+            isDisabled={isEditPage}
           />
-          <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류됩니다.</p>
+          <p className={style.info}>※ 카테고리 미선택시 '기타'로 분류되며, 수정이 불가능합니다.</p>
         </div>
         <h2 className={style.title}>픽업 지점 설정</h2>
         <p className={style.desc}>

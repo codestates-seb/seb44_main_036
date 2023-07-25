@@ -7,6 +7,7 @@ import SocialButton from './SocialButton';
 
 function SocialForm() {
   const isSignUp = useMatch('/users/signup');
+  const url = `${import.meta.env.VITE_API_URL}/oauth2/authorization/google`;
 
   return (
     <article className='w-full max-w-[370px] flex flex-col'>

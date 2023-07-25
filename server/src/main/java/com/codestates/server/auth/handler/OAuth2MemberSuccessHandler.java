@@ -4,6 +4,7 @@ import com.codestates.server.auth.jwt.JwtTokenizer;
 import com.codestates.server.auth.utils.CustomAuthorityUtils;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
@@ -28,45 +30,45 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private final MemberService memberService;
 
 
-    public OAuth2MemberSuccessHandler(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, MemberService memberService){
-        this.authorityUtils = authorityUtils;
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberService = memberService;
-    }
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-        var oAuth2User = (OAuth2User)authentication.getPrincipal();
-        System.out.println(oAuth2User);
+        OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
+
+        String nickname = (String) oAuth2User.getAttributes().get("name");
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
+        String image = (String) oAuth2User.getAttributes().get("picture");
+        if(image == null){
+            image = (String) oAuth2User.getAttributes().get("profile_image");
+        }
+        Member member = new Member(email,nickname,image);
         List<String> authorities = authorityUtils.createRoles(email);
 
-        saveMember(email,oAuth2User);
-        redirect(request,response,email,authorities);
+        Member savedMember = saveMember(member);
+        redirect(request,response,savedMember,authorities);
     }
 
-    private void saveMember(String email,OAuth2User oAuth2User){
-        Member member = new Member(email);
-        member.setNickname(String.valueOf(oAuth2User.getAttributes().get("name")));
-        memberService.createMember(member);
+    private Member saveMember(Member member){
+        return memberService.createMember(member);
     }
 
-    private void redirect(HttpServletRequest request,HttpServletResponse response,String username,List<String> authorities) throws IOException {
-        String accessToken = delegateAccessToken(username,authorities);
-        String refreshToken = delegateRefreshToken(username);
-
-        response.setHeader("Authorization",accessToken);
-        response.setHeader("Refresh",refreshToken);
+    private void redirect(HttpServletRequest request,HttpServletResponse response,Member member,List<String> authorities) throws IOException {
+        String accessToken = delegateAccessToken(member,authorities);
+        String refreshToken = delegateRefreshToken(member);
 
         String uri = createURI(accessToken,refreshToken).toString();
+
+        response.setHeader("Authorization","Bearer "+ accessToken);
+        response.setHeader("Refresh",refreshToken);
+
         getRedirectStrategy().sendRedirect(request,response,uri);
     }
 
-    private String delegateAccessToken(String username,List<String> authorities){
+    private String delegateAccessToken(Member member,List<String> authorities){
         Map<String,Object> claims = new HashMap<>();
-        claims.put("username",username);
+        claims.put("memberId",member.getMemberId());
         claims.put("roles",authorities);
 
-        String subject = username;
+        String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
 
         String base64EncodedSecretKey = jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey());
@@ -76,8 +78,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return accessToken;
     }
 
-    private String delegateRefreshToken(String username){
-        String subject = username;
+    private String delegateRefreshToken(Member member){
+        String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey());
 
@@ -93,9 +95,13 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
-                .path("/receive-token.html")
+//                .scheme("http")
+                .scheme("https")
+//                .host("localhost")
+                .host("seb44-main-036.vercel.app")
+                .port(443)
+//                .port(80)
+                .path("/login")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
