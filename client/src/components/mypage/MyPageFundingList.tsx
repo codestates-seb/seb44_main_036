@@ -14,8 +14,6 @@ function MyPageFundingList({ memberId }: UserModalProps) {
     userApi.getUserProjects
   );
 
-  console.log(projectList);
-
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {projectList?.map((project) => (
