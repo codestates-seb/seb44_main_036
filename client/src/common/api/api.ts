@@ -12,8 +12,7 @@ export const authApi = {
 export const userApi = {
   getUser: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
     authInstance.get(`/members/${memberId}`, { headers }),
-  getUserLikedProjects: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
-    authInstance.get(`/members/${memberId}/like`, { headers }),
+  getUserProjects: (url: string) => authInstance.get(url).then(({ data }) => data),
   updateUser: (memberId: string, userData: any, headers?: AxiosRequestConfig['headers']) =>
     authInstance.patch(`/members/${memberId}`, userData, { headers }),
 };
@@ -26,4 +25,5 @@ export const projectApi = {
   addProject: <T>(project: T) => authInstance.post('/projects', project),
   editProject: <T>(id: string, project: T) => authInstance.patch(`/projects/${id}`, project),
   deleteProject: (id: string) => authInstance.delete(`/projects/${id}`),
+  fundingProject: (project: any) => authInstance.post('fundings', project),
 };

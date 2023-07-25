@@ -1,15 +1,26 @@
-import { MyPageLikeItem } from '.';
-// import useSWR from 'swr';
-// import axios from 'axios';
+import { MyPageMainItem } from '.';
+import type { Projects } from '@/common/types/responseTypes';
+import useSWR from 'swr';
+import { userApi } from '@/common/api/api';
+import { Link } from 'react-router-dom';
 
-// const { data: likedProjects, error: likedProjectsError } = useSWR<IProject[]>(`서버 url/users/${userId}/like`, fetcher);
+interface UserModalProps {
+  memberId?: string;
+}
 
-function MyPageLikeList() {
+function MyPageLikeList({ memberId }: UserModalProps) {
+  const { data: projectList } = useSWR<Projects>(
+    `/members/${memberId}/like`,
+    userApi.getUserProjects
+  );
+
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
-      <MyPageLikeItem />
-      <MyPageLikeItem />
-      <MyPageLikeItem />
+      {projectList?.map((project) => (
+        <Link to={`/project/${project.projectId}`} key={project.projectId}>
+          <MyPageMainItem project={project} />
+        </Link>
+      ))}
     </section>
   );
 }
