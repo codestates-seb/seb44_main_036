@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg';
 import { style } from '../writepage/styles';
 import { onInputClickHandler } from './DaumPost';
+import markerimg from '@/assets/icons/marker_icon.png';
 
 declare global {
   interface Window {
@@ -38,7 +39,7 @@ function KakaoMap({ locationRef }: Props) {
           scrollwheel: false,
         };
 
-        const imageSrc = '/src/assets/icons/marker_icon.png';
+        const imageSrc = markerimg;
         const imageSize = new kakao.maps.Size(34, 45);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
         const marker = new window.kakao.maps.Marker({

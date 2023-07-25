@@ -3,7 +3,6 @@ import { Patch, Like } from '../ui';
 import type { Project, Projects } from '@/common/types/responseTypes';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
-import { useParams } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
@@ -25,7 +24,6 @@ function MyPageMainItem({ project, projects }: Props) {
   } = project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
-  const { categoryId } = useParams();
 
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ function MyPageMainItem({ project, projects }: Props) {
         likeCount: updatedLikeCount,
       };
       mutate(
-        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
+        `/members/${memberId}/project`,
         projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
         false
       );

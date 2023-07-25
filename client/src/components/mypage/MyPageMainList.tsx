@@ -1,5 +1,5 @@
 import type { Projects } from '@/common/types/responseTypes';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr';
 import { userApi } from '@/common/api/api';
 import { Link } from 'react-router-dom';
 import { MyPageMainItem } from '.';
@@ -9,7 +9,7 @@ interface UserModalProps {
 }
 
 function MyPageMainList({ memberId }: UserModalProps) {
-  const { data: projectList } = useSWR<Projects>(
+  const { data: projectList } = useSWRImmutable<Projects>(
     `/members/${memberId}/project`,
     userApi.getUserProjects
   );

@@ -3,7 +3,6 @@ import { Patch, Like } from '../ui';
 import type { Project, Projects } from '@/common/types/responseTypes';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
-import { useParams } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
@@ -25,7 +24,6 @@ function MyPageLikeItem({ project, projects }: Props) {
   } = project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
-  const { categoryId } = useParams();
 
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
@@ -41,11 +39,18 @@ function MyPageLikeItem({ project, projects }: Props) {
         likedProject: updatedLikedProject,
         likeCount: updatedLikeCount,
       };
-      mutate(
-        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
-        projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
-        false
-      );
+
+      // Update the project list based on whether it was liked or unliked
+      let updatedProjects;
+      if (updatedLikedProject === 0) {
+        // Unliked
+        updatedProjects = projects.filter((project) => project.projectId !== projectId);
+      } else {
+        // Liked
+        updatedProjects = [...projects, updatedProject];
+      }
+
+      mutate(`/members/${memberId}/like`, updatedProjects, false);
     }
   };
 

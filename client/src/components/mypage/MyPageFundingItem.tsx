@@ -3,7 +3,6 @@ import { Patch, Like } from '../ui';
 import type { Project, Projects } from '@/common/types/responseTypes';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
-import { useParams } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
@@ -25,7 +24,6 @@ function MyPageFundingItem({ project, projects }: Props) {
   } = project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
-  const { categoryId } = useParams();
 
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ function MyPageFundingItem({ project, projects }: Props) {
         likeCount: updatedLikeCount,
       };
       mutate(
-        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
+        `/members/${memberId}/funding`,
         projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
         false
       );
@@ -66,15 +64,15 @@ function MyPageFundingItem({ project, projects }: Props) {
       <div className='flex items-center justify-between'>
         <div className='flex-center'>
           <span className='text-xl font-bold text-purple-300'>
-            {/* {formattingNumber(calculateAchievementRate(targetAmount, currentAmount))}% 달성 */}
+            {formattingNumber(calculateAchievementRate(targetAmount, currentAmount))}% 달성
           </span>
           <span className='text-sm text-gray-500 ml-10pxr'>
-            {/* {formattingNumber(currentAmount)} 원 */}
+            {formattingNumber(currentAmount)} 원
           </span>
         </div>
         <Patch type='deadline'>{`${daysUntilDeadline}일 남음`}</Patch>
       </div>
-      <h2 className='text-xl mt-7pxr line-clamp-2'>개발중인 기능입니다.{/* {title} */}</h2>
+      <h2 className='text-xl mt-7pxr line-clamp-2'>{title}</h2>
     </article>
   );
 }
