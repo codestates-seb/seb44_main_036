@@ -4,7 +4,7 @@ import { calculateTotalPrice } from '@/common/utils/calculateTotalPrice';
 import { paymentEqual, paymentMinus } from '@/assets/payment';
 import useSWR from 'swr';
 import { projectApi } from '@/common/api/api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { updateCashAmount } from '@/reducer/userSlice';
 import { useDispatch } from 'react-redux';
 
@@ -22,6 +22,7 @@ interface PaymentInfoProps {
 
 function PaymentInfo({ memberId, address, cash, quantity }: PaymentInfoProps) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { projectId } = useParams();
   const projectIdAsNumber: number | undefined = projectId ? parseInt(projectId, 10) : undefined;
   const memberIdAsNumber: number | undefined = memberId ? parseInt(memberId, 10) : undefined;
@@ -44,6 +45,7 @@ function PaymentInfo({ memberId, address, cash, quantity }: PaymentInfoProps) {
 
   const handleModalClose = () => {
     setShowModal(false);
+    navigate('/');
   };
 
   const totalProductPrice: number = calculateTotalPrice(quantity, unitPrice);

@@ -27,6 +27,8 @@ function MyPageLikeItem({ project, projects }: Props) {
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
 
+    console.log(projects);
+
     await projectApi.likeProject({ memberId, projectId });
     const targetProject = projects.find((project) => project.projectId === projectId);
 
@@ -39,13 +41,10 @@ function MyPageLikeItem({ project, projects }: Props) {
         likeCount: updatedLikeCount,
       };
 
-      // Update the project list based on whether it was liked or unliked
       let updatedProjects;
       if (updatedLikedProject === 0) {
-        // Unliked
         updatedProjects = projects.filter((project) => project.projectId !== projectId);
       } else {
-        // Liked
         updatedProjects = [...projects, updatedProject];
       }
 

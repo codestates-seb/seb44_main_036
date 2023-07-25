@@ -1,6 +1,6 @@
 import { MyPageLikeItem } from '.';
 import type { Projects } from '@/common/types/responseTypes';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { userApi } from '@/common/api/api';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ function MyPageLikeList({ memberId }: UserModalProps) {
     `/members/${memberId}/like`,
     userApi.getUserProjects
   );
+
+  console.log(projectList);
 
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
