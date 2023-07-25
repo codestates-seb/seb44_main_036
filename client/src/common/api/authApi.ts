@@ -20,7 +20,6 @@ export const logout = async () => {
 
 export const getUserInfo = async () => {
   const memberId = storage.get('memberId');
-  console.log('memberId', memberId);
   if (memberId) {
     return (await userApi.getUser(memberId)).data;
   }

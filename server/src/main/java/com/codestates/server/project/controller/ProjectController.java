@@ -55,9 +55,9 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity getProjects(){
-        List<Project> projects = projectService.findProjects();
 
-        return new ResponseEntity(mapper.projectsToProjectResponseDtos(projects),HttpStatus.OK);
+
+        return new ResponseEntity(mapper.projectsToProjectResponseDtos(projectService.findProjects()),HttpStatus.OK);
     }
 
     @GetMapping("/category/{category-id}")
@@ -73,6 +73,6 @@ public class ProjectController {
 
     @GetMapping("/search")
     public ResponseEntity searchProject(@RequestParam("q") String keyword){
-        return new ResponseEntity(mapper.projectsToProjectResponseDtos(projectService.searchByKeyword(keyword)),HttpStatus.OK);
+        return new ResponseEntity(projectService.searchByKeyword(keyword),HttpStatus.OK);
     }
 }
