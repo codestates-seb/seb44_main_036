@@ -3,8 +3,7 @@ import { Patch, Like } from '../ui';
 import type { Project, Projects } from '@/common/types/responseTypes';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
-
-export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
+import { LikeHandler } from '../project/ProjectItem';
 
 type Props = {
   project: Project;
