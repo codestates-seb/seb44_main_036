@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type userDataType = {
   memberId: string;
@@ -30,7 +30,13 @@ const userSlice = createSlice({
       state.data = null;
       state.isLogin = false;
     },
+    updateCashAmount(state, action: PayloadAction<number>) {
+      if (state.data) {
+        state.data.cash = action.payload;
+      }
+    },
   },
 });
 
+export const { logIn, logOut, updateCashAmount } = userSlice.actions;
 export default userSlice;

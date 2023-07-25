@@ -1,24 +1,26 @@
+import type { Projects } from '@/common/types/responseTypes';
+import useSWRImmutable from 'swr';
+import { userApi } from '@/common/api/api';
+import { Link } from 'react-router-dom';
 import { MyPageMainItem } from '.';
-// import useSWR from 'swr';
-// import axios from 'axios';
 
-// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+interface UserModalProps {
+  memberId?: string;
+}
 
-function MyPageMainList() {
-  // 유저 정보 프롭스로 가져와야함, 프로젝트 정보 받아올것 타입 지정할 것
-  // const { data: mainProjects, error: mainProjectsError } = useSWR<IProject[]>(
-  //   user
-  //     ? user.accountType === 'seller'
-  //       ? `서버 url/selling-projects/${userId}`
-  //       : `서버 url/funded-projects/${userId}`
-  //     : null,
-  //   fetcher
-  // );
+function MyPageMainList({ memberId }: UserModalProps) {
+  const { data: projectList } = useSWRImmutable<Projects>(
+    `/members/${memberId}/project`,
+    userApi.getUserProjects
+  );
+
   return (
     <section className='grid-auto max-w-[1280px] mx-auto'>
-      <MyPageMainItem />
-      <MyPageMainItem />
-      <MyPageMainItem />
+      {projectList?.map((project) => (
+        <Link to={`/project/${project.projectId}`} key={project.projectId}>
+          <MyPageMainItem project={project} projects={projectList ?? []} />
+        </Link>
+      ))}
     </section>
   );
 }

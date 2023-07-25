@@ -1,9 +1,8 @@
 interface UserProfileProps {
   nickname?: string;
-  accountType: 'seller' | 'buyer';
 }
 
-function UserProfile({ nickname, accountType }: UserProfileProps) {
+function UserProfile({ nickname }: UserProfileProps) {
   return (
     <>
       <div className='flex flex-row mb-110pxr'>
