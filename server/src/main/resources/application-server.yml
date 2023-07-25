@@ -4,7 +4,7 @@ cloud:
       accessKey: ${AWS_ACCESS_KEY}
       secretKey: ${AWS_SECRET_KEY}
     s3:
-      bucket: mifunding
+      bucket: ${BUCKET}
     region:
       static: ap-northeast-2
     stack:
@@ -17,11 +17,15 @@ aws:
     name: cloud-parameter-store
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
   config:
     import: 'aws-parameterstore:'
   datasource:
     url: jdbc:mysql://${RDS_ENDPOINT}:3306/mifunding?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
-    username: root
+    username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
@@ -63,5 +67,5 @@ mail:
     admin: ${ADMIN}
 jwt:
   key: ${JWT_SECRET_KEY}
-  access-token-expiration-minutes: 40
-  refresh-token-expiration-minutes: 420
+  access-token-expiration-minutes: ${EXPIRATION_MINUTES}
+  refresh-token-expiration-minutes: ${EXPIRATION_MINUTES}

@@ -20,7 +20,7 @@ function MyPageFundingList({ memberId }: UserModalProps) {
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {projectList?.map((project) => (
         <Link to={`/project/${project.projectId}`} key={project.projectId}>
-          <MyPageFundingItem project={project} />
+          <MyPageFundingItem project={project} projects={projectList ?? []} />
         </Link>
       ))}
     </section>

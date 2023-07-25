@@ -1,15 +1,53 @@
+import { projectApi } from '@/common/api/api';
 import { Patch, Like } from '../ui';
-import type { Project } from '@/common/types/responseTypes';
+import type { Project, Projects } from '@/common/types/responseTypes';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
+import { mutate } from 'swr';
+import { useParams } from 'react-router-dom';
+
+export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
 type Props = {
   project: Project;
+  projects: Projects;
 };
 
-function MyPageLikeItem({ project }: Props) {
-  const { currentAmount, expiredDate, imageUrl, targetAmount, title } = project;
+function MyPageLikeItem({ project, projects }: Props) {
+  const {
+    currentAmount,
+    expiredDate,
+    imageUrl,
+    targetAmount,
+    title,
+    likedProject,
+    memberId,
+    projectId,
+  } = project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
+  const { categoryId } = useParams();
+
+  const handleHeartClick: LikeHandler = async (e) => {
+    e.preventDefault();
+
+    await projectApi.likeProject({ memberId, projectId });
+    const targetProject = projects.find((project) => project.projectId === projectId);
+
+    if (targetProject) {
+      const updatedLikedProject = targetProject.likedProject === 0 ? 1 : 0;
+      const updatedLikeCount = targetProject.likeCount + (updatedLikedProject === 0 ? 1 : -1);
+      const updatedProject = {
+        ...targetProject,
+        likedProject: updatedLikedProject,
+        likeCount: updatedLikeCount,
+      };
+      mutate(
+        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
+        projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
+        false
+      );
+    }
+  };
 
   return (
     <article className='relative flex flex-col cursor-pointer w-400pxr mb-35pxr'>
@@ -20,7 +58,11 @@ function MyPageLikeItem({ project }: Props) {
         className='h-250pxr rounded-xl mb-10pxr'
         onError={handleImageError}
       />
-      <Like like={false} position='top-12pxr right-12pxr' />
+      <Like
+        like={likedProject ? true : false}
+        position='top-12pxr right-12pxr'
+        handleClick={handleHeartClick}
+      />
       <div className='flex items-center justify-between'>
         <div className='flex-center'>
           <span className='text-xl font-bold text-purple-300'>

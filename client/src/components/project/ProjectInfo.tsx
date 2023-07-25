@@ -4,13 +4,14 @@ import { emptyHeart, heart, share } from '@/assets/like';
 import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
 import { useNavigate, useParams } from 'react-router-dom';
-import useSWR, { mutate } from 'swr';
-import { ProjectDetail } from '@/common/types/responseTypes';
+import useSWRImmutable, { mutate } from 'swr';
+import { Project } from '@/common/types/responseTypes';
 import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
 import { CATEGORY_NUMBER_TO_KO, CategoryNumber } from '@/common/constants/sort';
 import { storage } from '@/common/utils/storage';
+import { useAppSelector } from '@/hooks/useReducer';
 
 export type ModalData = {
   title: string;
@@ -22,10 +23,12 @@ function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { data: projectDetail, isLoading } = useSWR<ProjectDetail>(
+  const { data: projectDetail, isLoading } = useSWRImmutable<Project>(
     `/projects/${projectId}`,
-    projectApi.getProject
+    projectApi.getProject,
+    { dedupingInterval: Infinity }
   );
+  const userData = useAppSelector((state) => state.user.data);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -36,6 +39,8 @@ function ProjectInfo() {
     currentAmount,
     targetAmount,
     memberId,
+    likeCount,
+    likedProject,
     categoryId = 11,
   } = projectDetail!;
   const userId = storage.get('memberId') ?? '비로그인 유저';
@@ -67,6 +72,24 @@ function ProjectInfo() {
 
   const editProject = () => {
     navigate('/project/edit', { state: projectDetail });
+  };
+
+  const likeProject = async () => {
+    if (!userData) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/users/login');
+      return;
+    }
+    await projectApi.likeProject({ projectId, memberId });
+    mutate(
+      `/projects/${projectId}`,
+      {
+        ...projectDetail,
+        likedProject: likedProject === 0 ? 1 : 0,
+        likeCount: likedProject ? likeCount - 1 : likeCount + 1,
+      },
+      false
+    );
   };
 
   return (
@@ -115,7 +138,11 @@ function ProjectInfo() {
         <div className='relative flex justify-between'>
           {modalOpen && <ShareModal onModalClosed={onModalClosed} modalData={modalData} />}
           <div className='flex justify-between gap-20pxr'>
-            <SquareButton text='396' imgSrc={heart} />
+            <SquareButton
+              text={likeCount}
+              imgSrc={likedProject ? heart : emptyHeart}
+              onClick={likeProject}
+            />
             <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />
           </div>
           <Button

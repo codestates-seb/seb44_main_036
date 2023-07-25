@@ -25,3 +25,10 @@ export const dateToString = (date = new Date()) => {
 
   return `${year}-${month}-${day}`;
 };
+
+export const isPastDeadline = (expiredDate: string) => {
+  const today = new Date();
+  const deadline = new Date(expiredDate);
+
+  return deadline < today;
+};

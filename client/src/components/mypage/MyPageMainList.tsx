@@ -18,7 +18,7 @@ function MyPageMainList({ memberId }: UserModalProps) {
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {projectList?.map((project) => (
         <Link to={`/project/${project.projectId}`} key={project.projectId}>
-          <MyPageMainItem project={project} />
+          <MyPageMainItem project={project} projects={projectList ?? []} />
         </Link>
       ))}
     </section>

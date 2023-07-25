@@ -2,17 +2,15 @@ package com.codestates.server.projectLike.entity;
 
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.project.entity.Project;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
+@NoArgsConstructor
+@Setter
 public class ProjectLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

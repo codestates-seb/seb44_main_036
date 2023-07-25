@@ -26,12 +26,27 @@ public interface ProjectMapper {
         project.setPrice(post.getPrice());
         project.setTargetAmount(post.getTargetAmount());
         project.setEndDay(post.getEndDay());
+        project.setLocation(post.getLocation());
         project.setMember(member);
         project.setCategory(category);
 
         return project;
     }
 
+     default Project projectPatchDtoToProject(ProjectDto.Patch patch){
+        Project project = new Project();
+        project.setProjectId(patch.getProjectId());
+        project.setTitle(patch.getTitle());
+        project.setContent(patch.getContent());
+        project.setSummary(patch.getSummary());
+        project.setPrice(patch.getPrice());
+        project.setLocation(patch.getLocation());
+        project.setEndDay(patch.getEndDay());
+        project.setTargetAmount(patch.getTargetAmount());
+        project.setImageUrl(patch.getImageUrl());
+
+        return project;
+     }
 
      default ProjectDto.Response projectToProjectResponseDto(Project project){
         ProjectDto.Response response = new ProjectDto.Response();
@@ -45,6 +60,12 @@ public interface ProjectMapper {
             response.setExpiredDate(project.getExpiredDate());
             response.setTargetAmount(project.getTargetAmount());
             response.setImageUrl(project.getImageUrl());
+            response.setCategoryId(project.getCategory().getCategoryId());
+            response.setView(project.getView());
+            response.setLocation(project.getLocation());
+            response.setCreatedAt(project.getCreatedAt());
+            response.setLikeCount(project.getLikeCount());
+            response.setLikedProject(project.getLikedProject());
 
         return response;
      }

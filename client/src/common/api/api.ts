@@ -26,4 +26,5 @@ export const projectApi = {
   editProject: <T>(id: string, project: T) => authInstance.patch(`/projects/${id}`, project),
   deleteProject: (id: string) => authInstance.delete(`/projects/${id}`),
   fundingProject: (project: any) => authInstance.post('fundings', project),
+  likeProject: <T>(data: T) => authInstance.post('/projects/like', data),
 };

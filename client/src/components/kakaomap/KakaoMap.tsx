@@ -58,7 +58,7 @@ function KakaoMap({ locationRef }: Props) {
   }, [isLoad]);
 
   useEffect(() => {
-    if (map && marker) {
+    if (map && marker && isLoad) {
       window.kakao.maps.event.addListener(
         map,
         'click',
