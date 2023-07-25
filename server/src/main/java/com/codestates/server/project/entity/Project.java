@@ -43,13 +43,11 @@ public class Project extends Auditable {
     @Column(columnDefinition = "integer default 0",nullable = false)
     private int view;
 
-    @Column
-    private String location;
-
     @Column(name = "EXPIRED_DATE")
     private LocalDateTime expiredDate;
 
-
+    @ElementCollection
+    private List<String> tags;
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -64,24 +62,15 @@ public class Project extends Auditable {
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
     private List<ProjectLike> projectLikes = new ArrayList<>();
 
-    @Column(nullable = false)
-    private int likeCount = this.projectLikes.size();
-
     @Column
     private Integer likedProject = 0;
+
+    @Embedded
+    private Location location;
 
     public void setMember(Member member) {
         this.member = member;
     }
 
-    public void addProjectLike(ProjectLike projectLike){
-        this.projectLikes.add(projectLike);
-        this.likeCount = this.projectLikes.size();
-    }
-
-    public void removeProjectLike(ProjectLike projectLike){
-        this.projectLikes.remove(projectLike);
-        this.likeCount = this.projectLikes.size();
-    }
 
 }

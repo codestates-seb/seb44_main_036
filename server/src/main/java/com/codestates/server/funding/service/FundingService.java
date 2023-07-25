@@ -25,7 +25,7 @@ public class FundingService {
     private final FundingMapper mapper;
 
     public Funding createFunding(Funding funding){
-        Project findProject = projectService.findProject(funding.getProject().getProjectId());
+        Project findProject = projectService.findVerifiedProject(funding.getProject().getProjectId());
         Member findMember = memberService.findMember(funding.getMember().getMemberId());
         if(findMember.getCash() < getFundingPrice(funding,findProject)){
             throw new BusinessLogicException(ExceptionCode.MEMBER_CASH_INSUFFICIENT);
@@ -57,7 +57,7 @@ public class FundingService {
     public void cancelFunding(long fundingId){
 
         Funding findFunding = findFunding(fundingId);
-        Project findProject = projectService.findProject(findFunding.getProject().getProjectId());
+        Project findProject = projectService.findVerifiedProject(findFunding.getProject().getProjectId());
         Member findMember = memberService.findMember(findFunding.getMember().getMemberId());
 
         backCash(findFunding, findProject, findMember);

@@ -29,6 +29,7 @@ public interface ProjectMapper {
         project.setLocation(post.getLocation());
         project.setMember(member);
         project.setCategory(category);
+        project.setTags(post.getTags());
 
         return project;
     }
@@ -40,10 +41,11 @@ public interface ProjectMapper {
         project.setContent(patch.getContent());
         project.setSummary(patch.getSummary());
         project.setPrice(patch.getPrice());
-        project.setLocation(patch.getLocation());
         project.setEndDay(patch.getEndDay());
         project.setTargetAmount(patch.getTargetAmount());
         project.setImageUrl(patch.getImageUrl());
+        project.setLocation(patch.getLocation());
+        project.setTags(patch.getTags());
 
         return project;
      }
@@ -62,10 +64,10 @@ public interface ProjectMapper {
             response.setImageUrl(project.getImageUrl());
             response.setCategoryId(project.getCategory().getCategoryId());
             response.setView(project.getView());
-            response.setLocation(project.getLocation());
             response.setCreatedAt(project.getCreatedAt());
-            response.setLikeCount(project.getLikeCount());
             response.setLikedProject(project.getLikedProject());
+            response.setTags(project.getTags());
+            response.setLocation(project.getLocation());
 
         return response;
      }

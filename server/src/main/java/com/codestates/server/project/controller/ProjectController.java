@@ -30,10 +30,8 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity postProject(@RequestBody ProjectDto.Post requestBody){
-        Project project = mapper.projectPostDtoToProject(requestBody);
-        Project createdProject = projectService.createProject(project);
 
-       return new ResponseEntity(mapper.projectToProjectResponseDto(createdProject),HttpStatus.CREATED);
+       return new ResponseEntity(mapper.projectToProjectResponseDto(projectService.createProject(mapper.projectPostDtoToProject(requestBody))),HttpStatus.CREATED);
     }
 
     @PatchMapping("/{project-id}")
@@ -50,14 +48,26 @@ public class ProjectController {
     public ResponseEntity getProject(@PathVariable("project-id") long projectId){
         projectService.updateView(projectId);
 
-        return new ResponseEntity(mapper.projectToProjectResponseDto(projectService.findProject(projectId)),HttpStatus.OK);
+        return new ResponseEntity(projectService.findProject(projectId),HttpStatus.OK);
+    }
+
+    @GetMapping("/{project-id}/{member-id}")
+    public ResponseEntity getLoginProject(@PathVariable("project-id") long projectId,@PathVariable("member-id") long memberId){
+        projectService.updateView(projectId);
+
+        return new ResponseEntity(projectService.findLoginProject(projectId,memberId),HttpStatus.OK);
+    }
+
+    @GetMapping("/login/{member-id}")
+    public ResponseEntity getLoginProjects(@PathVariable("member-id") long memberId){
+
+
+        return new ResponseEntity(projectService.findLoginProjects(memberId),HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity getProjects(){
-
-
-        return new ResponseEntity(mapper.projectsToProjectResponseDtos(projectService.findProjects()),HttpStatus.OK);
+        return new ResponseEntity(projectService.findProjects(),HttpStatus.OK);
     }
 
     @GetMapping("/category/{category-id}")
