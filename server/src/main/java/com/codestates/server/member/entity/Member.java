@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +27,19 @@ public class Member extends Auditable {
     private String email;
     @Column(length = 100)
     private String password;
+    @Column
+    private String address;
 
-    @JsonManagedReference
+    @Column(nullable = false)
+    private Integer cash;
+
+    @Column
+    private String imageUrl;
+
+
     @OneToMany(mappedBy = "member")
     private List<Project> projects = new ArrayList<>();
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "member")
     private List<Funding> fundings = new ArrayList<>();
 
@@ -41,32 +47,12 @@ public class Member extends Auditable {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    public Member(String nickname,String email ){
+    public Member(String email,String nickname,String imageUrl){
         this.nickname = nickname;
         this.email = email;
+        this.imageUrl = imageUrl;
 
     }
-    public Member(String email) {
-
-        this.email = email;
-    }
 
 
-
-    public enum MemberRole {
-        ROLE_USER,
-        ROLE_ADMIN
-    }
-//    public enum MemberStatus {
-//        MEMBER_ACTIVE("활동중"),
-//        MEMBER_SLEEP("휴면 상태"),
-//        MEMBER_QUIT("탈퇴 상태");
-//
-//        @Getter
-//        private String status;
-//
-//        MemberStatus(String status) {
-//            this.status = status;
-//        }
-//    }
 }

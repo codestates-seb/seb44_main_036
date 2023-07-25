@@ -30,7 +30,6 @@ function LoginForm() {
     try {
       await postLogin({ email, password });
       const userInfo = await getUserInfo();
-      console.log(userInfo);
       dispatch(userSlice.actions.logIn(userInfo));
 
       successToast(`환영합니다. ${userInfo.nickname}님`);

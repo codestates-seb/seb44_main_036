@@ -15,7 +15,7 @@ public class FundingDto {
         private long projectId;
         @Positive
         private long memberId;
-        @NotBlank
+        @NotBlank(message = "주소는 공백이 아니여야 합니다.")
         private String address;
         @Positive
         private int quantity;

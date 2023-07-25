@@ -3,6 +3,7 @@ import { Category } from '.';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/navigation';
 
 export type categoryEN = keyof typeof CATEGORIES;
 export type categoryINFO = (typeof CATEGORIES)[keyof typeof CATEGORIES];

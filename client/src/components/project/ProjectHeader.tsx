@@ -6,7 +6,7 @@ function ProjectHeader() {
   const orders = Object.entries(ORDERS);
   const progress = Object.entries(PROGRESS);
   const [orderParams, setOrderParams] = useSetParams('order', 'recent');
-  const [progressParams, setProgressParams] = useSetParams('progress', 'ongoing');
+  const [progressParams, setProgressParams] = useSetParams('progress', 'all');
 
   return (
     <section className='flex justify-between max-w-[1280px] mx-auto mt-45pxr mb-25pxr'>
