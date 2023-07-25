@@ -33,7 +33,6 @@ function MyPage() {
   // const isLogin = useAppSelector((state) => state.user.isLogin);
   const memberId = userData?.memberId;
   // const { data } = useSWR(memberId, userApi.getUserLikedProjects);
-  // console.log(data);
 
   const [tab, setTab] = useState<'sell' | 'buy' | 'liked'>('sell');
   const [isModalOpen, setIsModalOpen] = useState(false);
