@@ -54,8 +54,6 @@ function UserModal({
     setNewNickname(event.target.value);
   };
 
-  console.log(address);
-
   const handleSave = async () => {
     try {
       if (!memberId) {
