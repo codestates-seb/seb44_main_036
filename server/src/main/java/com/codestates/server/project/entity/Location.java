@@ -18,7 +18,7 @@ public class Location{
 
     }
 
-    public Location(@NotNull String address,@NotNull String x,@NotNull String y){
+    public Location(String address,String x,String y){
         this.x = x;
         this.y = y;
         this.address = address;
