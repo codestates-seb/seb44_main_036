@@ -101,7 +101,7 @@ function KakaoMap({ locationRef }: Props) {
         />
         <SearchIconSvg className='absolute right-15pxr top-8pxr' />
       </div>
-      <div id='map' className='h-400pxr w-500pxr'></div>
+      <div id='map' className='h-400pxr w-500pxr z-[-1]'></div>
     </div>
   );
 }

@@ -45,8 +45,6 @@ function UserModal({ memberId, imageUrl, nickname, address, onClose, onSave }: U
     setNewNickname(event.target.value);
   };
 
-  console.log(address);
-
   const handleSave = async () => {
     try {
       if (!memberId) {

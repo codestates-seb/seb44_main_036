@@ -50,8 +50,8 @@ public class FundingService {
         return fundingRepository.findAll();
     }
 
-    public List<FundingDto.Response> findByMemberId(long memberId){
-        return mapper.fundingsToFundingResponseDtos(fundingRepository.findByMemberId(memberId));
+    public List<Funding> findByMemberId(long memberId){
+        return fundingRepository.findByMemberId(memberId);
     }
 
     public void cancelFunding(long fundingId){
