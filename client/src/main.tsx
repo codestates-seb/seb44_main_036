@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -13,65 +13,93 @@ import {
   PaymentPage,
   SignUpPage,
   WritePage,
+  SearchPage,
 } from '@/pages';
 import store from './store';
 import { CookiesProvider } from 'react-cookie';
-import { storage } from './common/utils/storage';
+import AuthRoute from './components/route/AuthRoute';
+import PublicRoute from './components/route/PublicRoute';
 
-const isLogin = () => {
-  const a = storage.get('accessToken');
-  console.log('로그인 했니?', a);
-  return a;
-};
+interface RouterBase {
+  path: string;
+  element: React.ReactNode;
+  withAuth: boolean;
+  index?: boolean;
+}
+
+const routerData: RouterBase[] = [
+  {
+    index: true,
+    path: '/category?/:categoryId?',
+    element: <MainPage />,
+    withAuth: false,
+  },
+  {
+    path: '/project/:projectId',
+    element: <ProjectPage />,
+    withAuth: false,
+  },
+  {
+    path: '/project/:projectId/payment',
+    element: <PaymentPage />,
+    withAuth: true,
+  },
+  {
+    path: '/project/edit',
+    element: <WritePage />,
+    withAuth: true,
+  },
+  {
+    path: '/project/add',
+    element: <WritePage />,
+    withAuth: true,
+  },
+  {
+    path: '/mypage',
+    element: <MyPage />,
+    withAuth: true,
+  },
+  {
+    path: '/users/signup',
+    element: <SignUpPage />,
+    withAuth: false,
+  },
+  {
+    path: '/users/login',
+    element: <LoginPage />,
+    withAuth: false,
+  },
+  {
+    path: '/search',
+    element: <SearchPage />,
+    withAuth: false,
+  },
+];
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
-    children: [
-      {
-        index: true,
-        path: '/category?/:categoryId?',
-        element: <MainPage />,
-      },
-      {
-        path: '/project/:projectId',
-        element: <ProjectPage />,
-      },
-      {
-        path: '/project/:projectId/payment',
-        element: <PaymentPage />,
-      },
-      {
-        path: '/project/edit',
-        element: <WritePage />,
-      },
-      {
-        path: '/project/add',
-        element: <WritePage />,
-      },
-      {
-        path: '/mypage',
-        element: <MyPage />,
-      },
-      {
-        path: '/users/signup',
-        element: <SignUpPage />,
-      },
-      {
-        path: '/users/login',
-        element: <LoginPage />,
-      },
-    ],
+    children: routerData.map((router) => {
+      if (router.withAuth) {
+        return {
+          path: router.path,
+          element: <AuthRoute>{router.element}</AuthRoute>,
+        };
+      } else {
+        return {
+          path: router.path,
+          element: <PublicRoute>{router.element}</PublicRoute>,
+        };
+      }
+    }),
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <CookiesProvider>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </CookiesProvider>
-  </React.StrictMode>
+  <CookiesProvider>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </CookiesProvider>
 );
