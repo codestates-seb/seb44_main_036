@@ -10,7 +10,7 @@ type Props = {
   projects: Projects;
 };
 
-function MyPageLikeItem({ project, projects }: Props) {
+function MyPageFundingItem({ project, projects }: Props) {
   const {
     currentAmount,
     expiredDate,
@@ -27,8 +27,6 @@ function MyPageLikeItem({ project, projects }: Props) {
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
 
-    console.log(projects);
-
     await projectApi.likeProject({ memberId, projectId });
     const targetProject = projects.find((project) => project.projectId === projectId);
 
@@ -40,15 +38,11 @@ function MyPageLikeItem({ project, projects }: Props) {
         likedProject: updatedLikedProject,
         likeCount: updatedLikeCount,
       };
-
-      let updatedProjects;
-      if (updatedLikedProject === 0) {
-        updatedProjects = projects.filter((project) => project.projectId !== projectId);
-      } else {
-        updatedProjects = [...projects, updatedProject];
-      }
-
-      mutate(`/members/${memberId}/like`, updatedProjects, false);
+      mutate(
+        `/members/${memberId}/funding`,
+        projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
+        false
+      );
     }
   };
 
@@ -82,4 +76,4 @@ function MyPageLikeItem({ project, projects }: Props) {
   );
 }
 
-export default MyPageLikeItem;
+export default MyPageFundingItem;
