@@ -86,7 +86,6 @@ public class ProjectDto {
 
         private long projectId;
         private long memberId;
-
         private LocalDateTime createdAt;
         private int likeCount;
         private String imageUrl;
@@ -94,11 +93,11 @@ public class ProjectDto {
         private String summary;
         private String content;
         private Integer price;
-        private int currentAmount;
+        private Integer currentAmount;
         private Integer targetAmount;
         private LocalDateTime expiredDate;
         private long categoryId;
-        private int likedProject;
+        private Integer likedProject;
         private int view;
         private String location;
     }

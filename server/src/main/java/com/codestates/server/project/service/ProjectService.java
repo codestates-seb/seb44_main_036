@@ -2,6 +2,7 @@ package com.codestates.server.project.service;//package com.codestates.server.pr
 
 import com.codestates.server.exception.BusinessLogicException;
 import com.codestates.server.exception.ExceptionCode;
+import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.service.MemberService;
 import com.codestates.server.project.dto.ProjectDto;
 import com.codestates.server.project.entity.Project;
@@ -89,11 +90,15 @@ public class ProjectService {
     }
 
     public List<ProjectDto.Response> findByLikedProject(long memberId){
-        return mapper.projectsToProjectResponseDtos(projectRepository.findByLikedProject(memberId,1));
+
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByLikedProject(memberId));
     }
 
-    public List<Project> searchByKeyword(String keyword){
-        return projectRepository.findByTitleContaining(keyword);
+    public List<ProjectDto.Response> searchByKeyword(String keyword){
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByTitleContaining(keyword));
+    }
+    public List<ProjectDto.Response> findByFundingMemberId(long memberId){
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByFundingMemberId(memberId));
     }
 
     public void deleteProject(long projectId){
