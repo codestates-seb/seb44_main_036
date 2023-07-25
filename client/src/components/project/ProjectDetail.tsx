@@ -10,8 +10,8 @@ function ProjectDetail() {
   if (isLoading) return <div>Loading....</div>;
 
   return (
-    // <div className='w-[54%]'>
-    <div>
+    <div className='w-[54%]'>
+      {/* <div> */}
       <h2 className='text-2xl font-bold mb-40pxr'>프로젝트 상세</h2>
       <TuiViewer content={data?.content} />
     </div>
