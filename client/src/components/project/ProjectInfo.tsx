@@ -1,7 +1,7 @@
 import { Patch, SquareButton, Button } from '../ui';
 import { arrowRight } from '@/assets/common';
 import { emptyHeart, heart, share } from '@/assets/like';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWRImmutable, { mutate } from 'swr';
@@ -23,13 +23,9 @@ function ProjectInfo() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const userData = useAppSelector((state) => state.user.data);
-  const getProjectEndpoint = useCallback(() => {
-    if (userData) return `/projects/${projectId}/${userData.memberId}`;
-    else return `/projects/${projectId}`;
-  }, [userData, projectId]);
 
   const { data: projectDetail, isLoading } = useSWRImmutable<Project>(
-    getProjectEndpoint(),
+    `/projects/${projectId}`,
     projectApi.getProject,
     { dedupingInterval: Infinity }
   );
@@ -48,8 +44,9 @@ function ProjectInfo() {
     categoryId = 11,
     tags,
   } = projectDetail!;
-  const userId = userData?.memberId ?? '비로그인 유저';
-  const isWriter = userId === String(memberId);
+
+  const userId = userData?.memberId ?? -1;
+  const isWriter = userId === memberId;
 
   const modalData: ModalData = {
     title: title,
@@ -87,7 +84,7 @@ function ProjectInfo() {
     }
     await projectApi.likeProject({ projectId, memberId });
     mutate(
-      getProjectEndpoint(),
+      `/projects/${projectId}`,
       {
         ...projectDetail,
         likedProject: likedProject === 0 ? 1 : 0,
