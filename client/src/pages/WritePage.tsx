@@ -118,6 +118,7 @@ function WritePage() {
           location: data.location,
           x: data.x,
           y: data.y,
+          tags: tagRef.current,
         };
         await projectApi.editProject<FormData>(initialState.projectId, editData);
         await mutate(`/projects/${initialState.projectId}`, editData);
@@ -234,6 +235,7 @@ function WritePage() {
           style={combineClassNames(style.input, style.tagInput)}
           tagRef={buttonRef}
           getTags={getTags}
+          initialTags={initialState.tags}
         ></TagInput>
         <h3 className={style.subTitle}>프로젝트 종료일</h3>
         <div className='relative'>
