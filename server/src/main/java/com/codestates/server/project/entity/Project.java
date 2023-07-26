@@ -5,8 +5,6 @@ import com.codestates.server.category.entity.Category;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.projectLike.entity.ProjectLike;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -65,8 +63,11 @@ public class Project extends Auditable {
     @Column
     private Integer likedProject = 0;
 
-    @Embedded
-    private Location location;
+    @Column
+    private String location;
+
+//    @Embedded
+//    private Location location;
 
     public void setMember(Member member) {
         this.member = member;

@@ -97,15 +97,30 @@ public class ProjectService {
     public List<ProjectDto.Response> findLoginProjects(long memberId){
         List<Project> findProjects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId"));
         List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
+        setLikedProject(findProjects,projectLikes);
 
-        for(Project project:findProjects){
-            for (ProjectLike projectLike:projectLikes){
+        return mapper.projectsToProjectResponseDtos(findProjects);
+    }
+
+    public List<ProjectDto.Response> findByCategoryType(long categoryId){
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
+    }
+    public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,long memberId){
+        List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
+        List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
+        setLikedProject(findProjects, projectLikes);
+
+        return mapper.projectsToProjectResponseDtos(findProjects);
+    }
+
+    private static void setLikedProject(List<Project> findProjects, List<ProjectLike> projectLikes) {
+        for(Project project: findProjects){
+            for (ProjectLike projectLike: projectLikes){
                 if(project.getProjectId() == projectLike.getProject().getProjectId()){
                     project.setLikedProject(1);
                 }
             }
         }
-        return mapper.projectsToProjectResponseDtos(findProjects);
     }
 
     public List<ProjectDto.Response> findProjects(){
@@ -121,10 +136,6 @@ public class ProjectService {
         Project findProject = projectRepository.findById(projectId).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND));
         return findProject;
-    }
-
-    public List<ProjectDto.Response> findByCategoryType(long categoryId){
-        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
     }
 
     public List<ProjectDto.Response> findByLikedProject(long memberId){

@@ -75,6 +75,11 @@ public class ProjectController {
         return new ResponseEntity(projectService.findByCategoryType(categoryId),HttpStatus.OK);
     }
 
+    @GetMapping("/category/{category-id}/{member-id}")
+    public ResponseEntity getLoginProjectByCategoryType(@PathVariable("category-id")long categoryId,@PathVariable("member-id") long memberId){
+        return new ResponseEntity(projectService.findByLoginCategoryType(categoryId,memberId),HttpStatus.OK);
+    }
+
     @DeleteMapping("/{project-id}")
     public ResponseEntity deleteMember(@PathVariable("project-id") @Positive long projectId) {
         projectService.deleteProject(projectId);

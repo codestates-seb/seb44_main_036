@@ -2,7 +2,7 @@ package com.codestates.server.project.dto;
 
 
 
-import com.codestates.server.project.entity.Location;
+//import com.codestates.server.project.entity.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +47,7 @@ public class ProjectDto {
         @NotBlank(message = "카테고리는 공백이 아니어야 합니다.")
         private long categoryId;
 
-        private Location location;
+        private String location;
 
         private List<String> tags;
     }
@@ -79,7 +79,7 @@ public class ProjectDto {
 
         private Integer price;
 
-        private Location location;
+        private String location;
 
         private List<String> tags;
 
@@ -106,7 +106,7 @@ public class ProjectDto {
         private long categoryId;
         private Integer likedProject;
         private int view;
-        private Location location;
+        private String location;
         private List<String> tags;
     }
 }
