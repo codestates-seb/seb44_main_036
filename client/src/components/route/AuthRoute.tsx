@@ -1,7 +1,7 @@
 import { getUserInfo } from '@/common/api/authApi';
 import { storage } from '@/common/utils/storage';
 import { useAppDispatch, useAppSelector } from '@/hooks/useReducer';
-import userSlice from '@/reducer/userSlice';
+import userSlice, { logOut } from '@/reducer/userSlice';
 import { useCallback, useEffect, useState, ReactNode } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
@@ -27,6 +27,7 @@ const AuthRoute = ({ children }: Props) => {
       if (accessToken) {
         getUser();
       } else {
+        logOut();
         navigate('/users/login');
       }
     }

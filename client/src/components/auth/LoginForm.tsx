@@ -7,7 +7,7 @@ import { getUserInfo, postLogin } from '@/common/api/authApi';
 import { EMAIL_REGEX, PASSWORD_REGEX } from '@/common/constants/regexs';
 import { LoginFormValues } from '@/common/types/authTypes';
 import { Button, Strong } from '@/components/ui';
-import userSlice from '@/reducer/userSlice';
+import userSlice, { logOut } from '@/reducer/userSlice';
 import { useAppDispatch } from '@/hooks/useReducer';
 import { successToast } from '@/common/utils/toast';
 import { AuthInput } from '.';
@@ -35,6 +35,7 @@ function LoginForm() {
       successToast(`환영합니다. ${userInfo.nickname}님`);
       navigate('/');
     } catch (error) {
+      logOut();
       if (axios.isAxiosError(error)) {
         const errorMessage = error.message;
         alert(errorMessage);

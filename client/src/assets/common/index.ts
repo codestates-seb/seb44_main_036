@@ -3,4 +3,4 @@ export { default as arrowRight } from './arrow-right.png';
 export { default as coin } from './coin.png';
 export { default as lizard } from './lizard.png';
 export { default as xSquare } from './x-square.png';
-export { default as ad } from './ad.png';
+export { default as adv } from './adv.png';

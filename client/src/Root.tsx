@@ -4,15 +4,19 @@ import Toast from './components/toast/toast';
 import { useEffect } from 'react';
 import { useAppDispatch } from './hooks/useReducer';
 import userSlice from './reducer/userSlice';
-import { getUserInfo } from './common/api/authApi';
+import { getUserInfo, logout } from './common/api/authApi';
 import { storage } from './common/utils/storage';
 
 function Root() {
   const dispatch = useAppDispatch();
 
   const getUser = async () => {
-    const userInfo = await getUserInfo();
-    dispatch(userSlice.actions.logIn(userInfo));
+    try {
+      const userInfo = await getUserInfo();
+      dispatch(userSlice.actions.logIn(userInfo));
+    } catch {
+      logout();
+    }
   };
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import { ReactComponent as SearchIconSvg } from '@/assets/icons/search_icon.svg'
 import { style } from '../writepage/styles';
 import { onInputClickHandler } from './DaumPost';
 import markerimg from '@/assets/icons/marker_icon.png';
+import { mapDataType } from '@/pages/WritePage';
 
 declare global {
   interface Window {
@@ -12,10 +13,11 @@ declare global {
 }
 
 type Props = {
-  locationRef: React.RefObject<HTMLInputElement> | null;
+  setMapDataFn: (value: mapDataType) => void;
+  initialState: any;
 };
 
-function KakaoMap({ locationRef }: Props) {
+function KakaoMap({ setMapDataFn, initialState }: Props) {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [marker, setMarker] = useState<kakao.maps.Marker | null>(null);
   const [address, setAdress] = useState<string>('');
@@ -32,12 +34,17 @@ function KakaoMap({ locationRef }: Props) {
     script.onload = () => {
       window.kakao.maps.load(() => {
         const container = document.getElementById('map');
-        const map = new window.kakao.maps.LatLng(33.450701, 126.570667);
+        const map = initialState?.location
+          ? new window.kakao.maps.LatLng(Number(initialState.y), Number(initialState.x))
+          : new window.kakao.maps.LatLng(33.450701, 126.570667);
+
         const options = {
           center: map,
           level: 3,
           scrollwheel: false,
         };
+
+        const position = new window.kakao.maps.Map(container, options);
 
         const imageSrc = markerimg;
         const imageSize = new kakao.maps.Size(34, 45);
@@ -47,7 +54,13 @@ function KakaoMap({ locationRef }: Props) {
           image: markerImage,
         });
 
-        setMap(new window.kakao.maps.Map(container, options));
+        if (initialState && initialState.location) {
+          marker.setMap(position);
+          marker.setPosition(map);
+          setAdress(initialState.location);
+        }
+
+        setMap(position);
         setMarker(marker);
         setIsLoad(true);
       });
@@ -56,7 +69,7 @@ function KakaoMap({ locationRef }: Props) {
     return () => {
       document.body.removeChild(script);
     };
-  }, [isLoad]);
+  }, []);
 
   useEffect(() => {
     if (map && marker && isLoad) {
@@ -78,6 +91,13 @@ function KakaoMap({ locationRef }: Props) {
                 addr && setAdress(addr);
                 marker.setMap(map);
                 marker.setPosition(mouseEvent.latLng);
+                const newMapData = {
+                  address: addr || '',
+                  y: String(mouseEvent.latLng.getLat()),
+                  x: String(mouseEvent.latLng.getLng()),
+                };
+
+                setMapDataFn(newMapData);
               }
             }
           );
@@ -93,15 +113,14 @@ function KakaoMap({ locationRef }: Props) {
           placeholder='주소를 검색하고 싶다면 클릭해 주세요'
           id='addr'
           type='text h-35pxr'
-          ref={locationRef}
           value={address}
           readOnly
           className={`${style.input} w-full border`}
-          onClick={() => onInputClickHandler(map, marker, setAdress)}
+          onClick={() => onInputClickHandler(map, marker, setAdress, setMapDataFn)}
         />
         <SearchIconSvg className='absolute right-15pxr top-8pxr' />
       </div>
-      <div id='map' className='h-400pxr w-500pxr z-[-1]'></div>
+      <div id='map' className='z-0 h-400pxr w-500pxr'></div>
     </div>
   );
 }

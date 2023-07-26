@@ -10,8 +10,7 @@ function SearchPage() {
   const searchWord = searchParams.get('q');
 
   const { data: projectList } = useSWRImmutable<Projects>(
-    // `/search?q=${searchWord}`,
-    '/projects',
+    `/projects/search?q=${searchWord}`,
     projectApi.getProjects,
     {
       dedupingInterval: Infinity,
