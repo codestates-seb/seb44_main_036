@@ -97,7 +97,7 @@ public class ProjectService {
     public List<ProjectDto.Response> findLoginProjects(long memberId){
         List<Project> findProjects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId"));
         List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
-//        setLikedProject(findProjects,projectLikes);
+        setLikedProject(findProjects,projectLikes);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
@@ -108,7 +108,7 @@ public class ProjectService {
     public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,long memberId){
         List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
         List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
-//        setLikedProject(findProjects, projectLikes);
+        setLikedProject(findProjects, projectLikes);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
