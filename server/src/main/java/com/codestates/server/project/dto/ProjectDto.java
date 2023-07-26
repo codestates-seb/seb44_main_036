@@ -49,7 +49,7 @@ public class ProjectDto {
 
         private String location;
 
-        private List<String> tags;
+//        private List<String> tags;
     }
 
     @Getter
@@ -81,7 +81,7 @@ public class ProjectDto {
 
         private String location;
 
-        private List<String> tags;
+//        private List<String> tags;
 
         public void setProjectId(long projectId) {
             this.projectId = projectId;
@@ -107,6 +107,6 @@ public class ProjectDto {
         private Integer likedProject;
         private int view;
         private String location;
-        private List<String> tags;
+//        private List<String> tags;
     }
 }

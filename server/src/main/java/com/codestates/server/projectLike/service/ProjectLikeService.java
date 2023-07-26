@@ -23,16 +23,21 @@ public class ProjectLikeService {
     private final ProjectRepository projectRepository;
 
     public void addLikeProject(ProjectLikeDto projectLikeDto){
+        Project project = getProject(projectLikeDto);
 
         if(existLike(projectLikeDto)) {
             ProjectLike projectLike = getProjectLike(projectLikeDto);
+            project.removeProjectLike(projectLike);
             projectLikeRepository.delete(projectLike);
+            projectRepository.save(project);
 
         }else{
             ProjectLike projectLike = new ProjectLike();
             projectLike.setProject(getProject(projectLikeDto));
             projectLike.setMember(getMember(projectLikeDto));
+            project.addProjectLike(projectLike);
             projectLikeRepository.save(projectLike);
+            projectRepository.save(project);
 
         }
     }
