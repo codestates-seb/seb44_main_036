@@ -5,8 +5,6 @@ import com.codestates.server.category.entity.Category;
 import com.codestates.server.funding.entity.Funding;
 import com.codestates.server.member.entity.Member;
 import com.codestates.server.projectLike.entity.ProjectLike;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,14 +40,14 @@ public class Project extends Auditable {
     private Integer targetAmount;
     @Column(columnDefinition = "integer default 0",nullable = false)
     private int view;
-
-    @Column
-    private String location;
+    @Column(nullable = false)
+    private Integer likeCount = 0;
 
     @Column(name = "EXPIRED_DATE")
     private LocalDateTime expiredDate;
 
-
+    @ElementCollection
+    private List<String> tags;
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -64,15 +62,15 @@ public class Project extends Auditable {
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
     private List<ProjectLike> projectLikes = new ArrayList<>();
 
-    @Column(nullable = false)
-    private int likeCount = this.projectLikes.size();
-
     @Column
     private Integer likedProject = 0;
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
+    @Column
+    private String location;
+    @Column
+    private String x;
+    @Column
+    private String y;
 
     public void addProjectLike(ProjectLike projectLike){
         this.projectLikes.add(projectLike);
@@ -83,5 +81,10 @@ public class Project extends Auditable {
         this.projectLikes.remove(projectLike);
         this.likeCount = this.projectLikes.size();
     }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
 
 }

@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { TagInput } from '@/components/writepage';
 import { TuiEditor } from '@/components/editor';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { options } from '@/common/constants/sort';
 import { customStyles, style } from '@/components/writepage/styles';
 import { TagType } from '@/components/writepage/TagInput';
@@ -21,6 +21,12 @@ type Category = {
   label: string;
 };
 
+export type mapDataType = {
+  address: string;
+  x: string;
+  y: string;
+};
+
 type FormData = {
   categoryId: number;
   title: string;
@@ -32,24 +38,37 @@ type FormData = {
   content: string;
   price: number;
   tags?: string[];
-  location?: string;
+  location: string | null;
+  x: string | null;
+  y: string | null;
   expiredDate?: string;
 };
 
 function WritePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emptyError, setIsEmptyError] = useState(false);
+  const [mapData, setMapData] = useState<mapDataType | null>(null);
 
   const editorRef = useRef<Editor>(null);
   const selectRef = useRef<Category>({ value: 11, label: '기타' });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tagRef = useRef<string[]>([]);
   const imageRef = useRef('');
-  const locationRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const initialState = location.state ?? {};
   const isEditPage = location.pathname.includes('edit');
+
+  useEffect(() => {
+    if (initialState) {
+      const newMapData = {
+        address: initialState.location,
+        x: initialState.x,
+        y: initialState.y,
+      };
+      setMapData(newMapData);
+    }
+  }, []);
 
   const {
     register,
@@ -80,8 +99,10 @@ function WritePage() {
     data.content = editorRef.current?.getInstance().getHTML();
     data.imageUrl = imageRef.current;
     data.categoryId = selectRef.current.value;
-    data.location = locationRef.current?.value;
-    // data.tags = tagRef.current;
+    data.location = mapData ? mapData.address : null;
+    data.x = mapData ? mapData.x : null;
+    data.y = mapData ? mapData.y : null;
+    data.tags = tagRef.current;
     try {
       if (isEditPage) {
         const editData = {
@@ -94,7 +115,10 @@ function WritePage() {
           summary: data.summary,
           targetAmount: data.targetAmount,
           title: data.title,
-          location: data.location || data.location,
+          location: data.location,
+          x: data.x,
+          y: data.y,
+          tags: tagRef.current,
         };
         await projectApi.editProject<FormData>(initialState.projectId, editData);
         await mutate(`/projects/${initialState.projectId}`, editData);
@@ -143,6 +167,10 @@ function WritePage() {
   const handleImage = async (file: File, callback: typeof Function) => {
     const imageUrl = await getImageUrl(file);
     callback(imageUrl);
+  };
+
+  const setMapDataFn = (value: mapDataType) => {
+    setMapData(value);
   };
 
   return (
@@ -207,6 +235,7 @@ function WritePage() {
           style={combineClassNames(style.input, style.tagInput)}
           tagRef={buttonRef}
           getTags={getTags}
+          initialTags={initialState.tags}
         ></TagInput>
         <h3 className={style.subTitle}>프로젝트 종료일</h3>
         <div className='relative'>
@@ -241,7 +270,7 @@ function WritePage() {
         </p>
         <div className='flex flex-col mb-55pxr'>
           <h3 className={style.subTitle}>주소</h3>
-          <KakaoMap locationRef={locationRef} />
+          <KakaoMap setMapDataFn={setMapDataFn} initialState={initialState} />
         </div>
         <h2 className={style.title}>스토리 작성</h2>
         <p className={style.desc}>프로젝트를 나타내는 중요한 정보들을 입력해 주세요</p>

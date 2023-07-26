@@ -4,7 +4,7 @@ import { Patch, Like } from '../ui';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
 import { useAppSelector } from '@/hooks/useReducer';
-import { redirect, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
@@ -44,7 +44,7 @@ function ProjectItem({ project, projects }: Props) {
 
     if (targetProject) {
       const updatedLikedProject = targetProject.likedProject === 0 ? 1 : 0;
-      const updatedLikeCount = targetProject.likeCount + (updatedLikedProject === 0 ? 1 : -1);
+      const updatedLikeCount = targetProject.likeCount + (updatedLikedProject === 0 ? -1 : 1);
       const updatedProject = {
         ...targetProject,
         likedProject: updatedLikedProject,
@@ -67,11 +67,11 @@ function ProjectItem({ project, projects }: Props) {
         className='h-250pxr rounded-xl mb-10pxr'
         onError={handleImageError}
       />
-      <Like
+      {/* <Like
         like={likedProject ? true : false}
         position='top-12pxr right-12pxr'
         handleClick={handleHeartClick}
-      />
+      /> */}
       <div className='flex items-center justify-between'>
         <div className='flex-center'>
           <span className='text-xl font-bold text-purple-300'>

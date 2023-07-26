@@ -8,6 +8,9 @@ import com.codestates.server.project.dto.ProjectDto;
 import com.codestates.server.project.entity.Project;
 import com.codestates.server.project.mapper.ProjectMapper;
 import com.codestates.server.project.repository.ProjectRepository;
+import com.codestates.server.projectLike.entity.ProjectLike;
+import com.codestates.server.projectLike.repository.ProjectLikeRepository;
+import com.codestates.server.projectLike.service.ProjectLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper mapper;
 
+    private final ProjectLikeRepository projectLikeRepository;
+
 
     public Project createProject(Project project){
         project.setExpiredDate(LocalDateTime.now().plusDays(project.getEndDay()));
@@ -36,7 +43,7 @@ public class ProjectService {
     }
 
     public Project updateProject(Project project) {
-        Project findProject = findProject(project.getProjectId());
+        Project findProject = findVerifiedProject(project.getProjectId());
 
         if(findProject.getCurrentAmount() > 0){
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_MODIFY);
@@ -60,18 +67,68 @@ public class ProjectService {
                 .ifPresent(price -> findProject.setPrice(price));
         Optional.ofNullable(project.getLocation())
                 .ifPresent(location -> findProject.setLocation(location));
+        Optional.ofNullable(project.getX())
+                .ifPresent(x -> findProject.setX(x));
+        Optional.ofNullable(project.getY())
+                .ifPresent(y -> findProject.setY(y));
+        Optional.ofNullable(project.getTags())
+                .ifPresent(tags -> findProject.setTags(tags));
+
 
         Project savedProject = projectRepository.save(findProject);
 
         return savedProject;
     }
 
-    public Project findProject(long projectId){
-        return findVerifiedProject(projectId);
+    public ProjectDto.Response findProject(long projectId){
+        ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
+        List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
+        findProject.setLikeCount(projectLikes.size());
+
+        return findProject;
+    }
+    public ProjectDto.Response findLoginProject(long projectId,long memberId){
+        ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
+        List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
+        findProject.setLikeCount(projectLikes.size());
+        if(projectLikeRepository.findByMemberIdAndProjectId(projectId,memberId).isPresent()){
+            findProject.setLikedProject(1);
+        }
+
+        return findProject;
     }
 
-    public List<Project> findProjects(){
-        return projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId"));
+    public List<ProjectDto.Response> findLoginProjects(long memberId){
+        List<Project> findProjects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId"));
+        List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
+        setLikedProject(findProjects,projectLikes);
+
+        return mapper.projectsToProjectResponseDtos(findProjects);
+    }
+
+    public List<ProjectDto.Response> findByCategoryType(long categoryId){
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
+    }
+    public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,long memberId){
+        List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
+        List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
+        setLikedProject(findProjects, projectLikes);
+
+        return mapper.projectsToProjectResponseDtos(findProjects);
+    }
+
+    private static void setLikedProject(List<Project> findProjects, List<ProjectLike> projectLikes) {
+        for(Project project: findProjects){
+            for (ProjectLike projectLike: projectLikes){
+                if(project.getProjectId() == projectLike.getProject().getProjectId()){
+                    project.setLikedProject(1);
+                }
+            }
+        }
+    }
+
+    public List<ProjectDto.Response> findProjects(){
+        return mapper.projectsToProjectResponseDtos(projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId")));
     }
 
     public List<ProjectDto.Response> findByMemberId(long memberId){
@@ -79,14 +136,10 @@ public class ProjectService {
         return  mapper.projectsToProjectResponseDtos(projectRepository.findByMemberId(memberId));
     }
 
-    private Project findVerifiedProject(long projectId) {
+    public Project findVerifiedProject(long projectId) {
         Project findProject = projectRepository.findById(projectId).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND));
         return findProject;
-    }
-
-    public List<ProjectDto.Response> findByCategoryType(long categoryId){
-        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
     }
 
     public List<ProjectDto.Response> findByLikedProject(long memberId){
@@ -105,7 +158,7 @@ public class ProjectService {
         if(findProject(projectId).getCurrentAmount() > 0){
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);
         }
-        projectRepository.delete(findProject(projectId));
+        projectRepository.delete(findVerifiedProject(projectId));
     }
 
     @Transactional

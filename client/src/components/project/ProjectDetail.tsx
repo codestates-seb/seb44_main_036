@@ -2,10 +2,19 @@ import { useParams } from 'react-router-dom';
 import { TuiViewer } from '../editor';
 import useSWR from 'swr';
 import { projectApi } from '@/common/api/api';
+import { useCallback } from 'react';
+import { useAppSelector } from '@/hooks/useReducer';
 
 function ProjectDetail() {
   const { projectId } = useParams();
-  const { data, isLoading } = useSWR(`/projects/${projectId}`, projectApi.getProject);
+  const userData = useAppSelector((state) => state.user.data);
+
+  const getProjectEndpoint = useCallback(() => {
+    if (userData) return `/projects/${projectId}/${userData.memberId}`;
+    else return `/projects/${projectId}`;
+  }, [userData, projectId]);
+
+  const { data, isLoading } = useSWR(getProjectEndpoint(), projectApi.getProject);
 
   if (isLoading) return <div>Loading....</div>;
 

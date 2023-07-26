@@ -10,7 +10,6 @@ import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
 import { CATEGORY_NUMBER_TO_KO, CategoryNumber } from '@/common/constants/sort';
-import { storage } from '@/common/utils/storage';
 import { useAppSelector } from '@/hooks/useReducer';
 
 export type ModalData = {
@@ -23,12 +22,13 @@ function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const { projectId } = useParams();
+  const userData = useAppSelector((state) => state.user.data);
+
   const { data: projectDetail, isLoading } = useSWRImmutable<Project>(
     `/projects/${projectId}`,
     projectApi.getProject,
     { dedupingInterval: Infinity }
   );
-  const userData = useAppSelector((state) => state.user.data);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -42,9 +42,11 @@ function ProjectInfo() {
     likeCount,
     likedProject,
     categoryId = 11,
+    tags,
   } = projectDetail!;
-  const userId = storage.get('memberId') ?? '비로그인 유저';
-  const isWriter = userId === String(memberId);
+
+  const userId = userData?.memberId ?? -1;
+  const isWriter = userId === memberId;
 
   const modalData: ModalData = {
     title: title,
@@ -107,9 +109,11 @@ function ProjectInfo() {
               {CATEGORY_NUMBER_TO_KO[categoryId as CategoryNumber]}
             </span>
             <img src={arrowRight} className='h-12pxr mr-5pxr' alt='' />
-            {/* todo: 태그 기능 구현시 추가 */}
-            {/* <Patch type='tag'># 남성 화장품</Patch>
-            <Patch type='tag'># 케어</Patch> */}
+            {tags.map((tag) => (
+              <Patch type='tag' key={tag}>
+                {tag}
+              </Patch>
+            ))}
           </div>
           {isWriter && (
             <div className='flex gap-12pxr'>
@@ -138,16 +142,12 @@ function ProjectInfo() {
         <div className='relative flex justify-between'>
           {modalOpen && <ShareModal onModalClosed={onModalClosed} modalData={modalData} />}
           <div className='flex justify-between gap-20pxr'>
-            <SquareButton
-              text={likeCount}
-              imgSrc={likedProject ? heart : emptyHeart}
-              onClick={likeProject}
-            />
+            {/* <SquareButton text='준비중' imgSrc={likedProject ? heart : emptyHeart} onClick={likeProject}  /> */}
             <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />
           </div>
           <Button
             text='펀딩하기'
-            style='w-[70%] text-xl'
+            style='w-[85%] text-xl'
             onClick={() => navigate(`/project/${projectId}/payment`)}
           />
         </div>

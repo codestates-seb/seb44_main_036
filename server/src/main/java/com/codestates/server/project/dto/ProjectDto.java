@@ -1,11 +1,14 @@
 package com.codestates.server.project.dto;
 
 
+
+//import com.codestates.server.project.entity.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProjectDto {
 
@@ -45,6 +48,9 @@ public class ProjectDto {
         private long categoryId;
 
         private String location;
+        private String x;
+        private String y;
+        private List<String> tags;
     }
 
     @Getter
@@ -76,6 +82,10 @@ public class ProjectDto {
 
         private String location;
 
+        private String x;
+        private String y;
+        private List<String> tags;
+
         public void setProjectId(long projectId) {
             this.projectId = projectId;
         }
@@ -100,5 +110,8 @@ public class ProjectDto {
         private Integer likedProject;
         private int view;
         private String location;
+        private String x;
+        private String y;
+        private List<String> tags;
     }
 }

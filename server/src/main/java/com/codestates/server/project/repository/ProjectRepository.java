@@ -17,7 +17,8 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query(value = "SELECT p FROM Project p WHERE p.category.categoryId =:categoryId")
     List<Project> findByCategoryType(long categoryId);
 
-    @Query(value = "SELECT p FROM Project p JOIN p.projectLikes l WHERE l.member.memberId =:memberId")
+//    @Query(value = "select * from project as p left join project_like as l on p.project_id=l.project_id where l.member_id=memberId",nativeQuery = true)
+    @Query(value = "SELECT p FROM Project p LEFT JOIN ProjectLike l ON p.projectId=l.project.projectId WHERE l.member.memberId =:memberId")
     List<Project> findByLikedProject(long memberId);
     @Query(value = "SELECT p FROM Project p JOIN p.fundings f WHERE f.member.memberId =:memberId")
     List<Project> findByFundingMemberId(long memberId);
