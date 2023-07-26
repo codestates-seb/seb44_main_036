@@ -67,11 +67,11 @@ function ProjectItem({ project, projects }: Props) {
         className='h-250pxr rounded-xl mb-10pxr'
         onError={handleImageError}
       />
-      <Like
+      {/* <Like
         like={likedProject ? true : false}
         position='top-12pxr right-12pxr'
         handleClick={handleHeartClick}
-      />
+      /> */}
       <div className='flex items-center justify-between'>
         <div className='flex-center'>
           <span className='text-xl font-bold text-purple-300'>

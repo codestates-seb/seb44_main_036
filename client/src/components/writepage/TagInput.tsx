@@ -8,7 +8,7 @@ export type TagType = {
 
 type Props = {
   style: string;
-  initialTags?: TagType[];
+  initialTags?: string[];
   tagRef: React.RefObject<HTMLButtonElement> | null;
   getTags: (tags: TagType[]) => void;
 };
@@ -17,7 +17,8 @@ const MAX_TAGS = 5;
 const TAG_MAX_LEN = 10;
 
 function TagInput({ initialTags = [], style, tagRef, getTags }: Props) {
-  const [tags, setTags] = useState(initialTags);
+  const editTags = initialTags.map((tag, idx) => ({ id: idx, label: tag }));
+  const [tags, setTags] = useState(editTags);
   const [input, setInput] = useState('');
 
   const addTag = () => {
@@ -56,8 +57,8 @@ function TagInput({ initialTags = [], style, tagRef, getTags }: Props) {
   return (
     <>
       <div className={style}>
-        {tags.map((tag, idx) => (
-          <Tag key={idx} id={tag.id} handleClick={removeTag}>
+        {tags.map((tag) => (
+          <Tag key={tag.id} id={tag.id} handleClick={removeTag}>
             {tag.label}
           </Tag>
         ))}

@@ -142,16 +142,12 @@ function ProjectInfo() {
         <div className='relative flex justify-between'>
           {modalOpen && <ShareModal onModalClosed={onModalClosed} modalData={modalData} />}
           <div className='flex justify-between gap-20pxr'>
-            <SquareButton
-              text={likeCount}
-              imgSrc={likedProject ? heart : emptyHeart}
-              onClick={likeProject}
-            />
+            {/* <SquareButton text='준비중' imgSrc={likedProject ? heart : emptyHeart} onClick={likeProject}  /> */}
             <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />
           </div>
           <Button
             text='펀딩하기'
-            style='w-[70%] text-xl'
+            style='w-[85%] text-xl'
             onClick={() => navigate(`/project/${projectId}/payment`)}
           />
         </div>
