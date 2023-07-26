@@ -67,8 +67,8 @@ public class ProjectService {
                 .ifPresent(price -> findProject.setPrice(price));
         Optional.ofNullable(project.getLocation())
                 .ifPresent(location -> findProject.setLocation(location));
-        Optional.ofNullable(project.getTags())
-                .ifPresent(tags -> findProject.setTags(tags));
+//        Optional.ofNullable(project.getTags())
+//                .ifPresent(tags -> findProject.setTags(tags));
 
 
         Project savedProject = projectRepository.save(findProject);
@@ -97,7 +97,7 @@ public class ProjectService {
     public List<ProjectDto.Response> findLoginProjects(long memberId){
         List<Project> findProjects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId"));
         List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
-        setLikedProject(findProjects,projectLikes);
+//        setLikedProject(findProjects,projectLikes);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
@@ -108,7 +108,7 @@ public class ProjectService {
     public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,long memberId){
         List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
         List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
-        setLikedProject(findProjects, projectLikes);
+//        setLikedProject(findProjects, projectLikes);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
