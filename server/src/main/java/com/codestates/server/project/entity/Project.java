@@ -46,8 +46,8 @@ public class Project extends Auditable {
     @Column(name = "EXPIRED_DATE")
     private LocalDateTime expiredDate;
 
-//    @ElementCollection
-//    private List<String> tags;
+    @ElementCollection
+    private List<String> tags;
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
