@@ -6,19 +6,34 @@ import { projectApi } from '@/common/api/api';
 import { useCallback, useEffect, useState } from 'react';
 import { isPastDeadline } from '@/common/utils';
 import { Empty } from '../ui';
+import { useAppSelector } from '@/hooks/useReducer';
 
 type Progress = 'all' | 'ongoing' | 'end';
 type Order = 'recent' | 'popular' | 'closing';
 
 function ProjectList() {
   const { categoryId } = useParams();
+  const userData = useAppSelector((state) => state.user.data);
+
+  const getProjectsEndpoint = useCallback(() => {
+    if (userData) {
+      // DESC: 카테고리 구현되어야 함. /projects/login/{memberId}/category/{categoryId}
+      if (categoryId) return `/projects/login/${userData.memberId}`;
+      else return `/projects/login/${userData.memberId}`;
+    } else {
+      if (categoryId) return `/projects/category/${categoryId}`;
+      else return `/projects`;
+    }
+  }, [userData, categoryId]);
+
   const { data: projectList } = useSWRImmutable<Projects>(
-    `/projects${categoryId ? `/category/${categoryId}` : ''}`,
+    getProjectsEndpoint(),
     projectApi.getProjects,
     {
       dedupingInterval: Infinity,
     }
   );
+
   const [filteredProjects, setFilteredProjects] = useState(projectList);
   const [searchParams] = useSearchParams();
 
@@ -37,7 +52,7 @@ function ProjectList() {
           (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
       case 'popular':
-        return dataList.sort((a, b) => b.likeCount - a.likeCount);
+        return dataList.sort((a, b) => b.view - a.view);
       case 'closing':
         return dataList
           .filter((item) => new Date(item.expiredDate).getTime() > now)
@@ -65,7 +80,11 @@ function ProjectList() {
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {filteredProjects.map((project) => (
         <Link to={`/project/${project.projectId}`} key={project.projectId}>
-          <ProjectItem project={project} projects={projectList ?? []} />
+          <ProjectItem
+            project={project}
+            projects={projectList ?? []}
+            endpoint={getProjectsEndpoint()}
+          />
         </Link>
       ))}
     </section>

@@ -1,7 +1,7 @@
 import { Patch, SquareButton, Button } from '../ui';
 import { arrowRight } from '@/assets/common';
 import { emptyHeart, heart, share } from '@/assets/like';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import ShareModal from '../kakaoshare/ShareModal';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWRImmutable, { mutate } from 'swr';
@@ -10,7 +10,6 @@ import { projectApi } from '@/common/api/api';
 import { handleImageError } from '@/common/utils';
 import { calculateAchievementRate } from '@/common/utils';
 import { CATEGORY_NUMBER_TO_KO, CategoryNumber } from '@/common/constants/sort';
-import { storage } from '@/common/utils/storage';
 import { useAppSelector } from '@/hooks/useReducer';
 
 export type ModalData = {
@@ -23,12 +22,17 @@ function ProjectInfo() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const { projectId } = useParams();
+  const userData = useAppSelector((state) => state.user.data);
+  const getProjectEndpoint = useCallback(() => {
+    if (userData) return `/projects/${projectId}/${userData.memberId}`;
+    else return `/projects/${projectId}`;
+  }, [userData, projectId]);
+
   const { data: projectDetail, isLoading } = useSWRImmutable<Project>(
-    `/projects/${projectId}`,
+    getProjectEndpoint(),
     projectApi.getProject,
     { dedupingInterval: Infinity }
   );
-  const userData = useAppSelector((state) => state.user.data);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -42,8 +46,9 @@ function ProjectInfo() {
     likeCount,
     likedProject,
     categoryId = 11,
+    tags,
   } = projectDetail!;
-  const userId = storage.get('memberId') ?? '비로그인 유저';
+  const userId = userData?.memberId ?? '비로그인 유저';
   const isWriter = userId === String(memberId);
 
   const modalData: ModalData = {
@@ -82,7 +87,7 @@ function ProjectInfo() {
     }
     await projectApi.likeProject({ projectId, memberId });
     mutate(
-      `/projects/${projectId}`,
+      getProjectEndpoint(),
       {
         ...projectDetail,
         likedProject: likedProject === 0 ? 1 : 0,
@@ -107,9 +112,11 @@ function ProjectInfo() {
               {CATEGORY_NUMBER_TO_KO[categoryId as CategoryNumber]}
             </span>
             <img src={arrowRight} className='h-12pxr mr-5pxr' alt='' />
-            {/* todo: 태그 기능 구현시 추가 */}
-            {/* <Patch type='tag'># 남성 화장품</Patch>
-            <Patch type='tag'># 케어</Patch> */}
+            {tags.map((tag) => (
+              <Patch type='tag' key={tag}>
+                {tag}
+              </Patch>
+            ))}
           </div>
           {isWriter && (
             <div className='flex gap-12pxr'>
