@@ -67,8 +67,12 @@ public class ProjectService {
                 .ifPresent(price -> findProject.setPrice(price));
         Optional.ofNullable(project.getLocation())
                 .ifPresent(location -> findProject.setLocation(location));
-//        Optional.ofNullable(project.getTags())
-//                .ifPresent(tags -> findProject.setTags(tags));
+        Optional.ofNullable(project.getX())
+                .ifPresent(x -> findProject.setX(x));
+        Optional.ofNullable(project.getY())
+                .ifPresent(y -> findProject.setY(y));
+        Optional.ofNullable(project.getTags())
+                .ifPresent(tags -> findProject.setTags(tags));
 
 
         Project savedProject = projectRepository.save(findProject);

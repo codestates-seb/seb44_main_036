@@ -67,7 +67,10 @@ public class Project extends Auditable {
 
     @Column
     private String location;
-
+    @Column
+    private String x;
+    @Column
+    private String y;
 
     public void addProjectLike(ProjectLike projectLike){
         this.projectLikes.add(projectLike);

@@ -48,7 +48,8 @@ public class ProjectDto {
         private long categoryId;
 
         private String location;
-
+        private String x;
+        private String y;
         private List<String> tags;
     }
 
@@ -81,6 +82,8 @@ public class ProjectDto {
 
         private String location;
 
+        private String x;
+        private String y;
         private List<String> tags;
 
         public void setProjectId(long projectId) {
@@ -107,6 +110,8 @@ public class ProjectDto {
         private Integer likedProject;
         private int view;
         private String location;
+        private String x;
+        private String y;
         private List<String> tags;
     }
 }
