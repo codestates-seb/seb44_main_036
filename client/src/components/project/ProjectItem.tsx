@@ -4,16 +4,17 @@ import { Patch, Like } from '../ui';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
 import { useAppSelector } from '@/hooks/useReducer';
-import { redirect, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
 type Props = {
   project: Project;
   projects: Projects;
+  endpoint?: string;
 };
 
-function ProjectItem({ project, projects }: Props) {
+function ProjectItem({ project, projects, endpoint }: Props) {
   const {
     currentAmount,
     expiredDate,
@@ -28,7 +29,6 @@ function ProjectItem({ project, projects }: Props) {
   const isDueSoon = daysUntilDeadline <= 7;
   const userData = useAppSelector((state) => state.user.data);
   const navigate = useNavigate();
-  const { categoryId } = useParams();
 
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ function ProjectItem({ project, projects }: Props) {
         likeCount: updatedLikeCount,
       };
       mutate(
-        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
+        endpoint,
         projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
         false
       );

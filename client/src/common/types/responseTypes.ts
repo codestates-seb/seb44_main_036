@@ -15,6 +15,7 @@ export type Project = {
   likedProject: number;
   location: string | null;
   view: number;
+  tags: string[];
 };
 
 export type Projects = Project[];
