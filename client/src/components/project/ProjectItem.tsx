@@ -4,17 +4,16 @@ import { Patch, Like } from '../ui';
 import { dday, formattingNumber, calculateAchievementRate, handleImageError } from '@/common/utils';
 import { mutate } from 'swr';
 import { useAppSelector } from '@/hooks/useReducer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export type LikeHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 
 type Props = {
   project: Project;
   projects: Projects;
-  endpoint?: string;
 };
 
-function ProjectItem({ project, projects, endpoint }: Props) {
+function ProjectItem({ project, projects }: Props) {
   const {
     currentAmount,
     expiredDate,
@@ -29,6 +28,7 @@ function ProjectItem({ project, projects, endpoint }: Props) {
   const isDueSoon = daysUntilDeadline <= 7;
   const userData = useAppSelector((state) => state.user.data);
   const navigate = useNavigate();
+  const { categoryId } = useParams();
 
   const handleHeartClick: LikeHandler = async (e) => {
     e.preventDefault();
@@ -44,14 +44,14 @@ function ProjectItem({ project, projects, endpoint }: Props) {
 
     if (targetProject) {
       const updatedLikedProject = targetProject.likedProject === 0 ? 1 : 0;
-      const updatedLikeCount = targetProject.likeCount + (updatedLikedProject === 0 ? 1 : -1);
+      const updatedLikeCount = targetProject.likeCount + (updatedLikedProject === 0 ? -1 : 1);
       const updatedProject = {
         ...targetProject,
         likedProject: updatedLikedProject,
         likeCount: updatedLikeCount,
       };
       mutate(
-        endpoint,
+        `/projects${categoryId ? `/category/${categoryId}` : ''}`,
         projects.map((project) => (project.projectId === projectId ? updatedProject : project)),
         false
       );

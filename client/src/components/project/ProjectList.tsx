@@ -6,55 +6,38 @@ import { projectApi } from '@/common/api/api';
 import { useCallback, useEffect, useState } from 'react';
 import { isPastDeadline } from '@/common/utils';
 import { Empty } from '../ui';
-import { useAppSelector } from '@/hooks/useReducer';
 
 type Progress = 'all' | 'ongoing' | 'end';
 type Order = 'recent' | 'popular' | 'closing';
 
 function ProjectList() {
   const { categoryId } = useParams();
-  const userData = useAppSelector((state) => state.user.data);
-
-  const getProjectsEndpoint = useCallback(() => {
-    if (userData) {
-      // DESC: 카테고리 구현되어야 함. /projects/login/{memberId}/category/{categoryId}
-      if (categoryId) return `/projects/login/${userData.memberId}`;
-      else return `/projects/login/${userData.memberId}`;
-    } else {
-      if (categoryId) return `/projects/category/${categoryId}`;
-      else return `/projects`;
-    }
-  }, [userData, categoryId]);
 
   const { data: projectList } = useSWRImmutable<Projects>(
-    getProjectsEndpoint(),
+    `/projects${categoryId ? `/category/${categoryId}` : ''}`,
     projectApi.getProjects,
-    {
-      dedupingInterval: Infinity,
-    }
+    { dedupingInterval: Infinity }
   );
 
-  const [filteredProjects, setFilteredProjects] = useState(projectList);
-  const [searchParams] = useSearchParams();
+  const [filteredProjects, setFilteredProjects] = useState<Projects>();
+  const [searchParams] = useSearchParams({ progress: 'all', order: 'recent' });
 
   const filterByProgress = useCallback((data: Projects, progress: Progress) => {
-    if (progress === 'all') return data;
-    return data.filter((item) =>
-      progress === 'end' ? isPastDeadline(item.expiredDate) : !isPastDeadline(item.expiredDate)
+    if (progress === 'all') return [...data].sort((a, b) => b.projectId - a.projectId);
+    return data.filter(({ expiredDate }) =>
+      progress === 'end' ? isPastDeadline(expiredDate) : !isPastDeadline(expiredDate)
     );
   }, []);
 
-  const sortByOrder = useCallback((dataList: Projects, order: Order) => {
+  const sortByOrder = useCallback((data: Projects, order: Order) => {
     const now = new Date().getTime();
     switch (order) {
       case 'recent':
-        return dataList.sort(
-          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
+        return [...data].sort((a, b) => b.projectId - a.projectId);
       case 'popular':
-        return dataList.sort((a, b) => b.view - a.view);
+        return [...data].sort((a, b) => b.view - a.view);
       case 'closing':
-        return dataList
+        return [...data]
           .filter((item) => new Date(item.expiredDate).getTime() > now)
           .sort((a, b) => new Date(a.expiredDate).getTime() - new Date(b.expiredDate).getTime());
     }
@@ -63,8 +46,8 @@ function ProjectList() {
   useEffect(() => {
     const applyFilters = () => {
       if (!projectList) return;
-      const progress: Progress = (searchParams.get('progress') as Progress) || 'all';
-      const order: Order = (searchParams.get('order') as Order) || 'recent';
+      const progress: Progress = searchParams.get('progress') as Progress;
+      const order: Order = searchParams.get('order') as Order;
 
       let filteredList = filterByProgress(projectList, progress);
       filteredList = sortByOrder(filteredList, order);
@@ -80,11 +63,7 @@ function ProjectList() {
     <section className='grid-auto max-w-[1280px] mx-auto'>
       {filteredProjects.map((project) => (
         <Link to={`/project/${project.projectId}`} key={project.projectId}>
-          <ProjectItem
-            project={project}
-            projects={projectList ?? []}
-            endpoint={getProjectsEndpoint()}
-          />
+          <ProjectItem project={project} projects={filteredProjects} />
         </Link>
       ))}
     </section>
