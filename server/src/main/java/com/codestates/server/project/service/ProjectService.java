@@ -1,30 +1,27 @@
 package com.codestates.server.project.service;//package com.codestates.server.project.service;
 
+
 import com.codestates.server.exception.BusinessLogicException;
 import com.codestates.server.exception.ExceptionCode;
-import com.codestates.server.funding.entity.Funding;
-import com.codestates.server.member.service.MemberService;
 import com.codestates.server.project.dto.ProjectDto;
 import com.codestates.server.project.entity.Project;
 import com.codestates.server.project.mapper.ProjectMapper;
 import com.codestates.server.project.repository.ProjectRepository;
 import com.codestates.server.projectLike.entity.ProjectLike;
 import com.codestates.server.projectLike.repository.ProjectLikeRepository;
-import com.codestates.server.projectLike.service.ProjectLikeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +30,6 @@ public class ProjectService {
 //    private final static String VIEWCOOKIENAME = "alreadyViewCookie";
     private final ProjectRepository projectRepository;
     private final ProjectMapper mapper;
-
     private final ProjectLikeRepository projectLikeRepository;
 
 
@@ -80,41 +76,65 @@ public class ProjectService {
         return savedProject;
     }
 
-    public ProjectDto.Response findProject(long projectId){
+    public ProjectDto.Response findProject(long projectId,HttpServletRequest request){
+        String jws = request.getHeader("Authorization").replace("Bearer ","");
+        String strMemberId = getMemberId(jws);
+        if (strMemberId != null){
+            long memberId = Long.parseLong(strMemberId);
+            ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
+            List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
+            findProject.setLikeCount(projectLikes.size());
+            if(projectLikeRepository.findByMemberIdAndProjectId(projectId,memberId).isPresent()){
+                findProject.setLikedProject(1);
+            }
+
+            return findProject;
+        }
         ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
         List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
         findProject.setLikeCount(projectLikes.size());
 
         return findProject;
     }
-    public ProjectDto.Response findLoginProject(long projectId,long memberId){
-        ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
-        List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
-        findProject.setLikeCount(projectLikes.size());
-        if(projectLikeRepository.findByMemberIdAndProjectId(projectId,memberId).isPresent()){
-            findProject.setLikedProject(1);
+
+
+    public List<ProjectDto.Response> findProjects(HttpServletRequest request){
+        String jws = request.getHeader("Authorization").replace("Bearer ","");
+        String strMemberId = getMemberId(jws);
+
+        if(strMemberId != null){
+            long memberId = Long.parseLong(strMemberId);
+            List<Project> findProjects = projectRepository.findAll();
+            List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
+            setLikedProject(findProjects,projectLikes);
+
+            return mapper.projectsToProjectResponseDtos(findProjects);
         }
 
-        return findProject;
+        return mapper.projectsToProjectResponseDtos(projectRepository.findAll());
     }
 
-    public List<ProjectDto.Response> findLoginProjects(long memberId){
-        List<Project> findProjects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId"));
-        List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
-        setLikedProject(findProjects,projectLikes);
+//    public List<ProjectDto.Response> findProjects(){
+//        return mapper.projectsToProjectResponseDtos(projectRepository.findAll());
+//    }
 
-        return mapper.projectsToProjectResponseDtos(findProjects);
-    }
+//    public List<ProjectDto.Response> findByCategoryType(long categoryId){
+//        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
+//    }
+    public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,HttpServletRequest request){
+        String jws = request.getHeader("Authorization").replace("Bearer ","");
+        String strMemberId = getMemberId(jws);
 
-    public List<ProjectDto.Response> findByCategoryType(long categoryId){
+        if (strMemberId != null){
+            long memberId = Long.parseLong(strMemberId);
+            List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
+            List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
+            setLikedProject(findProjects, projectLikes);
+
+            return mapper.projectsToProjectResponseDtos(findProjects);
+        }
+
         return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
-    }
-    public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,long memberId){
-        List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
-        List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
-        setLikedProject(findProjects, projectLikes);
-
-        return mapper.projectsToProjectResponseDtos(findProjects);
     }
 
     private static void setLikedProject(List<Project> findProjects, List<ProjectLike> projectLikes) {
@@ -125,10 +145,6 @@ public class ProjectService {
                 }
             }
         }
-    }
-
-    public List<ProjectDto.Response> findProjects(){
-        return mapper.projectsToProjectResponseDtos(projectRepository.findAll(Sort.by(Sort.Direction.DESC,"projectId")));
     }
 
     public List<ProjectDto.Response> findByMemberId(long memberId){
@@ -155,10 +171,24 @@ public class ProjectService {
     }
 
     public void deleteProject(long projectId){
-        if(findProject(projectId).getCurrentAmount() > 0){
+        if(findVerifiedProject(projectId).getCurrentAmount() > 0){
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);
         }
         projectRepository.delete(findVerifiedProject(projectId));
+    }
+
+    private String getMemberId(final String accessToken){
+        final String payloadJWT = accessToken.split("\\.")[1];
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        final String payload = new String(decoder.decode(payloadJWT));
+        JsonParser jsonParser = new BasicJsonParser();
+        Map<String,Object> jsonArray = jsonParser.parseMap(payload);
+
+        if(!jsonArray.containsKey("memberId")){
+            throw new BusinessLogicException(ExceptionCode.TOKEN_NOT_VALID);
+        }
+        return jsonArray.get("memberId").toString();
     }
 
     @Transactional
