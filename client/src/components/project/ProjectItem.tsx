@@ -14,16 +14,8 @@ type Props = {
 };
 
 function ProjectItem({ project, projects }: Props) {
-  const {
-    currentAmount,
-    expiredDate,
-    imageUrl,
-    targetAmount,
-    title,
-    likedProject,
-    memberId,
-    projectId,
-  } = project;
+  const { currentAmount, expiredDate, imageUrl, targetAmount, title, likedProject, projectId } =
+    project;
   const daysUntilDeadline = dday(new Date(expiredDate));
   const isDueSoon = daysUntilDeadline <= 7;
   const userData = useAppSelector((state) => state.user.data);
@@ -39,7 +31,7 @@ function ProjectItem({ project, projects }: Props) {
       return;
     }
 
-    await projectApi.likeProject({ memberId, projectId });
+    await projectApi.likeProject({ memberId: userData.memberId, projectId });
     const targetProject = projects.find((project) => project.projectId === projectId);
 
     if (targetProject) {
@@ -67,11 +59,11 @@ function ProjectItem({ project, projects }: Props) {
         className='h-250pxr rounded-xl mb-10pxr'
         onError={handleImageError}
       />
-      {/* <Like
+      <Like
         like={likedProject ? true : false}
         position='top-12pxr right-12pxr'
         handleClick={handleHeartClick}
-      /> */}
+      />
       <div className='flex items-center justify-between'>
         <div className='flex-center'>
           <span className='text-xl font-bold text-purple-300'>
