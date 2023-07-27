@@ -2,8 +2,14 @@ import { ProjectInfo, ProjectDetail } from '@/components/project';
 import ScrollUpButton from '@/components/ui/ScrollUpButton';
 import { adv } from '@/assets/common';
 // import { RewardList } from '@/components/reward';
+import { scrollToTop } from '@/common/utils/scrollToTop';
+import { useEffect } from 'react';
 
 function ProjectPage() {
+  useEffect(() => {
+    scrollToTop();
+  }, []);
+
   return (
     <>
       <main className='max-w-[1280px] mx-auto my-40pxr'>
