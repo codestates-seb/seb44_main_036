@@ -82,7 +82,7 @@ function ProjectInfo() {
       navigate('/users/login');
       return;
     }
-    await projectApi.likeProject({ projectId, memberId });
+    await projectApi.likeProject({ projectId, memberId: userData.memberId });
     mutate(
       `/projects/${projectId}`,
       {
@@ -142,12 +142,16 @@ function ProjectInfo() {
         <div className='relative flex justify-between'>
           {modalOpen && <ShareModal onModalClosed={onModalClosed} modalData={modalData} />}
           <div className='flex justify-between gap-20pxr'>
-            {/* <SquareButton text='준비중' imgSrc={likedProject ? heart : emptyHeart} onClick={likeProject}  /> */}
+            <SquareButton
+              text={likeCount}
+              imgSrc={likedProject ? heart : emptyHeart}
+              onClick={likeProject}
+            />
             <SquareButton onClick={() => setModalOpen(true)} text='공유' imgSrc={share} />
           </div>
           <Button
             text='펀딩하기'
-            style='w-[85%] text-xl'
+            style='w-[70%] text-xl'
             onClick={() => navigate(`/project/${projectId}/payment`)}
           />
         </div>

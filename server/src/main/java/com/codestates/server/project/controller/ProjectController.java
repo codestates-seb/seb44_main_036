@@ -11,10 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -44,40 +47,40 @@ public class ProjectController {
 
     }
 
+//    @GetMapping("/{project-id}")
+//    public ResponseEntity getProject(@PathVariable("project-id") long projectId){
+//        projectService.updateView(projectId);
+//
+//        return new ResponseEntity(projectService.findProject(projectId),HttpStatus.OK);
+//    }
+
     @GetMapping("/{project-id}")
-    public ResponseEntity getProject(@PathVariable("project-id") long projectId){
+    public ResponseEntity getProject(@PathVariable("project-id") long projectId,HttpServletRequest request) {
         projectService.updateView(projectId);
 
-        return new ResponseEntity(projectService.findProject(projectId),HttpStatus.OK);
-    }
-
-    @GetMapping("/{project-id}/{member-id}")
-    public ResponseEntity getLoginProject(@PathVariable("project-id") long projectId,@PathVariable("member-id") long memberId){
-        projectService.updateView(projectId);
-
-        return new ResponseEntity(projectService.findLoginProject(projectId,memberId),HttpStatus.OK);
-    }
-
-    @GetMapping("/login/{member-id}")
-    public ResponseEntity getLoginProjects(@PathVariable("member-id") long memberId){
-
-
-        return new ResponseEntity(projectService.findLoginProjects(memberId),HttpStatus.OK);
+        return new ResponseEntity(projectService.findProject(projectId,request),HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity getProjects(){
-        return new ResponseEntity(projectService.findProjects(),HttpStatus.OK);
+    public ResponseEntity getProjects(HttpServletRequest request){
+
+
+        return new ResponseEntity(projectService.findProjects(request),HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ResponseEntity getProjects(){
+//        return new ResponseEntity(projectService.findProjects(),HttpStatus.OK);
+//    }
+
+//    @GetMapping("/category/{category-id}")
+//    public ResponseEntity getProjectByCategoryType(@PathVariable("category-id")long categoryId){
+//        return new ResponseEntity(projectService.findByCategoryType(categoryId),HttpStatus.OK);
+//    }
 
     @GetMapping("/category/{category-id}")
-    public ResponseEntity getProjectByCategoryType(@PathVariable("category-id")long categoryId){
-        return new ResponseEntity(projectService.findByCategoryType(categoryId),HttpStatus.OK);
-    }
-
-    @GetMapping("/category/{category-id}/{member-id}")
-    public ResponseEntity getLoginProjectByCategoryType(@PathVariable("category-id")long categoryId,@PathVariable("member-id") long memberId){
-        return new ResponseEntity(projectService.findByLoginCategoryType(categoryId,memberId),HttpStatus.OK);
+    public ResponseEntity getProjectByCategoryType(@PathVariable("category-id")long categoryId,HttpServletRequest request){
+        return new ResponseEntity(projectService.findByLoginCategoryType(categoryId,request),HttpStatus.OK);
     }
 
     @DeleteMapping("/{project-id}")

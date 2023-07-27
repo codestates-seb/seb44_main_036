@@ -10,7 +10,8 @@ public enum ExceptionCode {
     PROJECT_CANT_MODIFY(409,"project currentAmount exist, can't modify"),
     PROJECT_CANT_DELETE(409,"project currentAmount exist, can't delete"),
     FUNDING_NOT_FOUND(404,"funding not found"),
-    MEMBER_CASH_INSUFFICIENT(403,"cash is insufficient");
+    MEMBER_CASH_INSUFFICIENT(403,"cash is insufficient"),
+    TOKEN_NOT_VALID(403,"token is not valid");
 
     @Getter
     private int status;
