@@ -77,9 +77,9 @@ public class ProjectService {
     }
 
     public ProjectDto.Response findProject(long projectId,HttpServletRequest request){
-        String jws = request.getHeader("Authorization").replace("Bearer ","");
-        String strMemberId = getMemberId(jws);
-        if (strMemberId != null){
+        if(request.getHeader("Authorization") != null){
+            String jws = request.getHeader("Authorization").replace("Bearer ","");
+            String strMemberId = getMemberId(jws);
             long memberId = Long.parseLong(strMemberId);
             ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
             List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
@@ -90,6 +90,7 @@ public class ProjectService {
 
             return findProject;
         }
+
         ProjectDto.Response findProject = mapper.projectToProjectResponseDto(findVerifiedProject(projectId));
         List<ProjectLike> projectLikes = projectLikeRepository.findByProjectId(projectId);
         findProject.setLikeCount(projectLikes.size());
@@ -99,10 +100,10 @@ public class ProjectService {
 
 
     public List<ProjectDto.Response> findProjects(HttpServletRequest request){
-        String jws = request.getHeader("Authorization").replace("Bearer ","");
-        String strMemberId = getMemberId(jws);
 
-        if(strMemberId != null){
+        if(request.getHeader("Authorization") != null){
+            String jws = request.getHeader("Authorization").replace("Bearer ","");
+            String strMemberId = getMemberId(jws);
             long memberId = Long.parseLong(strMemberId);
             List<Project> findProjects = projectRepository.findAll();
             List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
@@ -122,10 +123,10 @@ public class ProjectService {
 //        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
 //    }
     public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,HttpServletRequest request){
-        String jws = request.getHeader("Authorization").replace("Bearer ","");
-        String strMemberId = getMemberId(jws);
 
-        if (strMemberId != null){
+        if(request.getHeader("Authorization") != null){
+            String jws = request.getHeader("Authorization").replace("Bearer ","");
+            String strMemberId = getMemberId(jws);
             long memberId = Long.parseLong(strMemberId);
             List<Project> findProjects = projectRepository.findByCategoryType(categoryId);
             List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
@@ -133,7 +134,6 @@ public class ProjectService {
 
             return mapper.projectsToProjectResponseDtos(findProjects);
         }
-
         return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
     }
 
