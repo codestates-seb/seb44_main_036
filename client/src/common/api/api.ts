@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 
 import { loginData, signUpData } from '../types/authTypes';
 import { authInstance, instance } from './instance';
@@ -10,10 +10,10 @@ export const authApi = {
 };
 
 export const userApi = {
-  getUser: (memberId: string, headers?: AxiosRequestConfig['headers']) =>
+  getUser: (memberId: number, headers?: AxiosRequestConfig['headers']) =>
     authInstance.get(`/members/${memberId}`, { headers }),
   getUserProjects: (url: string) => authInstance.get(url).then(({ data }) => data),
-  updateUser: (memberId: string, userData: any, headers?: AxiosRequestConfig['headers']) =>
+  updateUser: (memberId: number, userData: any, headers?: AxiosRequestConfig['headers']) =>
     authInstance.patch(`/members/${memberId}`, userData, { headers }),
 };
 
