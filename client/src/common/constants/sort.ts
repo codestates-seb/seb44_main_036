@@ -59,3 +59,9 @@ export const options = Object.values(CATEGORIES)
     value: categoryNUM,
     label: categoryKO,
   }));
+
+export const MYTABS = {
+  project: '판매중인',
+  funding: '펀딩중인',
+  like: '좋아요한',
+} as const;

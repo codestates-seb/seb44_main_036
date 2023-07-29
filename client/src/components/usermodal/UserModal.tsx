@@ -14,7 +14,7 @@ import { userApi } from '@/common/api/api';
 import { AxiosError } from 'axios';
 
 interface UserModalProps {
-  memberId?: string;
+  memberId?: number;
   imageUrl?: string;
   nickname?: string;
   address: string | null;
