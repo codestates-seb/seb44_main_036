@@ -98,10 +98,10 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 //                .scheme("http")
                 .scheme("https")
 //                .host("localhost")
-                .host("seb44-main-036.vercel.app")
+                .host("mifunding.vercel.app")
                 .port(443)
+                .path("/users/login")
 //                .port(80)
-                .path("/login")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

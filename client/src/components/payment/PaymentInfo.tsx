@@ -14,7 +14,7 @@ interface PostcodeData {
 }
 
 interface PaymentInfoProps {
-  memberId?: string | undefined;
+  memberId?: number | undefined;
   address?: string | null;
   cash?: number;
   quantity: number;
@@ -25,7 +25,7 @@ function PaymentInfo({ memberId, address, cash, quantity }: PaymentInfoProps) {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const projectIdAsNumber: number | undefined = projectId ? parseInt(projectId, 10) : undefined;
-  const memberIdAsNumber: number | undefined = memberId ? parseInt(memberId, 10) : undefined;
+  const memberIdAsNumber: number | undefined = memberId ? memberId : undefined;
   const { data } = useSWR(`/projects/${projectId}`, projectApi.getProject);
   const unitPrice = data?.price;
   const [newAddress, setNewAddress] = useState<string>(address || '');

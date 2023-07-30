@@ -77,6 +77,7 @@ public interface ProjectMapper {
             response.setX(project.getX());
             response.setY(project.getY());
             response.setTags(project.getTags());
+            response.setFinished(project.isFinished());
 
         return response;
      }
