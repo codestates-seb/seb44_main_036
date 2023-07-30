@@ -95,12 +95,11 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-//                .scheme("https")
-                .host("localhost")
-//                .host("mifunding.vercel.app")
-//                .port(443)
-                .port(5173)
+//                .scheme("http")
+                .scheme("https")
+//                .host("localhost")
+                .host("mifunding.vercel.app")
+                .port(443)
                 .path("/users/login")
 //                .port(80)
                 .queryParams(queryParams)
