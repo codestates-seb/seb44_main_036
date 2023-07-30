@@ -8,17 +8,21 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
 @Component
+@Slf4j
 public class JwtTokenizer {
     @Getter
     @Value("${jwt.key}")
@@ -89,6 +93,32 @@ public class JwtTokenizer {
         Date expiration = calendar.getTime();
 
         return expiration;
+    }
+
+    public Boolean tokenValidation(String token){
+        Key key = getKeyFromBase64EncodedKey(encodedBase64SecretKey(secretKey));
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    public String getUsernameFromToken(String token) {
+        Key key = getKeyFromBase64EncodedKey(encodedBase64SecretKey(secretKey));
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public List<String> getRoles(String token){
+        Key key = getKeyFromBase64EncodedKey(encodedBase64SecretKey(secretKey));
+       return (List<String>) Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("roles");
+    }
+
+    public Long getMemberId(String token){
+        Key key = getKeyFromBase64EncodedKey(encodedBase64SecretKey(secretKey));
+        return (Long) Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId");
     }
 
     private Key getKeyFromBase64EncodedKey(String base64EncodedSecretKey) {

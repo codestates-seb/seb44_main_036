@@ -1,7 +1,7 @@
-package com.codestates.server.project.entity;
-
-import lombok.Getter;
-
+//package com.codestates.server.project.entity;
+//
+//import lombok.Getter;
+//
 //import javax.persistence.Embeddable;
 //
 //
