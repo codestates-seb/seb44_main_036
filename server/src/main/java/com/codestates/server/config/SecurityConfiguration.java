@@ -6,6 +6,7 @@ import com.codestates.server.auth.filter.JwtVerificationFilter;
 import com.codestates.server.auth.handler.*;
 import com.codestates.server.auth.jwt.JwtTokenizer;
 import com.codestates.server.auth.utils.CustomAuthorityUtils;
+import com.codestates.server.member.repository.MemberRepository;
 import com.codestates.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +32,8 @@ public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
 
     @Bean

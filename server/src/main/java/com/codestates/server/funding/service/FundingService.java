@@ -27,6 +27,9 @@ public class FundingService {
     public Funding createFunding(Funding funding){
         Project findProject = projectService.findVerifiedProject(funding.getProject().getProjectId());
         Member findMember = memberService.findMember(funding.getMember().getMemberId());
+        if(findProject.isFinished()){
+            throw new BusinessLogicException(ExceptionCode.DEADLINE_HAS_PASSED);
+        }
         if(findMember.getCash() < getFundingPrice(funding,findProject)){
             throw new BusinessLogicException(ExceptionCode.MEMBER_CASH_INSUFFICIENT);
         }
