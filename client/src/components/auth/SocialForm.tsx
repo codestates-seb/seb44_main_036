@@ -7,10 +7,11 @@ import SocialButton from './SocialButton';
 
 function SocialForm() {
   const isSignUp = useMatch('/users/signup');
-  const url = 'https://mifunding.net/oauth2/authorization/google';
+  const googleurl =
+    'http://ec2-43-201-225-71.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
 
   const googleSocialLogin = () => {
-    window.location.assign(url);
+    window.location.assign(googleurl);
   };
 
   return (
