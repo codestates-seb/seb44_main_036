@@ -44,9 +44,9 @@ public class ProjectService {
         if(findProject.getCurrentAmount() > 0){
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_MODIFY);
         }
-        if(findProject.isFinished()){
-            throw new BusinessLogicException(ExceptionCode.DEADLINE_HAS_PASSED);
-        }
+//        if(findProject.isFinished()){
+//            throw new BusinessLogicException(ExceptionCode.DEADLINE_HAS_PASSED);
+//        }
 
         Optional.ofNullable(project.getContent())
                 .ifPresent(content -> findProject.setContent(content));
@@ -109,26 +109,26 @@ public class ProjectService {
             List<Project> findProjects = projectRepository.findAll();
             List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
             setLikedProject(findProjects,projectLikes);
-            setIsFinished(findProjects);
+//            setIsFinished(findProjects);
 
 
             return mapper.projectsToProjectResponseDtos(findProjects);
         }
 
         List<Project> findProjects = projectRepository.findAll();
-        setIsFinished(findProjects);
+//        setIsFinished(findProjects);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
 
-    private void setIsFinished(List<Project> findProjects) {
-        for(Project project: findProjects){
-            if(project.getExpiredDate().isBefore(LocalDateTime.now())){
-                project.setFinished(true);
-                save(project);
-            }
-        }
-    }
+//    private void setIsFinished(List<Project> findProjects) {
+//        for(Project project: findProjects){
+//            if(project.getExpiredDate().isBefore(LocalDateTime.now())){
+//                project.setFinished(true);
+//                save(project);
+//            }
+//        }
+//    }
 
 //    public List<ProjectDto.Response> findProjects(){
 //        return mapper.projectsToProjectResponseDtos(projectRepository.findAll());
@@ -137,7 +137,7 @@ public class ProjectService {
 //    public List<ProjectDto.Response> findByCategoryType(long categoryId){
 //        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
 //    }
-    public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,HttpServletRequest request){
+    public List<ProjectDto.Response> findByCategoryType(long categoryId,HttpServletRequest request){
 
         if(request.getHeader("Authorization") != null){
             String jws = request.getHeader("Authorization").replace("Bearer ","");
@@ -182,11 +182,11 @@ public class ProjectService {
 
     public List<ProjectDto.Response> searchByKeyword(String keyword){
         List<Project> findProjects = projectRepository.findByTitleContaining(keyword);
-        for(Project project:findProjects){
-            if(project.isFinished()){
-                findProjects.remove(project);
-            }
-        }
+//        for(Project project:findProjects){
+//            if(project.isFinished()){
+//                findProjects.remove(project);
+//            }
+//        }
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
     public List<ProjectDto.Response> findByFundingMemberId(long memberId){
@@ -195,11 +195,13 @@ public class ProjectService {
 
     public void deleteProject(long projectId){
         if(findVerifiedProject(projectId).getCurrentAmount() > 0){
-            if(findVerifiedProject(projectId).isFinished()){
-                projectRepository.delete(findVerifiedProject(projectId));
-            }else{
+//            if(findVerifiedProject(projectId).isFinished()){
+//                projectRepository.delete(findVerifiedProject(projectId));
+//            }else{
                 throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);
-            }
+//            }
+        }else {
+            projectRepository.delete(findVerifiedProject(projectId));
         }
     }
 

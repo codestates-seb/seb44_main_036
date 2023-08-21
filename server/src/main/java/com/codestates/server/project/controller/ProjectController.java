@@ -80,7 +80,7 @@ public class ProjectController {
 
     @GetMapping("/category/{category-id}")
     public ResponseEntity getProjectByCategoryType(@PathVariable("category-id")long categoryId,HttpServletRequest request){
-        return new ResponseEntity(projectService.findByLoginCategoryType(categoryId,request),HttpStatus.OK);
+        return new ResponseEntity(projectService.findByCategoryType(categoryId,request),HttpStatus.OK);
     }
 
     @DeleteMapping("/{project-id}")
