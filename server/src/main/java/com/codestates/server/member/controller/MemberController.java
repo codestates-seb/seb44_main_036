@@ -1,11 +1,9 @@
 package com.codestates.server.member.controller;
 
 
-import com.codestates.server.funding.service.FundingService;
 import com.codestates.server.member.dto.MemberDto;
 import com.codestates.server.member.mapper.MemberMapper;
 import com.codestates.server.member.service.MemberService;
-import com.codestates.server.project.mapper.ProjectMapper;
 import com.codestates.server.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,8 +24,6 @@ public class MemberController {
 
     private final ProjectService projectService;
 
-    private final ProjectMapper projectMapper;
-    private final FundingService fundingService;
 
 
     //회원 정보 등록
@@ -44,12 +40,6 @@ public class MemberController {
                                       @Valid @RequestBody MemberDto.Patch patch) {
         patch.setMemberId(memberId);
         return new ResponseEntity<>(mapper.memberToMemberResponseDto(memberService.updateMember(mapper.memberPatchDtoToMember(patch))), HttpStatus.OK);
-    }
-    //전체 회원 정보 조회
-    @GetMapping
-    public ResponseEntity getMembers() {
-
-        return new ResponseEntity<>(mapper.membersToMemberResponseDtos(memberService.findMembers()), HttpStatus.OK);
     }
 
 
