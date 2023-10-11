@@ -1,6 +1,7 @@
 package com.codestates.server.member.service;
 
 import com.codestates.server.auth.utils.CustomAuthorityUtils;
+import com.codestates.server.config.Encrypt;
 import com.codestates.server.exception.BusinessLogicException;
 import com.codestates.server.exception.ExceptionCode;
 import com.codestates.server.member.entity.Member;
@@ -22,11 +23,13 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
 
+    private final Encrypt encrypt;
+
 
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
         if (member.getPassword() != null) {
-            member.setPassword(passwordEncoder.encode(member.getPassword()));
+            member.setPassword(encrypt.getEncrypt(member.getPassword(),encrypt.getSalt()));
         }
         member.setCash(3000000);
         member.setRoles(authorityUtils.createRoles(member.getEmail()));
