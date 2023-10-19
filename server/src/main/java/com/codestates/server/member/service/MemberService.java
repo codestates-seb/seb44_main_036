@@ -29,7 +29,7 @@ public class MemberService {
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
         if (member.getPassword() != null) {
-            member.setPassword(encrypt.getEncrypt(member.getPassword(),encrypt.getSalt()));
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
         }
         member.setCash(3000000);
         member.setRoles(authorityUtils.createRoles(member.getEmail()));
