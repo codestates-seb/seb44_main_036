@@ -95,9 +95,15 @@ public class ProjectController {
         return new ResponseEntity(projectService.findRecycleBinProject(request),HttpStatus.OK);
     }
 
+    @PostMapping("/restoration/{project-id}")
+    public ResponseEntity restorationProject(@PathVariable("project-id") long projectId){
+        projectService.restorationProject(projectId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/{project-id}")
-    public ResponseEntity deleteMember(@PathVariable("project-id") @Positive long projectId) {
+    public ResponseEntity deleteProject(@PathVariable("project-id") @Positive long projectId) {
         projectService.deleteProject(projectId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
