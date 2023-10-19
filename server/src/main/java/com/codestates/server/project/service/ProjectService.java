@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -107,6 +105,7 @@ public class ProjectService {
             String strMemberId = getMemberId(jws);
             long memberId = Long.parseLong(strMemberId);
             List<Project> findProjects = projectRepository.findAll();
+            removeDeleteProject(findProjects);
             List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
             setLikedProject(findProjects,projectLikes);
 //            setIsFinished(findProjects);
@@ -116,9 +115,16 @@ public class ProjectService {
         }
 
         List<Project> findProjects = projectRepository.findAll();
+        removeDeleteProject(findProjects);
 //        setIsFinished(findProjects);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
+    }
+
+    private static void removeDeleteProject(List<Project> findProjects) {
+        findProjects.stream().filter(project -> project.getDeletedAt() != null)
+                .collect(Collectors.toList())
+                .forEach(project -> findProjects.remove(project));
     }
 
 //    private void setIsFinished(List<Project> findProjects) {
@@ -165,8 +171,10 @@ public class ProjectService {
     }
 
     public List<ProjectDto.Response> findByMemberId(long memberId){
+        List<Project> findProjects = projectRepository.findByMemberId(memberId);
+        removeDeleteProject(findProjects);
 
-        return  mapper.projectsToProjectResponseDtos(projectRepository.findByMemberId(memberId));
+        return  mapper.projectsToProjectResponseDtos(findProjects);
     }
 
     public Project findVerifiedProject(long projectId) {
@@ -182,6 +190,7 @@ public class ProjectService {
 
     public List<ProjectDto.Response> searchByKeyword(String keyword){
         List<Project> findProjects = projectRepository.findByTitleContaining(keyword);
+        removeDeleteProject(findProjects);
 //        for(Project project:findProjects){
 //            if(project.isFinished()){
 //                findProjects.remove(project);
@@ -212,6 +221,12 @@ public class ProjectService {
         deleteExpiredProject(findProjects);
 
         return mapper.projectsToProjectResponseDtos(projectRepository.findByRecycleBinProject(memberId));
+    }
+
+    public void restorationProject(long projectId){
+        Project findProject = findVerifiedProject(projectId);
+        findProject.setDeletedAt(null);
+        save(findProject);
     }
 
     private void deleteExpiredProject(List<Project> findProjects) {
