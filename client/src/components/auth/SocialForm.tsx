@@ -7,16 +7,12 @@ import SocialButton from './SocialButton';
 
 function SocialForm() {
   const isSignUp = useMatch('/users/signup');
-  const url = `https://mifunding.vercel.app/oauth2/authorization/google`;
-  // const url2 = `${import.meta.env.VITE_API_URL}/oauth2/authorization/google`;
+  const googleurl =
+    'http://ec2-43-201-225-71.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
 
   const googleSocialLogin = () => {
-    window.location.href = url;
+    window.location.assign(googleurl);
   };
-
-  // const kakaoSocialLogin = () => {
-  //   window.location.href = url2;
-  // };
 
   return (
     <article className='w-full max-w-[370px] flex flex-col'>
@@ -28,7 +24,6 @@ function SocialForm() {
         style={'mb-15pxr text-gray-800 bg-white border-[1.5px] border-gray-300 hover:bg-gray-200'}
       />
       <SocialButton
-        // onClick={kakaoSocialLogin}
         text={'카카오톡으로 시작'}
         icon={<KakaoLogoSvg />}
         style={'text-kakao-300 bg-kakao-100 border-gray-300 hover:bg-kakao-200'}
