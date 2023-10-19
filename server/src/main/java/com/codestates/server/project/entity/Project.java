@@ -71,6 +71,8 @@ public class Project extends Auditable {
     private String x;
     @Column
     private String y;
+    @Column(name = "DELETED_DATE")
+    private LocalDateTime deletedAt;
 
 //    @Column
 //    private boolean isFinished = false;

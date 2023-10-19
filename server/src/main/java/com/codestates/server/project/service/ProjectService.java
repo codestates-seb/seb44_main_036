@@ -195,15 +195,35 @@ public class ProjectService {
 
     public void deleteProject(long projectId){
         if(findVerifiedProject(projectId).getCurrentAmount() > 0){
-//            if(findVerifiedProject(projectId).isFinished()){
-//                projectRepository.delete(findVerifiedProject(projectId));
-//            }else{
                 throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);
-//            }
         }else {
-            projectRepository.delete(findVerifiedProject(projectId));
+            Project findProject = findVerifiedProject(projectId);
+            findProject.setDeletedAt(LocalDateTime.now().plusMonths(1));
+            save(findProject);
         }
     }
+    public List<ProjectDto.Response> findRecycleBinProject(HttpServletRequest request){
+        String jws = request.getHeader("Authorization").replace("Bearer ","");
+        String strMemberId = getMemberId(jws);
+        long memberId = Long.parseLong(strMemberId);
+
+        List<Project> findProjects = projectRepository.findByMemberId(memberId);
+
+        deleteExpiredProject(findProjects);
+
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByRecycleBinProject(memberId));
+    }
+
+    private void deleteExpiredProject(List<Project> findProjects) {
+        for(Project project : findProjects){
+            if(project.getDeletedAt().isBefore(LocalDateTime.now())){
+                project.setDeletedAt(null);
+                projectRepository.delete(project);
+                save(project);
+            }
+        }
+    }
+
 
     private String getMemberId(final String accessToken){
         final String payloadJWT = accessToken.split("\\.")[1];

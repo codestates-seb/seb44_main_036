@@ -83,14 +83,22 @@ public class ProjectController {
         return new ResponseEntity(projectService.findByCategoryType(categoryId,request),HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity searchProject(@RequestParam("q") String keyword){
+        return new ResponseEntity(projectService.searchByKeyword(keyword),HttpStatus.OK);
+    }
+
+    @GetMapping("/bin")
+    public ResponseEntity getRecycleBin(HttpServletRequest request){
+
+
+        return new ResponseEntity(projectService.findRecycleBinProject(request),HttpStatus.OK);
+    }
+
+
     @DeleteMapping("/{project-id}")
     public ResponseEntity deleteMember(@PathVariable("project-id") @Positive long projectId) {
         projectService.deleteProject(projectId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity searchProject(@RequestParam("q") String keyword){
-        return new ResponseEntity(projectService.searchByKeyword(keyword),HttpStatus.OK);
     }
 }
