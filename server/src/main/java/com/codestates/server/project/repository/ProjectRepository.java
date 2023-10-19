@@ -14,6 +14,9 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query(value = "SELECT p FROM Project p WHERE p.member.memberId =:memberId")
     List<Project> findByMemberId(long memberId);
 
+    @Query(value = "SELECT p FROM Project p WHERE p.member.memberId =:memberId AND p.deletedAt IS NOT NULL")
+    List<Project> findByRecycleBinProject(long memberId);
+
     @Query(value = "SELECT p FROM Project p WHERE p.category.categoryId =:categoryId")
     List<Project> findByCategoryType(long categoryId);
 
