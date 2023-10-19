@@ -216,8 +216,7 @@ public class ProjectService {
 
     private void deleteExpiredProject(List<Project> findProjects) {
         for(Project project : findProjects){
-            if(project.getDeletedAt().isBefore(LocalDateTime.now())){
-                project.setDeletedAt(null);
+            if(project.getDeletedAt() != null && project.getDeletedAt().isBefore(LocalDateTime.now())){
                 projectRepository.delete(project);
                 save(project);
             }
