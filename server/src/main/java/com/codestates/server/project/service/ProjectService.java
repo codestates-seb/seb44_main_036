@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +42,9 @@ public class ProjectService {
         if(findProject.getCurrentAmount() > 0){
             throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_MODIFY);
         }
-        if(findProject.isFinished()){
-            throw new BusinessLogicException(ExceptionCode.DEADLINE_HAS_PASSED);
-        }
+//        if(findProject.isFinished()){
+//            throw new BusinessLogicException(ExceptionCode.DEADLINE_HAS_PASSED);
+//        }
 
         Optional.ofNullable(project.getContent())
                 .ifPresent(content -> findProject.setContent(content));
@@ -107,28 +105,36 @@ public class ProjectService {
             String strMemberId = getMemberId(jws);
             long memberId = Long.parseLong(strMemberId);
             List<Project> findProjects = projectRepository.findAll();
+            removeDeleteProject(findProjects);
             List<ProjectLike> projectLikes = projectLikeRepository.findByMemberId(memberId);
             setLikedProject(findProjects,projectLikes);
-            setIsFinished(findProjects);
+//            setIsFinished(findProjects);
 
 
             return mapper.projectsToProjectResponseDtos(findProjects);
         }
 
         List<Project> findProjects = projectRepository.findAll();
-        setIsFinished(findProjects);
+        removeDeleteProject(findProjects);
+//        setIsFinished(findProjects);
 
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
 
-    private void setIsFinished(List<Project> findProjects) {
-        for(Project project: findProjects){
-            if(project.getExpiredDate().isBefore(LocalDateTime.now())){
-                project.setFinished(true);
-                save(project);
-            }
-        }
+    private static void removeDeleteProject(List<Project> findProjects) {
+        findProjects.stream().filter(project -> project.getDeletedAt() != null)
+                .collect(Collectors.toList())
+                .forEach(project -> findProjects.remove(project));
     }
+
+//    private void setIsFinished(List<Project> findProjects) {
+//        for(Project project: findProjects){
+//            if(project.getExpiredDate().isBefore(LocalDateTime.now())){
+//                project.setFinished(true);
+//                save(project);
+//            }
+//        }
+//    }
 
 //    public List<ProjectDto.Response> findProjects(){
 //        return mapper.projectsToProjectResponseDtos(projectRepository.findAll());
@@ -137,7 +143,7 @@ public class ProjectService {
 //    public List<ProjectDto.Response> findByCategoryType(long categoryId){
 //        return mapper.projectsToProjectResponseDtos(projectRepository.findByCategoryType(categoryId));
 //    }
-    public List<ProjectDto.Response> findByLoginCategoryType(long categoryId,HttpServletRequest request){
+    public List<ProjectDto.Response> findByCategoryType(long categoryId,HttpServletRequest request){
 
         if(request.getHeader("Authorization") != null){
             String jws = request.getHeader("Authorization").replace("Bearer ","");
@@ -165,8 +171,10 @@ public class ProjectService {
     }
 
     public List<ProjectDto.Response> findByMemberId(long memberId){
+        List<Project> findProjects = projectRepository.findByMemberId(memberId);
+        removeDeleteProject(findProjects);
 
-        return  mapper.projectsToProjectResponseDtos(projectRepository.findByMemberId(memberId));
+        return  mapper.projectsToProjectResponseDtos(findProjects);
     }
 
     public Project findVerifiedProject(long projectId) {
@@ -182,11 +190,12 @@ public class ProjectService {
 
     public List<ProjectDto.Response> searchByKeyword(String keyword){
         List<Project> findProjects = projectRepository.findByTitleContaining(keyword);
-        for(Project project:findProjects){
-            if(project.isFinished()){
-                findProjects.remove(project);
-            }
-        }
+        removeDeleteProject(findProjects);
+//        for(Project project:findProjects){
+//            if(project.isFinished()){
+//                findProjects.remove(project);
+//            }
+//        }
         return mapper.projectsToProjectResponseDtos(findProjects);
     }
     public List<ProjectDto.Response> findByFundingMemberId(long memberId){
@@ -195,13 +204,40 @@ public class ProjectService {
 
     public void deleteProject(long projectId){
         if(findVerifiedProject(projectId).getCurrentAmount() > 0){
-            if(findVerifiedProject(projectId).isFinished()){
-                projectRepository.delete(findVerifiedProject(projectId));
-            }else{
                 throw new BusinessLogicException(ExceptionCode.PROJECT_CANT_DELETE);
+        }else {
+            Project findProject = findVerifiedProject(projectId);
+            findProject.setDeletedAt(LocalDateTime.now().plusMonths(1));
+            save(findProject);
+        }
+    }
+    public List<ProjectDto.Response> findRecycleBinProject(HttpServletRequest request){
+        String jws = request.getHeader("Authorization").replace("Bearer ","");
+        String strMemberId = getMemberId(jws);
+        long memberId = Long.parseLong(strMemberId);
+
+        List<Project> findProjects = projectRepository.findByMemberId(memberId);
+
+        deleteExpiredProject(findProjects);
+
+        return mapper.projectsToProjectResponseDtos(projectRepository.findByRecycleBinProject(memberId));
+    }
+
+    public void restorationProject(long projectId){
+        Project findProject = findVerifiedProject(projectId);
+        findProject.setDeletedAt(null);
+        save(findProject);
+    }
+
+    private void deleteExpiredProject(List<Project> findProjects) {
+        for(Project project : findProjects){
+            if(project.getDeletedAt() != null && project.getDeletedAt().isBefore(LocalDateTime.now())){
+                projectRepository.delete(project);
+                save(project);
             }
         }
     }
+
 
     private String getMemberId(final String accessToken){
         final String payloadJWT = accessToken.split("\\.")[1];

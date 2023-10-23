@@ -1,6 +1,7 @@
 package com.codestates.server.member.service;
 
 import com.codestates.server.auth.utils.CustomAuthorityUtils;
+import com.codestates.server.config.Encrypt;
 import com.codestates.server.exception.BusinessLogicException;
 import com.codestates.server.exception.ExceptionCode;
 import com.codestates.server.member.entity.Member;
@@ -21,6 +22,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+
+    private final Encrypt encrypt;
 
 
     public Member createMember(Member member) {

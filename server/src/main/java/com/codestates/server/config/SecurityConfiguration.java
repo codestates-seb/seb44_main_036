@@ -55,20 +55,20 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                                .antMatchers(HttpMethod.POST, "/signup").permitAll()
-                                .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
-                                .antMatchers(HttpMethod.GET, "/members").hasRole("ADMIN")
-                                .antMatchers(HttpMethod.GET, "/members/**").hasAnyRole("USER", "ADMIN")
-                                .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
-                                .antMatchers(HttpMethod.POST, "/projects").hasRole("USER")
-                                .antMatchers(HttpMethod.PATCH, "/projects/**").hasRole("USER")
-                                .antMatchers(HttpMethod.GET, "/projects").permitAll()  //테스트해보기
-                                .antMatchers(HttpMethod.DELETE, "/projects").hasRole("USER")
-                                .antMatchers(HttpMethod.POST, "/fundings").hasRole("USER")
-                                .antMatchers(HttpMethod.GET, "/fundings").hasRole("ADMIN")
-                                .antMatchers(HttpMethod.DELETE, "/fundings").hasRole("USER")
-                                .antMatchers(HttpMethod.POST, "/projects/like").hasRole("USER")
-                                .antMatchers(HttpMethod.POST, "/upload").hasRole("USER")
+//                                .antMatchers(HttpMethod.POST, "/signup").permitAll()
+//                                .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.GET, "/members").hasRole("ADMIN")
+//                                .antMatchers(HttpMethod.GET, "/members/**").hasAnyRole("USER", "ADMIN")
+//                                .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.POST, "/projects").hasRole("USER")
+//                                .antMatchers(HttpMethod.PATCH, "/projects/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.GET, "/projects").permitAll()  //테스트해보기
+//                                .antMatchers(HttpMethod.DELETE, "/projects").hasRole("USER")
+//                                .antMatchers(HttpMethod.POST, "/fundings").hasRole("USER")
+//                                .antMatchers(HttpMethod.GET, "/fundings").hasRole("ADMIN")
+//                                .antMatchers(HttpMethod.DELETE, "/fundings").hasRole("USER")
+//                                .antMatchers(HttpMethod.POST, "/projects/like").hasRole("USER")
+//                                .antMatchers(HttpMethod.POST, "/upload").hasRole("USER")
                                 .anyRequest().permitAll()
 
                 )
@@ -105,10 +105,9 @@ public class SecurityConfiguration {
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer,authorityUtils);
 
 
-             builder.addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
-
-             builder.addFilterAfter(jwtVerificationFilter,OAuth2LoginAuthenticationFilter.class);
+           builder
+                   .addFilter(jwtAuthenticationFilter)
+                   .addFilterAfter(jwtVerificationFilter,OAuth2LoginAuthenticationFilter.class);
         }
     }
 }

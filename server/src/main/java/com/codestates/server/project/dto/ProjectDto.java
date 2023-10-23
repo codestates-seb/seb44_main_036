@@ -113,6 +113,8 @@ public class ProjectDto {
         private String x;
         private String y;
         private List<String> tags;
-        private boolean isFinished;
+
+        private LocalDateTime deletedAt;
+//        private boolean isFinished;
     }
 }

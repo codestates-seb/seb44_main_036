@@ -71,9 +71,11 @@ public class Project extends Auditable {
     private String x;
     @Column
     private String y;
+    @Column(name = "DELETED_DATE")
+    private LocalDateTime deletedAt;
 
-    @Column
-    private boolean isFinished = false;
+//    @Column
+//    private boolean isFinished = false;
 
     public void addProjectLike(ProjectLike projectLike){
         this.projectLikes.add(projectLike);
