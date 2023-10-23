@@ -8,7 +8,7 @@
 
 - **Team Project**
 - **Service Name: [Mi Funding](https://mifunding.vercel.app/)**
-- **Development Duration**: `2023.06.28 ~ 2023.10.26`
+- **Development Duration**: `2023.06.28 ~ 2023.07.26`
 - **Developer**
 
 ### Front-end
